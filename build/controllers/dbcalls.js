@@ -945,9 +945,9 @@ function dbCargarPedidosPendientes(){
         containerPeds.innerHTML = contador;
         
         if(Number(contador)>0){
-            btnPedidosPend.className = 'btn btn-danger btn-lg btn-icon rounded-circle shadow';
+            //btnPedidosPend.className = 'btn btn-danger btn-lg btn-icon rounded-circle shadow';
         }else{
-            btnPedidosPend.className = 'btn btn-outline-secondary btn-lg btn-icon rounded-circle shadow';
+            //btnPedidosPend.className = 'btn btn-outline-secondary btn-lg btn-icon rounded-circle shadow';
         }
         
         btnPedidosPend.innerHTML = `<i class="fal fa-bell"></i>Pedidos no enviados (${contador})`;

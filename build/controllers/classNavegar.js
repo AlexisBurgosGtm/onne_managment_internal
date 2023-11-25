@@ -1,8 +1,6 @@
 let classNavegar = {
     login : async(historial)=>{
-        divUsuario.innerText = 'DESCONECTADO';
-        lbTipo.innerText = "Inicie sesión";
-        rootMenu.innerHTML = '';
+        
         GlobalCoddoc = '';
         GlobalCodUsuario=99999;
         GlobalUsuario = '';
@@ -28,9 +26,7 @@ let classNavegar = {
             
     },
     inicio : async(tipousuario)=>{
-        divUsuario.innerText = GlobalUsuario;
-        lbTipo.innerText = GlobalTipoUsuario;
-
+      
         switch (tipousuario) {
             case 'VENDEDOR':
                 classNavegar.inicioVendedor();
@@ -48,6 +44,9 @@ let classNavegar = {
         })
     },
     inicioVendedor : async ()=>{
+
+       
+
         let strFooter =    `<button class="btn btn-sm text-white hidden"  id="btnMenu2VendedorClientesMapa">
                                 <i class="fal fa-map"></i>
                                 Mapa
@@ -79,6 +78,8 @@ let classNavegar = {
                             </button>
                     
                             `
+
+            
 
                     rootMenuFooter.innerHTML = strFooter;
                                                  

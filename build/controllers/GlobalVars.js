@@ -1,4 +1,4 @@
-let versionapp = 'Modif 24.10.2023';
+let versionapp = 'mod 11.2023';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
@@ -12,11 +12,6 @@ let rootMenuLateral = document.getElementById('rootMenuLateral');
 const showMenuLateral =(titulo)=>{ $("#modalMenu").modal('show'); lbMenuTitulo.innerText = titulo;};
 const hideMenuLateral =()=>{ $("#modalMenu").modal('hide'); lbMenuTitulo.innerText = '';};
 
-let divUsuario = document.getElementById('divUsuario');
-let lbTipo = document.getElementById('lbTipo');
-
-divUsuario.innerText = "DESCONECTADO";
-lbTipo.innerText = "Inicie sesión";
 
 
 let GlobalSelectedClientesDia ='SN';

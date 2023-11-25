@@ -59,19 +59,13 @@ function getView(){
                             </div>
                             <br>
                             <div class="form-group" align="center">
-                                <button class="btn btn-primary btn-lg shadow col-12 btn-rounded"  type="submit" id="btnIniciar">
+                                <button class="btn btn-primary bg-onne btn-lg shadow col-12 btn-rounded"  type="submit" id="btnIniciar">
                                     <i class="fal fa-unlock"></i>
                                     Ingresar
                                 </button>
                             </div>
                             <div class="form-group" align="right">
                                 <small class="">Onne-App - ${versionapp}</small>
-                                <br>
-                                <small>
-                                    <a href="https://apigen.whatsapp.com/send?phone=50257255092&text=Ayudame%20con%20la%20app%20de%20Mercados%20Efectivos...%20">
-                                        por Alexis Burgos
-                                    </a>
-                                </small>
                             </div>
                         </form>
                     </div>

@@ -128,41 +128,9 @@
                                                                         
 
                                                     
-                            <div id="rootMenuFooter" class="text-white negrita">
+                            <div  class="text-white negrita">
 
-                                <a data-toggle="" title="" class="header-icon d-flex align-items-center justify-content-center ml-2" id="btnMConfig">
-                                    <img src="img/cog.png" class="profile-image rounded-circle" alt="Menú">
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-animated dropdown-xl">
-                                    <div class="dropdown-header bg-gris d-flex flex-row py-4 rounded-top">
-                                        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                            <span class="mr-2">
-                                                <img src="img/logo.png" class="rounded-circle profile-image" alt="Usuario">
-                                            </span>
-                                            <div class="info-card-text">
-                                                <div class="fs-lg text-truncate text-truncate-lg" id="divUsuario">Usuario</div>
-                                                <span class="text-truncate text-truncate-md opacity-80" id="lbTipo">correo@distribuidora.com</span>                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-divider m-0"></div>
-                                    
-                                    <div id="rootMenu" class="hidden">
-                                        
-                                        
-
-
-
-                                    
-                                    </div>
-                                    
-                                    <div class="dropdown-divider m-0"></div>
-
-                                    <a class="dropdown-item fw-500 pt-3 pb-3 bg-danger text-white" data-toggle="dropdown" href="#" id="btnMenuInicioSalir">
-                                        <span>SALIR (x)</span>
-                                    </a>
-                                </div>
+                                
                             </div>
 
                         </div>
@@ -204,14 +172,12 @@
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
 
                     <!-- BEGIN Page Footer -->
-                    <footer class="page-footer bg-white foot" role="contentinfo" id="footContainer">
+                    <footer class="page-footer bg-white foot bg-onne text-white" role="contentinfo" id="footContainer">
                         <!--
                         <div class="d-flex align-items-center flex-1 text-muted">    
                         -->
-                        <div class="d-flex align-items-left" id="rootMenuFooter2">
+                        <div class="d-flex align-items-left " id="rootMenuFooter">
                             <b class="text-dark"></b>
-                           
-                         
                                 
                         </div>
 
@@ -363,7 +329,7 @@
                     </div>
                     
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="hidden form-group">
                             <label>Servicio para Enviar Pedidos</label>
                             <select class="form-control" id="cmbTipoDb">
                                 <option value="PROPIO">SERVICIO PROPIO</option>
@@ -383,26 +349,14 @@
                                 </div>
                                 
                             </div>
-                            <!--
-                                <table class="table table-responsive table-hover table-striped table-bordered shadow">
-                                <thead class="bg-info text-white">
-                                    <td>Fecha</td>
-                                    <td>Cliente</td>
-                                    <td>Importe</td>
-                                    <td></td>
-                                    <td></td>
-                                </thead>
-                                <tbody id="tblPedidosPendientes"></tbody>
-                            </table>
-
-                             -->
+                          
                              <div class="table-responsive" id="tblPedidosPendientes">
 
                                 
                              </div>
 
                         </div>
-                        <button class="btn form-control shadow" data-dismiss="modal">
+                        <button class="btn btn-secondary hand shadow" data-dismiss="modal">
                             Cerrar(x)
                         </button>
                     </div>

@@ -40,11 +40,111 @@ function getView(){
         },
         tab_inicio : ()=>{
             return `
+                            <div class="row">
+
+                                <div class="card card-rounded col-6">
+                                    <div class="card-body">
+                                        <label>Total del día:</label><br>
+                                        <h4 class="negrita" id="lbTotalDia">Total venta 0 - pedidos 0</h4>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label>Precios Descargados:</label>
+                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarP"><i class="fal fa-download"></i></button>
+                                                <h5 class="negrita text-danger" id="lbTotalProductos">0</h5>
+                                            </div>
+                                            <div class="col-12">
+                                                <label>Precios en Nube:</label>
+                                                <h5 class="negrita text-success" id="lbTotalProductosOnline">0</h5>    
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label>Clientes Descargados:</label>
+                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarC"><i class="fal fa-download"></i></button>
+                                                <h5 class="negrita text-danger" id="lbTotalClientes">0</h5>    
+                                            </div>
+                                            <div class="col-12">
+                                                <label>Clientes en Nube:</label>
+                                                <h5 class="negrita text-success" id="lbTotalClientesOnline">0</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card card-rounded col-6">
+                                    
+
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('LUNES')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>LUNES</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MARTES')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>MARTES</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MIERCOLES')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>MIERCOLES</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('JUEVES')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>JUEVES</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('VIERNES')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>VIERNES</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('SABADO')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>SABADO</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('DOMINGO')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>DOMINGO</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('AJENOS')">
+                                                <div class="card-body p-2 text-center">
+                                                    <h5>OTROS</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                           
+            `
+        },
+        BACKUP_tab_inicio : ()=>{
+            return `
                     <div class="card card-rounded">
            
                         <div class="card-body">
 
                             <div class="row">
+                            
                                 <div class="card card-rounded col-12">
                                     <div class="card-body">
 
