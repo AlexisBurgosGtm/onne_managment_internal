@@ -1,4 +1,4 @@
-let versionapp = 'mod 11.2023';
+let versionapp = 'mod 01.2024';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
@@ -77,11 +77,13 @@ let GlobalSistema = 'ISC';
 let GlobalLoaderMini = `<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>`;
 
 let GlobalLoader = `
+                
                 <div>
-                    <div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-info" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-danger" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-warning" role="status"><span class="sr-only">Loading...</span></div>
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>
                 </div>
                 `
 

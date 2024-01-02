@@ -522,7 +522,7 @@ let apigen = {
         .then((response) => {
             const data = response.data.recordset;
             data.map((rows)=>{
-                    strdata = `Venta Día: ${funciones.setMoneda(rows.IMPORTE,'Q')} Pedidos: ${rows.PEDIDOS}`
+                    strdata = `Importe: ${funciones.setMoneda(rows.IMPORTE,'Q')}  Pedidos: ${rows.PEDIDOS}`
             })
             
             lbTotal.innerText = strdata;

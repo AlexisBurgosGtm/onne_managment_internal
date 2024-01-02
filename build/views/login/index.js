@@ -120,12 +120,12 @@ function addListeners(){
 
 
     //carga las sucursales directamente desde código
-    document.getElementById('cmbSucursal').innerHTML = '<option value="" disabled selected hidden>Selecciona una sede</option>' + funciones.getComboSucursales();
+    document.getElementById('cmbSucursal').innerHTML =  funciones.getComboSucursales();
 
     selectDateDownload() //carga la info inicial
     .then(()=>{
         try {
-            document.getElementById('cmbSucursal').value = GlobalCodSucursal;
+            //document.getElementById('cmbSucursal').value = GlobalCodSucursal;
             console.log(GlobalCodSucursal);
         } catch (error) {
             console.log('error al cargar sucursal')

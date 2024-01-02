@@ -104,7 +104,7 @@ function getView(){
                         
                         <div class="table-responsive border-top-rounded border-bottom-rounded shadow">
                             <table class="table table-hover table-striped"><!--mt-5-->
-                                <thead class="bg-secondary text-white">
+                                <thead class="bg-primary text-white">
                                     <tr>
                                         <th class="">Producto</th>
                                         <th class="">Subtotal</th>
@@ -117,11 +117,11 @@ function getView(){
                     <div>
 
                         <button class="btn btn-xl btn-secondary btn-bottom-ml btn-circle hand shadow" id="btnCambiarCliente">
-                            <i class="fal fa-user"></i>
+                            <i class="fal fa-arrow-left"></i>
                         </button>
                     
                         <button class="btn btn-circle btn-xl btn-success shadow btn-bottom-mr hand" id="btnAgregarProd">
-                            <i class="fal fa-search"></i>
+                            <i class="fal fa-plus"></i>
                         </button>
 
                         <button class="btn btn-danger btn-xl btn-circle btn-bottom-r shadow hand" id="btnCobrar">
@@ -137,180 +137,34 @@ function getView(){
         </div>  
             `
         },
-        gridTempVentaModalBusquedaProductos :()=>{
-            return `
-        <div class="row">
-            <div id="panel-2" class="panel col-12">
-
-
-                <div class="panel-hdr">
-                    <h2 id="txtTotalVenta" class="text-danger"></h2>
-                    <div class="panel-toolbar">
-                                               
-                        <button class="btn btn-warning" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen">
-                            <i class="fal fa-angle-double-up"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                            <div class="input-group">
-                                <select class="form-control col-3 shadow border-info" id="cmbTipoPrecio">
-                                    <option value="P">DET</option>
-                                    <option value="C">PreB</option>
-                                    <option value="B">PreC</option>
-                                    <option value="A">MAY</option>
-                                    <option value="K">CAMBIO</option>
-                                </select>
-                                <input id="txtBusqueda" type="text" ref="txtBusqueda" class="form-control col-7  shadow border-info" placeholder="Buscar código o descripción..." aria-label="" aria-describedby="button-addon4" />
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-info waves-effect waves-themed shadow" type="button" id="btnBuscarProducto">
-                                        <i class="fal fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped"><!--mt-5-->
-                                <thead>
-                                    <tr>
-                                        <th class="border-top-0 table-scale-border-bottom fw-700">Producto</th>
-                                        <th class="text-right border-top-0 table-scale-border-bottom fw-700">Medida</th>
-                                        <th class="text-center border-top-0 table-scale-border-bottom fw-700">Cant.</th>
-                                        <th class="text-right border-top-0 table-scale-border-bottom fw-700">Subtotal</th>
-                                        <th class="text-center border-top-0 table-scale-border-bottom fw-700"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblGridTempVentas"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade modal-with-scroll" id="ModalBusqueda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-right" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <label class="modal-title text-danger h3" id="">Búsqueda de Productos</label>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                               </button>
-                            </div>
-                            <div class="modal-body">
-                            <table class="table table-responsive table-striped table-hover">
-                                <thead class="bg-trans-gradient text-white">
-                                    <tr>
-                                        <td>Producto</td>
-                                        <td>Precio</td>                         
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblResultadoBusqueda">
-                                
-                                </tbody>
-                            </table>
-                            </div>        
-                        </div>
-                    </div>
-
-                    <div class="shortcut-menu align-left">
-                        <button class="btn btn-danger btn-md" data-dismiss="modal">
-                            <i class="fal fa-angle-double-left"></i>Atrás
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="modal fade  modal-with-scroll" id="ModalCantidadProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-right" role="document">
-                        <div class="modal-content">
-                            <br><br><br><br><br>
-                            <div class="modal-header">
-                                <label class="modal-title" id="txtDesProducto">Azucar don Justo Cabal Kilo</label>
-                            </div>
-                            <div class="modal-body" align="right">
-                                <div class="col-8">
-                                    <div class="row">
-                                        <b id="txtCodMedida">UNIDAD</b>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="input-group">  
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-md btn-icon btn-round btn-info" id="btnCantidadDown">
-                                                        -
-                                                    </button>
-                                                </div>
-                                    
-                                                <input type="number" class="text-center form-control" id="txtCantidad" value="1">    
-                                    
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-md btn-icon btn-round btn-info" id="btnCantidadUp">
-                                                        +
-                                                    </button>    
-                                                </div>
-                                            </div>                            
-                                        </div>                              
-                                    </div>
-                                    <div class="col-12">
-                                        <label>Precio: </label>
-                                        <label class="text-success" id="txtPrecioProducto">Q500</label>
-                                        <br>
-                                        <label>Subtotal:</label>
-                                        <label class="text-danger" id="txtSubTotal">Q500</label>
-                                    </div>
-                                    <br>
-                                    <div class="">
-                                        <button type="button" class="btn btn-outline-secondary btn-round" data-dismiss="modal" id="btnCancelarModalProducto">
-                                            <i class="fal fa-ban"></i>Cancelar
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-round" id="btnAgregarProducto">
-                                            <i class="fal fa-check"></i>Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>  
-            `
-        },
         modalBusquedaProductos :()=>{
             return `
             <div class="modal fade  modal-with-scroll" id="ModalBusqueda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-right" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <label class="modal-title text-danger h3" id="">Búsqueda de Productos</label>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                            </button>
+                        <div class="modal-header bg-primary text-white">
+                            <label class="h5" id="">Búsqueda de Productos</label>
                         </div>
 
                         <div class="modal-body">
-                            <div class="row">
+                            
                                 <div class="input-group">
-                                    <select class="form-control col-3 shadow border-secondary negrita border-left-0 border-right-0 border-top-0" id="cmbTipoPrecio">
-                                        <option value="P">DET</option>
-                                        <option value="C">PreB</option>
-                                        <option value="B">PreA</option>
-                                        <option value="A">MAY</option>
-                                        <option value="K">CAMBIO</option>
+                                    <select class="form-control negrita col-3 border-primary" id="cmbTipoPrecio">
+                                        <option value="P">PUBLICO</option>
+                                        <option value="C">MAYOREO C</option>
+                                        <option value="B">MAYOREO B</option>
+                                        <option value="A">MAYOREO A</option>
                                     </select>
-                                    <input id="txtBusqueda" type="text" ref="txtBusqueda" class="bg-amarillo form-control col-7 shadow" placeholder="Buscar código o descripción..." aria-label="" aria-describedby="button-addon4" />
+                                    <input id="txtBusqueda" type="text" class="form-control col-8 shadow border-primary text-primary" placeholder="Buscar código o descripción..." aria-label="" aria-describedby="button-addon4" />
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-success btn-rounded waves-effect waves-themed shadow" type="button" id="btnBuscarProducto">
+                                        <button class="btn btn-primary btn-rounded waves-effect waves-themed shadow co-2" type="button" id="btnBuscarProducto">
                                             <i class="fal fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                        <table class="table table-responsive table-striped table-hover">
-                            <thead class="bg-secondary text-white">
+                            <hr class="solid">
+                        <table class="table table-responsive table-bordered border-primary">
+                            <thead class="bg-primary text-white">
                                 <tr>
                                     <td>Producto</td>
                                     <td>Precio</td>                         
@@ -328,8 +182,8 @@ function getView(){
                     </div>
                 </div>
                 <div class="shortcut-menu align-left">
-                    <button class="btn btn-danger btn-sm" data-dismiss="modal">
-                        <i class="fal fa-angle-double-left"></i>Atrás
+                    <button class="btn btn-secondary btn-circle btn-xl hand shadow" data-dismiss="modal">
+                        <i class="fal fa-angle-double-left"></i>
                     </button>
                 </div>
             </div>
@@ -473,11 +327,8 @@ function getView(){
                 <div class="modal fade" id="ModalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <label class="modal-title text-danger h3" id="">Finalización del Pedido</label>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                </button>
+                            <div class="modal-header bg-primary text-white">
+                                <label class="modal-title h5" id="">Enviar Pedido</label>
                             </div>
                 
                             <div class="modal-body shadow">
@@ -490,28 +341,28 @@ function getView(){
                                             <input class="form-control" style="font-size:80%" id="txtDireccion" disabled="true">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label>Total Venta:</label>
-                                            <h3 class="negrita text-danger" id="lbTotalPedido2"></h3>
-                                            
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label>Forma de Pago:</label>
+                                                    <select id="cmbEntregaConcre" class="form-control">
+                                                        <option value="CONTADO">CONTADO</option>
+                                                        <option value="CREDITO">CREDITO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-8 text-right">
+                                                <div class="form-group">
+                                                    <label>Total Venta</label>
+                                                    <h2 class="negrita text-danger" id="lbTotalPedido2"></h2>
+                                                </div>
+                                            </div>
                                         </div>
-                                        
-
+                                        <br>
                                         <div class="form-group">
-                                            <label>Forma de Pago:</label>
-                                            <select id="cmbEntregaConcre" class="form-control">
-                                                <option value="CONTADO">CONTADO</option>
-                                                <option value="CREDITO">CREDITO</option>
-                                                <option value="VALE">VALE AL VENDEDOR</option>
-                                                <option value="FACTURA">FACTURA CONTABLE</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Observaciones</label>
+                                            <label>Notas:</label>
                                             <textarea rows="3" cols="80" class="form-control" id="txtEntregaObs" placeholder="Escriba aqui sus observaciones..."></textarea>
                                         </div>                                                              
-                                            
                                     </div>
 
                                     <div class="row">
@@ -532,7 +383,7 @@ function getView(){
                                         <div class="col-1"></div>
             
                                         <div class="col-5">
-                                            <button class="btn btn-outline-success btn-lg btn-pills btn-block waves-effect waves-themed" id="btnFinalizarPedido">
+                                            <button class="btn btn-primary btn-lg btn-pills btn-block waves-effect waves-themed" id="btnFinalizarPedido">
                                                 <i class="fal fa-paper-plane mr-1"></i>Enviar
                                             </button>
                                         </div>
@@ -804,23 +655,7 @@ async function iniciarVistaVentas(nit,nombre,direccion){
     })
 
      
-    // EVENTOS DE LOS BOTONES
-    document.body.addEventListener('keyup',(e)=>{
-        if(GlobalSelectedForm=='VENTAS'){
-            switch (e.keyCode) {
-                case 118: //f7
-                    btnCobrar.click();
-                    break;
-                case 113: //f2
-                    btnBusquedaClientes.click();
-                    //createNotification('hola mundo');
-                default:
-                    break;
-            }    
-        }
-    });
-
-    // carga el grid
+    
    
     
     await classTipoDocumentos.fcnCorrelativoDocumento('PED',cmbCoddoc.value,'txtCorrelativo');
@@ -956,27 +791,28 @@ function fcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
      
                 }
 
-                str += `<tr id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});" class="border-bottom">
+                str += `
+            <tr class="border-primary" id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});" class="border-bottom">
                 <td >
                     ${funciones.quitarCaracteres(rows.DESPROD,'"'," pulg",true)}
                     <br>
-                    <small class="text-danger"><b>${rows.CODPROD}</b></small><small class="text-info">//Escala:${rows.DESPROD3}</small>
+                    <small class="text-danger"><b>${rows.CODPROD}</b></small>
+                    <small class="text-info">//Descripción:${rows.DESPROD3}</small>
                     <br>
-                    <b class"bg-danger text-white">${rows.CODMEDIDA}</b>
-                    <small>(${rows.EQUIVALE})</small>
+                    <b class"bg-danger text-white">${rows.CODMEDIDA}</b><small>(${rows.EQUIVALE})</small>
+                    <br>
+                    <small class="negrita">Marca:${rows.DESMARCA}</small>
                 </td>
                 <td>${funciones.setMoneda(pre || 0,'Q ')}
                     <br>
                     <small class="${strC}">E:${funciones.setMoneda(exist,'')}</small>
                 </td>
-                
                 <td>
-                    <button class="btn btn-sm btn-success btn-circle text-white" 
+                    <button class="btn btn-sm btn-primary hand shadow btn-circle text-white" 
                     onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});">
                         +
                     </button>
-                <td>
-                
+                </td>
             </tr>`
             })
             tabla.innerHTML= str;
@@ -1154,7 +990,7 @@ async function fcnCargarGridTempVentas(idContenedor){
                 varTotalCosto = varTotalCosto + Number(rows.TOTALCOSTO);
                 return `<tr id="${rows.ID.toString()}" class="border-bottom" ondblclick="funciones.hablar('${rows.DESPROD}')">
                             <td class="text-left">
-                                ${rows.DESPROD}
+                                <b class="text-primary">${rows.DESPROD}</b>
                                 <br>
                                 <small class="text-danger"><b>${rows.CODPROD} (${rows.EQUIVALE} item)</b></small>
                                 <br>
@@ -1177,7 +1013,7 @@ async function fcnCargarGridTempVentas(idContenedor){
                                 </div>
                             </td>
                                                         
-                            <td class="text-right" id=${'S'+idcant}>${funciones.setMoneda(rows.TOTALPRECIO,'Q')}</td>
+                            <td class="text-right negrita text-danger" id=${'S'+idcant}>${funciones.setMoneda(rows.TOTALPRECIO,'Q')}</td>
                             
                         </tr>`
            }).join('\n');

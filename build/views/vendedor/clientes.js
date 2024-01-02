@@ -50,22 +50,16 @@ function getView(){
                                             <div class="col-12">
                                                 <label>Precios Descargados:</label>
                                                 <button class="btn btn-sm btn-info btn-circle" id="btnDescargarP"><i class="fal fa-download"></i></button>
-                                                <h5 class="negrita text-danger" id="lbTotalProductos">0</h5>
-                                            </div>
-                                            <div class="col-12">
-                                                <label>Precios en Nube:</label>
-                                                <h5 class="negrita text-success" id="lbTotalProductosOnline">0</h5>    
+                                                <br>
+                                                <label style="font-size:110%" class="negrita text-danger" id="lbTotalProductos">0</label>/<label style="font-size:110%" class="negrita text-success" id="lbTotalProductosOnline">0</label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <label>Clientes Descargados:</label>
                                                 <button class="btn btn-sm btn-info btn-circle" id="btnDescargarC"><i class="fal fa-download"></i></button>
-                                                <h5 class="negrita text-danger" id="lbTotalClientes">0</h5>    
-                                            </div>
-                                            <div class="col-12">
-                                                <label>Clientes en Nube:</label>
-                                                <h5 class="negrita text-success" id="lbTotalClientesOnline">0</h5>
+                                                <br>
+                                                <label style="font-size:110%" class="negrita text-danger" id="lbTotalClientes">0</label>/<label style="font-size:110%" class="negrita text-success" id="lbTotalClientesOnline">0</label>    
                                             </div>
                                         </div>
                                     </div>
@@ -75,28 +69,28 @@ function getView(){
                                     
 
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('LUNES')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('LUNES')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>LUNES</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MARTES')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('MARTES')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>MARTES</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MIERCOLES')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('MIERCOLES')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>MIERCOLES</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('JUEVES')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('JUEVES')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>JUEVES</h5>
                                                 </div>
@@ -104,28 +98,28 @@ function getView(){
                                         </div><br>
                                         
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('VIERNES')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('VIERNES')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>VIERNES</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('SABADO')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('SABADO')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>SABADO</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('DOMINGO')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('DOMINGO')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>DOMINGO</h5>
                                                 </div>
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('AJENOS')">
+                                            <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('AJENOS')">
                                                 <div class="card-body p-2 text-center">
                                                     <h5>OTROS</h5>
                                                 </div>
@@ -135,133 +129,6 @@ function getView(){
                                 </div>
                             </div>
                            
-            `
-        },
-        BACKUP_tab_inicio : ()=>{
-            return `
-                    <div class="card card-rounded">
-           
-                        <div class="card-body">
-
-                            <div class="row">
-                            
-                                <div class="card card-rounded col-12">
-                                    <div class="card-body">
-
-                                        <label>Total del día:</label><br>
-                                        <h4 class="negrita" id="lbTotalDia">Total venta 0 - pedidos 0</h4>
-                                        
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label>Precios Descargados:</label>
-                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarP"><i class="fal fa-download"></i></button>
-                                                <h5 class="negrita text-danger" id="lbTotalProductos">0</h5>
-                                            </div>
-                                            <div class="col-6">
-                                                <label>Clientes Descargados:</label>
-                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarC"><i class="fal fa-download"></i></button>
-                                                <h5 class="negrita text-danger" id="lbTotalClientes">0</h5>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label>Precios en Nube:</label>
-                                                <h5 class="negrita text-success" id="lbTotalProductosOnline">0</h5>
-                                            </div>
-                                            <div class="col-6">
-                                                <label>Clientes en Nube:</label>
-                                                <h5 class="negrita text-success" id="lbTotalClientesOnline">0</h5>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                              
-                            </div>
-                           
-
-                            <br>
-
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('LUNES')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>LUNES</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MARTES')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>MARTES</h5>
-                                        </div>
-                                    </div>
-                                </div>    
-                            </div> 
-                            <br>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('MIERCOLES')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>MIERCOLES</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('JUEVES')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>JUEVES</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div> 
-                            <br>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('VIERNES')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>VIERNES</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('SABADO')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>SABADO</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                            <br>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('DOMINGO')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>DOMINGO</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card card-rounded shadow hand col-12" onclick="getListaClientes('OTROS')">
-                                        <div class="card-body p-2 text-center">
-                                            <h5>OTROS</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                            <br>
-                            <div class="row">
-                                <div class="card card-rounded shadow hand col-12 border-info text-info" onclick="getListaClientes('AJENOS')">
-                                    <div class="card-body p-2 text-center">
-                                        <h5>BUSCAR CLIENTE AJENO</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    
-                    </div>
             `
         },
         tab_no_visitados: ()=>{
@@ -314,7 +181,7 @@ function getView(){
         tab_ajenos: ()=>{
             return `
             <div class="form-group p-2">
-                <label class="negrita">Clientes ajenos:</label>
+                <label class="negrita">Clientes :</label>
                 <div class="input-group">
                                   
                     <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    

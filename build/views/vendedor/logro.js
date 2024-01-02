@@ -42,9 +42,9 @@ function getView(){
                             <option value="2">MARCAS VENDIDAS (DIA)</option>
                             <option value="3">PRODUCTOS VENDIDOS (DIA)</option>
                             <option value="4">VENTAS POR FECHA (MES)</option>
-                            <option value="5">PRODUCTOS DEL MES (MES)</option>
-                            <option value="6">MARCAS DEL MES (MES)</option>
-                            <option value="7">VENTAS NETAS - OBJETIVO (MES)</option>
+                            <option class="hidden" value="5">PRODUCTOS DEL MES (MES)</option>
+                            <option class="hidden" value="6">MARCAS DEL MES (MES)</option>
+                            <option class="hidden" value="7">VENTAS NETAS - OBJETIVO (MES)</option>
                         </select>
                     </div>
                 </div>
