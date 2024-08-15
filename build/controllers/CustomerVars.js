@@ -1,12 +1,12 @@
-let GlobalToken = 'VICEFARMA';
+let GlobalToken = 'FARMACIA';
 let GlobalCodSucursal = '';
 
-let GlobalEmpnit = 'VICEFARMA000';
-let GlobalEmpNombre = 'VICEFARMA 1';
+let GlobalEmpnit = 'FURIZAR0001';
+let GlobalEmpNombre = 'FARMACIA';
 
 
 let GlobalVentaMinima = 1;
 
 let dataEmpresas = [ 
-    {codsucursal:"VICEFARMA000",nomsucursal:"VICEFARMA 1",color:"success"}
+    {codsucursal:"FURIZAR0001",nomsucursal:"FARMACIA",color:"success"}
 ];
