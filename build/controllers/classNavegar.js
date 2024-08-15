@@ -60,7 +60,7 @@ let classNavegar = {
 
                             <button class="btn btn-sm text-white" id="btnPedidosPend">
                                 <i class="fal fa-bell"></i>
-                                Pedidos no enviados
+                                Pendientes
                             </button>
 
                             <button class="btn btn-sm text-white" id="btnMenu2VendedorLogro">
