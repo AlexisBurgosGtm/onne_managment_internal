@@ -1,4 +1,4 @@
-let versionapp = 'mod 08.2024';
+let versionapp = 'mod 12.2024';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
@@ -20,7 +20,7 @@ let SelectedCodUpdate = '';
 let SelectedLocalCodUpdate = '';
 let GlobalObjetivoVenta = 0;
 let GlobalCodUsuario = 99999;
-let GlobalUsuario = 'MERCADOSEFECTIVOS';
+let GlobalUsuario = '';
 let GlobalPassUsuario = '';
 let GlobalNivelUser = 0;
 let GlobalTipoUsuario ='';

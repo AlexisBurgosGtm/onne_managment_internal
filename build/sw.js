@@ -1,5 +1,5 @@
-const staticCacheName = 'OBpre-cache-v08-2024';
-const dynamicCacheName = 'OBruntime-cache-v08-2024';
+const staticCacheName = 'OBpre-cache-v12-2024';
+const dynamicCacheName = 'OBruntime-cache-v12-2024';
 
 console.log(staticCacheName);
 
@@ -81,6 +81,8 @@ const precacheAssets = [
 self.addEventListener('install', function (event) {
     
   
+    return;
+
     event.waitUntil(
         caches.open(staticCacheName).then(function (cache) {
             return cache.addAll(precacheAssets);
@@ -90,6 +92,8 @@ self.addEventListener('install', function (event) {
 
 // ACTIVATE Event
 self.addEventListener('activate', function (event) {
+    
+    return;
     
  
     event.waitUntil(
@@ -105,7 +109,7 @@ self.addEventListener('activate', function (event) {
 // FETCH Event
 self.addEventListener('fetch', function (event) {
     
-    //return;
+    return;
 
     event.respondWith(
         caches.match(event.request).then(cacheRes => {

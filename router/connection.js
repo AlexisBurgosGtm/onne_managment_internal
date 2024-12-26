@@ -1,13 +1,22 @@
 ﻿
-
 const config = {
-	user: 'DB_A6478C_ltjdistribuidores_admin',
+	user: 'db_a6478c_onneweb_admin',
 	password: 'razors1805',
-	server: 'sql5066.site4now.net',
-	database: 'DB_A6478C_ltjdistribuidores',
+	server: 'sql5092.site4now.net',
+	database: 'db_a6478c_onneweb',
 	pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}
 };
 
+
+
+
+const configxx = {
+	user: 'iEx',
+	password: 'iEx',
+	server: 'DESKTOP-3L7R1E4\\SQL22',
+	database: 'ONNE',
+	pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}
+};
 
 const sql = require('mssql');
 

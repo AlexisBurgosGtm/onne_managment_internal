@@ -19,7 +19,7 @@ let classNavegar = {
                     window.history.pushState({"page":0}, "login", GlobalUrl + '/login')
                 }
 
-                document.getElementById('btnPedidosPend').style="visibility:hidden";
+                //document.getElementById('btnPedidosPend').style="visibility:hidden";
                 
             })
         
@@ -27,12 +27,17 @@ let classNavegar = {
     },
     inicio : async(tipousuario)=>{
       
-        switch (tipousuario) {
-            case 'VENDEDOR':
+        switch (tipousuario.toString()) {
+            case '3':
                 classNavegar.inicioVendedor();
                 break;
+
+            case '1':
+
+                break;
+
             default:
-                funciones.AvisoError('Esta aplicación es solo para VENTAS');
+                funciones.AvisoError('Esta aplicación es solo para VENTAS y ADMINISTRACION');
                 break;
         };
     },
@@ -51,6 +56,7 @@ let classNavegar = {
                                 <i class="fal fa-map"></i>
                                 Mapa
                             </button> 
+                            
                             <button class="btn btn-sm text-white"  id="btnMenu2VendedorClientes">
                                 <i class="fal fa-users"></i>
                                 Clientes
@@ -58,20 +64,21 @@ let classNavegar = {
                           
                             
 
-                            <button class="btn btn-sm text-white" id="btnPedidosPend">
+                            <button class="btn btn-sm text-white hidden" id="btnPedidosPend">
                                 <i class="fal fa-bell"></i>
                                 Pendientes
                             </button>
 
                             <button class="btn btn-sm text-white" id="btnMenu2VendedorLogro">
                                 <i class="fal fa-chart-pie"></i>
-                                Pedidos
+                                Facturas
                             </button>
 
-                            <button class="btn btn-sm text-white" id="btnMenu2Censo">
+                            <button class="btn btn-sm text-white hidden" id="btnMenu2Censo">
                                 <i class="fal fa-edit"></i>
                                 Cliente nuevo
                             </button>
+
                             <button class="btn btn-sm text-white"  id="btnMConfig">
                                 <i class="fal fa-cog"></i>
                                 Opciones
@@ -125,7 +132,7 @@ let classNavegar = {
                     //classNavegar.ventasMapaClientes();
                     classNavegar.inicioVendedorListado();
 
-                    document.getElementById('btnPedidosPend').style="visibility:visible";
+                    //document.getElementById('btnPedidosPend').style="visibility:visible";
 
                     
                     let btnMConfig = document.getElementById('btnMConfig');

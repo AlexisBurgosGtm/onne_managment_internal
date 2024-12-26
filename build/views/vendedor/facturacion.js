@@ -760,6 +760,94 @@ function fcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
 
     let str = ""; 
 
+    apigen.buscar_producto(filtro)
+    .then((response) => {
+        const data = response;
+        //con esta variable determino el tipo de precio a usar            
+        let pre = 0;
+
+        console.log('buscar producto... ' + filtro)
+            
+            data.recordset.map((rows)=>{
+
+                console.log(rows)
+
+                let exist = Number(rows.EXISTENCIA)/Number(rows.EQUIVALE); let strC = '';
+                if(Number(rows.EXISTENCIA<=0)){strC='bg-danger text-white'}else{strC='bg-success text-white'};
+                let totalexento = 0;
+                if (rows.EXENTO==1){totalexento=Number(rows.PRECIO)}
+                
+                switch (cmbTipoPrecio.value) {
+                    case 'P':
+                        pre = Number(rows.PRECIO)
+                        break;
+                    case 'C':
+                        pre = Number(rows.PRECIOC)
+                        break;
+                    case 'B':
+                        pre = Number(rows.PRECIOB)
+                        break;
+                    case 'A':
+                        pre = Number(rows.PRECIOA)
+                        break;
+                    case 'K':
+                        pre = Number(0.01)
+                        break;
+     
+                }
+
+                str += `
+            <tr class="border-primary" id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});" class="border-bottom">
+                <td >
+                    ${funciones.quitarCaracteres(rows.DESPROD,'"'," pulg",true)}
+                    <br>
+                    <small class="text-danger"><b>${rows.CODPROD}</b></small>
+                    <small class="text-info">//Descripción:${rows.DESPROD3}</small>
+                    <br>
+                    <b class"bg-danger text-white">${rows.CODMEDIDA}</b><small>(${rows.EQUIVALE})</small>
+                    <br>
+                    <small class="negrita">Marca:${rows.DESMARCA}</small>
+                </td>
+                <td>${funciones.setMoneda(pre || 0,'Q ')}
+                    <br>
+                    <small class="${strC}">E:${funciones.setMoneda(exist,'')}</small>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-primary hand shadow btn-circle text-white" 
+                    onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});">
+                        +
+                    </button>
+                </td>
+            </tr>`
+            })
+            tabla.innerHTML= str;
+        
+    }, (error) => {
+        console.log(error);
+        tabla.innerHTML ='<label>No hay datos para mostrar...</label>';
+    })
+    .catch((error)=>{
+        //funciones.AvisoError(error);
+        tabla.innerHTML ='<label>No hay datos para mostrar...</label>';
+    })
+
+
+
+
+};
+
+function BACKUPfcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
+    
+    let cmbTipoPrecio = document.getElementById(idTipoPrecio);
+
+    let filtro = document.getElementById(idFiltro).value;
+    
+    let tabla = document.getElementById(idTablaResultado);
+    tabla.innerHTML = GlobalLoader;
+
+
+    let str = ""; 
+
     selectProducto(filtro)
     .then((response) => {
         const data = response;

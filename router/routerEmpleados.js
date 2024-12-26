@@ -8,11 +8,21 @@ router.get("/login",async(req,res)=>{
 
     
     let qry ='';
-    qry = `SELECT CODUSUARIO AS CODIGO, NOMBRE AS USUARIO, TIPO, CODDOC, CODSUCURSAL, ISNULL(OBJETIVOMES,100000) AS OBJETIVO 
-            FROM ME_USUARIOS 
-            WHERE CODSUCURSAL='${codsucursal}' AND NOMBRE='${user}' AND PASS='${pass}' 
-            OR CODSUCURSAL='TODOS' AND NOMBRE='${user}' AND PASS='${pass}'`;
+    qry = `SELECT 
+            CODEMPLEADO AS CODIGO, 
+            NOMEMPLEADO AS USUARIO, 
+            CODTIPOEMPLEADO AS TIPO, 
+            WHATSAPP AS CODDOC, 
+            EMPNIT AS CODSUCURSAL,
+            0 AS OBJETIVO 
+        FROM EMPLEADOS 
+            WHERE EMPNIT='${codsucursal}' 
+                AND NOMEMPLEADO='${user}' 
+                AND CLAVE='${pass}' 
+            `;
     
+
+
     execute.Query(res,qry);
 });
 
@@ -21,6 +31,8 @@ router.put("/location",async(req,res)=>{
 
     const {sucursal,codven,lat,long,horamin,fecha} = req.body;
     
+
+
     let qry ='';
     qry = `UPDATE ME_USUARIOS SET LAT=${lat}, LONG=${long}, HORAMIN='${horamin}', FECHA='${fecha}'
      WHERE CODSUCURSAL='${sucursal}' AND CODUSUARIO=${codven}`;

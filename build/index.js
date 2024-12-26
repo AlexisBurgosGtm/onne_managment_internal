@@ -98,29 +98,7 @@ window.onpopstate = function(event) {
     }
 }
 
-let cmbTipoDb = document.getElementById('cmbTipoDb');
-cmbTipoDb.addEventListener('change',()=>{
 
-    switch (cmbTipoDb.value) {
-      case 'PROPIO':
-        GlobalUrlServicePedidos = '';
-        break;
-    
-      case 'HEROKU':
-        GlobalUrlServicePedidos = 'https://mercados-efectivos-api.herokuapp.com'
-        break;
-     
-      case 'RENDER':
-          GlobalUrlServicePedidos = ''
-          break;
-        default:
-          GlobalUrlServicePedidos = '';
-          break;
-    }
-          
-          
-      
-})
 
 
 
@@ -161,4 +139,4 @@ cmbTipoDb.addEventListener('change',()=>{
       $("#internetStatus").fadeIn(500);
   });
 
-})();
+});

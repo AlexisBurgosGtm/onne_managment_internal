@@ -205,31 +205,35 @@ router.get("/buscarproducto", async(req,res)=>{
 // VENTAS BUSCAR PRODUCTO POR DESCRIPCION
 router.post("/buscarproductotodos", async(req,res)=>{
     
-    const {sucursal} = req.body;
-    // app= sucusal
-    // K= CAMBIO DE PRODUCTO
-
+    const {sucursal,filtro} = req.body;
+  
     let qry ='';
-
-     
-    qry = `SELECT ME_Productos.CODSUCURSAL, ME_Productos.CODPROD, ME_Productos.DESPROD, ME_Precios.CODMEDIDA, 
-                ME_Precios.EQUIVALE, 
-                ME_Precios.COSTO, 
-                ME_PRECIOS.PRECIO AS PRECIO,
-                ME_PRECIOS.OFERTA AS PRECIOA,
-                ME_PRECIOS.ESCALA AS PRECIOB,
-                ME_PRECIOS.MAYORISTA AS PRECIOC,
-                0.01 AS CAMBIO, 
-                ME_Marcas.DESMARCA, 
-                0 AS EXENTO, 
-                ISNULL(ME_PRODUCTOS.EXISTENCIA,0) AS EXISTENCIA,
-                ME_Productos.DESPROD3,
-                ISNULL(ME_Productos.CODUPDATE,'NOCODE') AS CODUPDATE
-            FROM ME_Productos LEFT OUTER JOIN
-                ME_Marcas ON ME_Productos.CODSUCURSAL = ME_Marcas.CODSUCURSAL AND ME_Productos.CODMARCA = ME_Marcas.CODMARCA LEFT OUTER JOIN
-                ME_Precios ON ME_Productos.CODSUCURSAL = ME_Precios.CODSUCURSAL AND ME_Productos.CODPROD = ME_Precios.CODPROD
-            WHERE (ME_Productos.CODSUCURSAL = '${sucursal}') 
-            ORDER BY ME_Precios.CODPROD, ME_Precios.CODMEDIDA` 
+    qry = `
+        SELECT 
+            PRODUCTOS.EMPNIT AS CODSUCURSAL, 
+            PRODUCTOS.CODPROD, 
+            PRODUCTOS.DESPROD, 
+            PRODUCTOS.DESPROD2, 
+            PRODUCTOS.DESPROD3, 
+            PRODUCTOS.TIPOPROD,
+            PRODUCTOS.EXENTO, 
+            PRODUCTOS.EXISTENCIA, 
+            PRODUCTOS.NF, 
+            PRODUCTOS.HABILITADO, 
+            PRECIOS.CODMEDIDA, 
+            PRECIOS.EQUIVALE, 
+            PRECIOS.COSTO, 
+            PRECIOS.PRECIO, 
+            PRECIOS.MAYOREOA AS PRECIOA, 
+            PRECIOS.MAYOREOB AS PRECIOB, 
+            PRECIOS.MAYOREOC AS PRECIOC
+        FROM     PRODUCTOS LEFT OUTER JOIN
+                  MARCAS ON PRODUCTOS.CODMARCA = MARCAS.CODMARCA AND PRODUCTOS.EMPNIT = MARCAS.EMPNIT LEFT OUTER JOIN
+                  PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
+        WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') 
+        AND (PRODUCTOS.DESPROD LIKE '%${filtro}%') 
+        AND (PRODUCTOS.HABILITADO='SI')
+    `
             
     execute.Query(res,qry);
 
@@ -594,14 +598,20 @@ router.post("/logromesvendedor", async(req,res)=>{
 
 // TOTAL VENTAS Y TOTAL PEDIDOS POR FECHA
 router.post("/totalventadia", async(req,res)=>{
+
     const {sucursal,codven,fecha}  = req.body;
     
     let qry = '';
-    qry = `SELECT COUNT(DOC_NUMERO) AS PEDIDOS, ISNULL(SUM(DOC_TOTALVENTA),0) AS IMPORTE
-            FROM ME_Documentos
-            WHERE (CODSUCURSAL ='${sucursal}') AND (DOC_FECHA = '${fecha}') AND (CODVEN = ${codven}) AND (DOC_ESTATUS<>'A')`
+    qry = `SELECT COUNT(CODDOC) AS PEDIDOS, 
+            ISNULL(SUM(TOTALPRECIO),0) AS IMPORTE
+            FROM DOCUMENTOS
+            WHERE (EMPNIT ='${sucursal}') 
+            AND (FECHA = '${fecha}') 
+            AND (CODVEN = ${codven}) 
+            AND (STATUS<>'A')`
         
     execute.Query(res,qry);
+
 });
 
 // LISTA DE PEDIDOS POR UNA FECHA

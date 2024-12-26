@@ -1,12 +1,13 @@
-let GlobalToken = 'FARMACIA';
+let GlobalToken = '';
 let GlobalCodSucursal = '';
 
-let GlobalEmpnit = 'FURIZAR0001';
-let GlobalEmpNombre = 'FARMACIA';
+let GlobalEmpnit = 'ONNE000';
+let GlobalEmpNombre = 'ONNE SYSTEMS';
 
 
 let GlobalVentaMinima = 1;
 
 let dataEmpresas = [ 
-    {codsucursal:"FURIZAR0001",nomsucursal:"FARMACIA",color:"success"}
+    {codsucursal:"FURIZAR0001",nomsucursal:"FARMACIA URIZAR",color:"success"},
+    {codsucursal:"ONNE000",nomsucursal:"ONNE SYSTEMS",color:"success"},
 ];

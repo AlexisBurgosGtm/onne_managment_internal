@@ -76,13 +76,13 @@ let apigen = {
                             
                             
                             switch (GlobalTipoUsuario.toString()) {
-                                case 'VENDEDOR':
+                                case '3':
                                     classNavegar.inicioVendedor();    
                                     break;
-                                case 'SUPERVISOR':
+                                case '2':
                                     classNavegar.inicio_supervisor();    
                                     break;
-                                case 'REPARTIDOR':
+                                case '1':
                                     classNavegar.inicio_repartidor();
                                     break;
                             }
@@ -97,49 +97,6 @@ let apigen = {
                     GlobalCoddoc= '';
                     GlobalObjetivoVenta =0;
                     GlobalSelectedDiaUpdated = 0;
-                    funciones.AvisoError('Usuario o Contraseña incorrectos, intente seleccionando la sucursal a la que pertenece');
-                    reject();
-                }
-            }, (error) => {
-                funciones.AvisoError('Error en la solicitud');
-                reject();
-            });
-
-        })
-        
-
-    },
-    empleadosLogin_ONLINE : (sucursal,user,pass)=>{
-        return new Promise((resolve,reject)=>{
-            axios.post('/empleados/login', {
-                app:GlobalSistema,
-                codsucursal: sucursal,
-                user:user,
-                pass:pass       
-            })
-            .then((response) => {
-                const data = response.data.recordset;
-                if(response.data.rowsAffected[0]==1){
-                    data.map((rows)=>{
-                        if(rows.USUARIO==user){
-                            GlobalCodUsuario = rows.CODIGO;
-                            GlobalUsuario = rows.USUARIO;
-                            GlobalPassUsuario = pass;
-                            GlobalTipoUsuario = rows.TIPO;
-                            GlobalCoddoc= rows.CODDOC;
-                            GlobalCodSucursal = sucursal;
-                            GlobalSistema = sucursal;
-                            
-                            //classNavegar.inicio(GlobalTipoUsuario);     
-                            classNavegar.inicioVendedor();   
-                        }        
-                    })
-                    resolve();
-                }else{
-                    GlobalCodUsuario = 9999
-                    GlobalUsuario = '';
-                    GlobalTipoUsuario = '';
-                    GlobalCoddoc= '';
                     funciones.AvisoError('Usuario o Contraseña incorrectos, intente seleccionando la sucursal a la que pertenece');
                     reject();
                 }
@@ -169,6 +126,29 @@ let apigen = {
             }, (error) => {
                 reject();
             });
+        })
+    },
+    buscar_producto:(filtro)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/ventas/buscarproductotodos', {
+                sucursal:GlobalCodSucursal,
+                filtro:filtro
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(Number(data.rowsAffected[0])==0){
+                    reject();
+                }else{
+                    resolve(data);                         
+                }
+            }, (error) => {
+               reject();
+            });
+    
+            
         })
     },
     clientesVendedor: async(sucursal,codven,dia,idContenedor,idContenedorVisitados)=>{
@@ -522,12 +502,12 @@ let apigen = {
         .then((response) => {
             const data = response.data.recordset;
             data.map((rows)=>{
-                    strdata = `Importe: ${funciones.setMoneda(rows.IMPORTE,'Q')}  Pedidos: ${rows.PEDIDOS}`
+                    strdata = `Importe: ${funciones.setMoneda(rows.IMPORTE,'Q')}  Facturas: ${rows.PEDIDOS}`
             })
             
             lbTotal.innerText = strdata;
         }, (error) => {
-            lbTotal.innerText = '--';
+            lbTotal.innerText = 'No hay datos....';
         });
            
     },

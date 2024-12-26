@@ -7,11 +7,12 @@ function getView(){
                     <div class="tab-content py-3">
 
                         <div class="tab-pane fade active show" id="panelInicio" role="tabpanel">
-                                ${view.tab_inicio()}
+                            ${view.tab_ajenos()}
                         </div>
 
                         <div class="tab-pane fade" id="panelNoVisitados" role="tabpanel">
-                                ${view.tab_no_visitados()}
+                           
+                             ${view.tab_no_visitados()} 
                         </div>
                         
                         <div class="tab-pane fade" id="panelVisitados" role="tabpanel">
@@ -20,7 +21,8 @@ function getView(){
                         </div>
 
                         <div class="tab-pane fade" id="panelAjenos" role="tabpanel">
-                                ${view.tab_ajenos()}
+                             ${view.tab_inicio()}
+                                
                         </div>
 
 
@@ -42,31 +44,13 @@ function getView(){
             return `
                             <div class="row">
 
-                                <div class="card card-rounded col-6">
-                                    <div class="card-body">
+                               
+
+                                <div class="card card-rounded col-12">
+                                    
                                         <label>Total del día:</label><br>
                                         <h4 class="negrita" id="lbTotalDia">Total venta 0 - pedidos 0</h4>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <label>Precios Descargados:</label>
-                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarP"><i class="fal fa-download"></i></button>
-                                                <br>
-                                                <label style="font-size:110%" class="negrita text-danger" id="lbTotalProductos">0</label>/<label style="font-size:110%" class="negrita text-success" id="lbTotalProductosOnline">0</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <label>Clientes Descargados:</label>
-                                                <button class="btn btn-sm btn-info btn-circle" id="btnDescargarC"><i class="fal fa-download"></i></button>
-                                                <br>
-                                                <label style="font-size:110%" class="negrita text-danger" id="lbTotalClientes">0</label>/<label style="font-size:110%" class="negrita text-success" id="lbTotalClientesOnline">0</label>    
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="card card-rounded col-6">
-                                    
+                                       
 
                                         <div class="row">
                                             <div class="card card-rounded shadow hand col-12 border-primary text-primary" onclick="getListaClientes('LUNES')">
@@ -186,16 +170,17 @@ function getView(){
                                   
                     <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
                     <div class="input-group-append">
-                        <button class="btn btn-md btn-icon btn-round" id="btnClientesAjenosBuscar">
+                        <button class="btn btn-md btn-primary btn-round" id="btnClientesAjenosBuscar">
                             <i class="fal fa-search"></i>
                         </button>    
                     </div>
-                </div>                            
+                </div>
+                                            
             </div>
 
             <div class="table-responsive">
                 <table class="table table-responsive table-striped table-hover table-bordered" id="">
-                    <thead class="bg-trans-gradient text-white">
+                    <thead class="bg-primary text-white">
                         <tr>
                             <td class="negrita">Cliente / Dirección</td>
                         </tr>
@@ -777,277 +762,15 @@ async function addListeners(){
     });
 
 
-    await getTotalClientes('lbTotalClientes');
-    await getTotalProductos('lbTotalProductos');
-
     //muestra la lista de clientes del día si ya ingresó una vez
     //if(GlobalSelectedClientesDia=='SN'){}else{getListaClientes(GlobalSelectedClientesDia)};
 
-    apigen.getTotalProductosOnline()
-    .then((total)=>{
-        document.getElementById('lbTotalProductosOnline').innerText = total;
-    })
-    .catch(()=>{
-        document.getElementById('lbTotalProductosOnline').innerText = '---';
-    })
-
-    apigen.getTotalClientesOnline()
-    .then((total)=>{
-        document.getElementById('lbTotalClientesOnline').innerText = total;
-    })
-    .catch(()=>{
-        document.getElementById('lbTotalClientesOnline').innerText = '---';
-    });
 
 
-
-    //botones para actualizar
-    let btnDescargarP = document.getElementById('btnDescargarP')
-    btnDescargarP.addEventListener('click',()=>{
-        funciones.Confirmacion('¿Está seguro que desea Descargar el catálogo de Productos?')
-        .then((value)=>{
-            if(value==true){
-                
-                btnDescargarP.disabled = true;
-                btnDescargarP.innerHTML = `<i class="fal fa-sync fa-spin"></i>`;
-
-                downloadProductos()
-                .then((data)=>{
-                    funciones.showToast(`Productos descargados, guardándolos localmente`);
-                    deleteProductos()
-                    .then(()=>{
-                        let contador = 1;
-                        let totalrows = Number(data.rowsAffected[0]);
-                          
-                        data.recordset.map(async(rows)=>{
-                            var datosdb = {
-                                CODSUCURSAL:rows.CODSUCURSAL,
-                                CODPROD:rows.CODPROD,
-                                DESPROD:rows.DESPROD,
-                                CODMEDIDA:rows.CODMEDIDA,
-                                EQUIVALE:rows.EQUIVALE,
-                                COSTO:rows.COSTO,
-                                PRECIO:rows.PRECIO,
-                                PRECIOA:rows.PRECIOA,
-                                PRECIOB:rows.PRECIOB,
-                                PRECIOC:rows.PRECIOC,
-                                DESMARCA:rows.DESMARCA,
-                                EXENTO:rows.EXENTO,
-                                EXISTENCIA:rows.EXISTENCIA,
-                                DESPROD3:rows.DESPROD3
-                            }                
-                            var noOfRowsInserted = await connection.insert({
-                                into: "productos",
-                                values: [datosdb], //you can insert multiple values at a time
-                            });
-                            if (noOfRowsInserted > 0) {
-                                let porc = (Number(contador) / Number(totalrows)) * 100;
-                                //setLog(`<label>Productos agregados: ${contador} de ${totalrows} (${porc.toFixed(2)}%)</label>`,'rootWait')
-                                contador += 1;
-                                if(totalrows==contador){
-                                   
-                                    funciones.Aviso('Productos descargados exitosamente!!');
-                                   
-                                    btnDescargarP.disabled = false;
-                                    btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-
-                                    try {
-                                        getTotalProductos('lbTotalProductos');
-                                    } catch (error) {
-                                        
-                                    }
-                                }
-                            }
-                        });
-                    })
-                    .catch(()=>{
-                      
-                       funciones.AvisoError('No se pudieron eliminar los productos previos');
-                       btnDescargarP.disabled = false;
-                       btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-
-                    })
-                })
-                .catch(()=>{
-                   
-                    funciones.AvisoError('No se pudieron descargar los productos');
-                    btnDescargarP.disabled = false;
-                    btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-
-                })
-    
-                
-                
-            }
-        })
-    });
-
-    let btnDescargarC = document.getElementById('btnDescargarC');
-    btnDescargarC.addEventListener('click',()=>{
-        funciones.Confirmacion('¿Está seguro que desea Descargar el catálogo de Clientes?')
-        .then((value)=>{
-            if(value==true){
-    
-                btnDescargarC.disabled = true;
-                btnDescargarC.innerHTML = `<i class="fal fa-sync fa-spin"></i>`;
-    
-                downloadClientes()
-                .then((data)=>{
-                    funciones.showToast(`Clientes descargados, ahora se guardarán localmente`)
-                    deleteClientes()
-                    .then(()=>{
-                        let totalrows = Number(data.rowsAffected[0]);
-                        let contador = 1;
-    
-                        data.recordset.map(async(rows)=>{
-                            var datosdb = {
-                                CODSUCURSAL:rows.CODSUCURSAL,
-                                CODIGO:rows.CODIGO,
-                                DESMUNI:rows.DESMUNI,
-                                DIRCLIE:rows.DIRCLIE,
-                                LASTSALE:rows.LASTSALE,
-                                LAT:rows.LAT,
-                                LONG:rows.LONG,
-                                NIT:rows.NIT,
-                                NOMCLIE:rows.NOMCLIE,
-                                REFERENCIA:rows.REFERENCIA,
-                                STVISITA:rows.STVISITA,
-                                VISITA:rows.VISITA,
-                                TELEFONO:rows.TELEFONO,
-                                TIPONEGOCIO:rows.TIPONEGOCIO,
-                                NEGOCIO:rows.NEGOCIO
-                            }                
-                            var noOfRowsInserted = await connection.insert({
-                                into: "clientes",
-                                values: [datosdb], //you can insert multiple values at a time
-                            });
-                            if (noOfRowsInserted > 0) {
-                                let porc = (Number(contador)/Number(totalrows))*100;
-                                //setLog(`<label>Clientes agregados: ${contador} de ${totalrows} (${porc.toFixed(2)} %)</label>`,'rootWait')
-                                contador += 1;
-                                if(totalrows==contador){
-                                   
-                                    funciones.Aviso('Clientes descargados exitosamente!!');
-                                    btnDescargarC.disabled = false;
-                                    btnDescargarC.innerHTML = `<i class="fal fa-download"></i>`;
-                                    try {
-                                        getTotalClientes('lbTotalClientes');
-                                       
-                                    } catch (error) {
-                                        
-                                    }
-                                }
-                            }
-                        });
-                        fcn_get_mun_deptos();
-                    })
-                    .catch(()=>{
-                       
-                        funciones.AvisoError('No se pudieron eliminar los Clientes previos');
-                        btnDescargarC.disabled = false;
-                        btnDescargarC.innerHTML = `<i class="fal fa-download"></i>`;
-                        fcn_get_mun_deptos();
-                    })
-                })
-                .catch(()=>{
-                   
-                    funciones.AvisoError('No se pudieron descargar los clientes');
-                    btnDescargarC.disabled = false;
-                    btnDescargarC.innerHTML = `<i class="fal fa-download"></i>`;
-                    fcn_get_mun_deptos();
-                })
-                      
-                
-            }
-        })
-    });
-
+   
 
     funciones.slideAnimationTabs();
     
-    
-    apigen.config_get_codupdate(GlobalCodSucursal)
-    .then((code)=>{
-        SelectedCodUpdate = code;
-        selectDateDownload().then(()=>{
-                if(SelectedCodUpdate.toString()==SelectedLocalCodUpdate.toString()){
-                    funciones.showToast('Su catálogo de precios está actualizado')
-                }else{
-                    funciones.showToast('Catálogo de precios desactualizado, iniciando descarga');
-                    btnDescargarP.disabled = true;
-                    btnDescargarP.innerHTML = `<i class="fal fa-sync fa-spin"></i>`;
-    
-                    downloadProductos()
-                    .then((data)=>{
-                        funciones.showToast(`Productos descargados, guardándolos localmente`);
-                        deleteProductos()
-                        .then(()=>{
-                            let contador = 1;
-                            let totalrows = Number(data.rowsAffected[0]);
-                              
-                            data.recordset.map(async(rows)=>{
-                                var datosdb = {
-                                    CODSUCURSAL:rows.CODSUCURSAL,
-                                    CODPROD:rows.CODPROD,
-                                    DESPROD:rows.DESPROD,
-                                    CODMEDIDA:rows.CODMEDIDA,
-                                    EQUIVALE:rows.EQUIVALE,
-                                    COSTO:rows.COSTO,
-                                    PRECIO:rows.PRECIO,
-                                    PRECIOA:rows.PRECIOA,
-                                    PRECIOB:rows.PRECIOB,
-                                    PRECIOC:rows.PRECIOC,
-                                    DESMARCA:rows.DESMARCA,
-                                    EXENTO:rows.EXENTO,
-                                    EXISTENCIA:rows.EXISTENCIA,
-                                    DESPROD3:rows.DESPROD3
-                                }                
-                                var noOfRowsInserted = await connection.insert({
-                                    into: "productos",
-                                    values: [datosdb], //you can insert multiple values at a time
-                                });
-                                if (noOfRowsInserted > 0) {
-                                    let porc = (Number(contador) / Number(totalrows)) * 100;
-                                    //setLog(`<label>Productos agregados: ${contador} de ${totalrows} (${porc.toFixed(2)}%)</label>`,'rootWait')
-                                    contador += 1;
-                                    if(totalrows==contador){
-                                       
-                                        funciones.Aviso('Productos descargados exitosamente!!');
-                                       
-                                        btnDescargarP.disabled = false;
-                                        btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-    
-                                        try {
-                                            getTotalProductos('lbTotalProductos');
-                                        } catch (error) {
-                                            
-                                        }
-                                    }
-                                }
-                            });
-                        })
-                        .catch(()=>{
-                          
-                           funciones.AvisoError('No se pudieron eliminar los productos previos');
-                           btnDescargarP.disabled = false;
-                           btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-    
-                        })
-                    })
-                    .catch(()=>{
-                       
-                        funciones.AvisoError('No se pudieron descargar los productos');
-                        btnDescargarP.disabled = false;
-                        btnDescargarP.innerHTML = `<i class="fal fa-download"></i>`;
-    
-                    })
-
-                }
-        });
-        //console.log('downloaded: ' + SelectedCodUpdate);
-        //console.log('local: ' + SelectedLocalCodUpdate);
-    })
-    .catch(()=>{SelectedCodUpdate='NOCODE'});
     
     
 };
