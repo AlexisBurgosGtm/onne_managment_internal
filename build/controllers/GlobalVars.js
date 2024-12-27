@@ -26,6 +26,7 @@ let GlobalNivelUser = 0;
 let GlobalTipoUsuario ='';
 let GlobalSelectedDia ='';
 let GlobalBool = false;
+let GlobalConfigIva = 1.12;
 
 let GlobalSelectedForm = '';
 
@@ -79,6 +80,22 @@ let GlobalLoaderMini = `<div class="spinner-border text-primary" role="status"><
 let GlobalLoader = `
                 
                 <div>
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                </div>
+                `
+
+
+let GlobalLoaderOld = `
+                
+                <div>
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
+                    <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
                     <img class="spinner-grow text-white" width="75px" height="75px" src="./favicon.png">
                     <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>
                     <div class="spinner-grow text-primary" role="status"><span class="sr-only">Loading...</span></div>

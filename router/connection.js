@@ -9,14 +9,23 @@ const config = {
 
 
 
-
-const configxx = {
+const configLOCAL = {
 	user: 'iEx',
 	password: 'iEx',
 	server: 'DESKTOP-3L7R1E4\\SQL22',
 	database: 'ONNE',
-	pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}
+	pool: {	
+		max: 100,	
+		min: 0,	
+		idleTimeoutMillis: 30000
+	},
+	options: {
+    	encrypt: false, // for azure
+    	trustServerCertificate: true // change to true for local dev / self-signed certs
+  }
 };
+
+
 
 const sql = require('mssql');
 
@@ -38,14 +47,14 @@ let execute = {
 			sql.close();  
 		  })
 		  pool1.on('error', err => {
+				console.log('error sql = ' + err);
 				res.send('error');
-			  console.log('error sql = ' + err);
-			  sql.close();
+			  	sql.close();
 		  })
 		} catch (error) {
 			console.log(error);
-		  res.send('error');   
-		  sql.close();
+		  	res.send('error');   
+		  	sql.close();
 		}
 	},
 	QueryBackup : (res,sqlqry)=>{	

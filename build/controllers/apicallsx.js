@@ -71,6 +71,7 @@ let apigen = {
                             GlobalCoddoc= rows.CODDOC;
                             GlobalCodSucursal = sucursal;
                             GlobalSistema = sucursal;
+                            GlobalEmpnit = sucursal;
                             GlobalObjetivoVenta = Number(rows.OBJETIVO);
                             GlobalSelectedDiaUpdated = Number(f.getDate());
                             
@@ -91,6 +92,7 @@ let apigen = {
                     })
                     resolve();
                 }else{
+                    GlobalEmpnit = '';
                     GlobalCodUsuario = 9999
                     GlobalUsuario = '';
                     GlobalTipoUsuario = '';
@@ -3156,12 +3158,12 @@ let apigen = {
 
         })
     },
-    updateClientesLastSale:(nitclie,visita)=>{
+    updateClientesLastSale:(codclie,visita)=>{
         return new Promise((resolve,reject)=>{
-            updateSaleCliente(GlobalSelectedCodCliente)
+           
             axios.post('/clientes/lastsale',{
-                sucursal:GlobalCodSucursal,
-                nitclie:nitclie,
+                sucursal:GlobalEmpnit,
+                codclie:codclie,
                 fecha:funciones.getFecha(),
                 visita:visita
             })

@@ -172,10 +172,12 @@ router.post('/clientesvendedor',async(req,res)=>{
 
 //ESTABLECE LA FECHA DE ULTIMA VENTA DEL CLIENTE
 router.post('/lastsale',async(req,res)=>{
-    const {sucursal,nitclie,fecha,visita} = req.body;
+    const {sucursal,codclie,fecha,visita} = req.body;
 
     //FAXCLIE= SERÁ USADO PARA INDICAR EL RESULTADO DE LA VISITA: VENTA,NODINERO,CERRADO
-    let qry = `UPDATE ME_CLIENTES SET FECHAINGRESO='${fecha}',FAXCLIE='${visita}' WHERE CODSUCURSAL='${sucursal}' AND NITCLIE='${nitclie}' `;
+    let qry = `UPDATE CLIENTES 
+                SET LASTSALE='${fecha}' 
+                WHERE EMPNIT='${sucursal}' AND CODCLIENTE=${codclie}; `;
 
     execute.Query(res,qry);
 

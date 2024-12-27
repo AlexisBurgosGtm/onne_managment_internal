@@ -1,8 +1,8 @@
 let GlobalToken = '';
 let GlobalCodSucursal = '';
 
-let GlobalEmpnit = 'ONNE000';
-let GlobalEmpNombre = 'ONNE SYSTEMS';
+let GlobalEmpnit = '';
+let GlobalEmpNombre = '';
 
 
 let GlobalVentaMinima = 1;
