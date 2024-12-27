@@ -4,7 +4,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 const execute = require('./router/connection');
-var routerNoticias = require('./router/routerNoticias');
+
 var routerVentas = require('./router/routerVentas');
 var routerSucursales = require('./router/routerSucursales');
 let routerRepartidor = require('./router/routerRepartidor');
@@ -15,6 +15,7 @@ var routerProductos = require('./router/routerProductos');
 let routerDigitacion = require('./router/routerDigitacion');
 let routerUsuarios = require('./router/routerUsuarios');
 let routerCenso = require('./router/routerCenso');
+var routerConfig = require('./router/router_config');
 
 var http = require('http').Server(app);
 //var io = require('socket.io')(http);
@@ -67,8 +68,8 @@ app.get("/test_service",function(req,res){
 //Router para SUCURSALES
 app.use('/sucursales', routerSucursales);
 
-//Router para app NOTICIAS
-app.use('/noticias', routerNoticias);
+//Router para app CONFIG
+app.use('/config', routerConfig);
 
 //Router para app CENSO
 app.use('/censo', routerCenso);

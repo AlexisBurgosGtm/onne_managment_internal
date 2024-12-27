@@ -382,8 +382,8 @@ function getView(){
                                                 <div class="form-group">
                                                     <label>Forma de Pago:</label>
                                                     <select id="cmbEntregaConcre" class="form-control">
-                                                        <option value="CONTADO">CONTADO</option>
-                                                        <option value="CREDITO">CREDITO</option>
+                                                        <option value="CON">CONTADO</option>
+                                                        <option value="CRE">CREDITO</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -1601,13 +1601,15 @@ async function fcnFinalizarPedido(){
                             totalprecio:GlobalTotalDocumento,
                             nitclie:nit,
                             dirclie:dirclie,
+                            concre:,
                             obs:obs,
                             direntrega:direntrega,
                             usuario:GlobalUsuario,
                             codven:cmbVendedor.value,
                             lat:latdoc,
                             long:longdoc,
-                            hora:hora
+                            hora:hora,
+                            poriva:1.12
                         })
                         .then(async(response) => {
                             const data = response.data;

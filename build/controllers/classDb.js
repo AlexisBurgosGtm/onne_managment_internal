@@ -1,5 +1,5 @@
-const DbName = "mercadosefectivosoffline10";
-const DbName_old = "mercadosefectivosoffline7";
+const DbName = "onne_managment_v1";
+const DbName_old = "onne_managment_v1";
 
 var tblDocumentos = {
     name: 'documentos',
@@ -87,6 +87,7 @@ var tblTempventas = {
         EQUIVALE:{dataType: "number"},
         CANTIDAD:{dataType: "number"},
         TOTALUNIDADES:{dataType: "number"},
+        DESCUENTO:{dataType: "number"},
         COSTO:{dataType: "number"},
         PRECIO:{dataType: "number"},
         TOTALCOSTO:{dataType: "number"},
@@ -94,6 +95,7 @@ var tblTempventas = {
         EXENTO:{dataType: "number"},
         USUARIO:{dataType: "string"},
         TIPOPRECIO:{dataType: "string"},
+        TIPOPROD:{dataType: "string"},
         EXISTENCIA:{dataType: "number"}
     }
 };

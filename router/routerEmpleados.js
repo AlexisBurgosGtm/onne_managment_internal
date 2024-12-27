@@ -34,8 +34,11 @@ router.put("/location",async(req,res)=>{
 
 
     let qry ='';
-    qry = `UPDATE ME_USUARIOS SET LAT=${lat}, LONG=${long}, HORAMIN='${horamin}', FECHA='${fecha}'
-     WHERE CODSUCURSAL='${sucursal}' AND CODUSUARIO=${codven}`;
+    qry = `UPDATE EMPLEADOS 
+            SET LATITUD=${lat}, 
+            LONGITUD=${long}
+        WHERE EMPNIT='${sucursal}' 
+        AND CODEMPLEADO=${codven}`;
     
     execute.Query(res,qry);
 });
