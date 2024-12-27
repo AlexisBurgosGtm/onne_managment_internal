@@ -1,42 +1,5 @@
 function getView(){
     let view = {
-        body:()=>{
-            return `
-                <div class="col-12 p-0 bg-white">
-                    <div class="tab-content" id="myTabHomeContent">
-                        <div class="tab-pane fade show active" id="uno" role="tabpanel" aria-labelledby="receta-tab">
-                            ${view.encabezadoClienteDocumento() 
-                                + view.gridTempVenta() 
-                                + view.modalBusquedaCliente() 
-                                + view.modalNuevoCliente() 
-                                }
-                        </div>
-                        <div class="tab-pane fade" id="dos" role="tabpanel" aria-labelledby="home-tab">
-                           ${view.modalTerminar()}
-                        </div>
-                        <div class="tab-pane fade" id="tres" role="tabpanel" aria-labelledby="home-tab">
-                            
-                        </div>    
-                    </div>
-
-                    <ul class="nav nav-tabs hidden" id="myTabHome" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active negrita text-success" id="tab-uno" data-toggle="tab" href="#uno" role="tab" aria-controls="profile" aria-selected="false">
-                                <i class="fal fa-list"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link negrita text-danger" id="tab-dos" data-toggle="tab" href="#dos" role="tab" aria-controls="home" aria-selected="true">
-                                <i class="fal fa-comments"></i></a>
-                        </li>  
-                        <li class="nav-item">
-                            <a class="nav-link negrita text-danger" id="tab-tres" data-toggle="tab" href="#tres" role="tab" aria-controls="home" aria-selected="true">
-                                <i class="fal fa-comments"></i></a>
-                        </li>         
-                    </ul>
-                </div>
-               
-            `
-        },
         encabezadoClienteDocumento :()=>{
             return `
         <div class="row">
@@ -361,75 +324,6 @@ function getView(){
         },
         modalTerminar :()=>{
             return `
-                 <div class="card card-rounded col-12 shadow">
-                            <div class="card-header bg-primary text-white">
-                                <label class="modal-title h5" id="">Finalizar Factura</label>
-                            </div>
-                
-                            <div class="card-body p-4">
-
-                                    <div class="">      
-                                    
-                                        <div class="form-group">
-                                            <label>Cliente:</label>
-                                            <input class="form-control" style="font-size:80%" id="txtNombre" disabled="true">
-                                            <label>Dirección:</label>
-                                            <input class="form-control" style="font-size:80%" id="txtDireccion" disabled="true">
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label>Forma de Pago:</label>
-                                                    <select id="cmbEntregaConcre" class="form-control">
-                                                        <option value="CONTADO">CONTADO</option>
-                                                        <option value="CREDITO">CREDITO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-8 text-right">
-                                                <div class="form-group">
-                                                    <label>Total Venta</label>
-                                                    <h2 class="negrita text-danger" id="lbTotalPedido2"></h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="form-group">
-                                            <label>Notas:</label>
-                                            <textarea rows="3" cols="80" class="form-control" id="txtEntregaObs" placeholder="Escriba aqui sus observaciones..."></textarea>
-                                        </div>                                                              
-                                    </div>
-
-                                    <div class="row">
-                                        <label class="text-white" id="lbDocLat">0</label>
-                                        <label class="text-white" id="lbDocLong">0</label class="text-white">
-                                    </div>
-                                    
-                                    <br>
-            
-                                    <div class="row">
-            
-                                        <div class="col-12 text-center">
-                                            <button class="btn btn-primary btn-lg btn-pills btn-block waves-effect waves-themed" id="btnFinalizarPedido">
-                                                <i class="fal fa-save"></i>Crear Factura
-                                            </button>
-                                        </div>
-                                        
-                                        
-                                    </div>
-                            
-                            </div>
-                        
-                        </div>
-
-                        <button class="btn btn-secondary btn-bottom-l btn-xl btn-circle hand shadow" id="btnEntregaCancelar" onclick="document.getElementById('tab-uno').click()">
-                            <i class="fal fa-arrow-left"></i>
-                        </button> 
-                   `
-        },
-        BACKUPmodalTerminar :()=>{
-            return `
                 <div class="modal fade" id="ModalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -490,7 +384,7 @@ function getView(){
             
                                         <div class="col-5">
                                             <button class="btn btn-primary btn-lg btn-pills btn-block waves-effect waves-themed" id="btnFinalizarPedido">
-                                                <i class="fal fa-save"></i>Guardar Factura
+                                                <i class="fal fa-paper-plane mr-1"></i>Enviar
                                             </button>
                                         </div>
                                         
@@ -619,7 +513,11 @@ function getView(){
     }
 
 
-    root.innerHTML = view.body(); 
+    root.innerHTML = view.encabezadoClienteDocumento() 
+                + view.gridTempVenta() 
+                + view.modalBusquedaCliente() 
+                + view.modalNuevoCliente() 
+                + view.modalTerminar(); 
                 //+ view.modalCantidadCalculadora();
 
     let containerModalesVentas = document.getElementById('containerModalesVentas');
@@ -634,8 +532,6 @@ async function iniciarVistaVentas(nit,nombre,direccion){
     
     //inicializa la vista
     getView();
-
-    funciones.slideAnimationTabs();
 
 
     let lbNomClien = document.getElementById('lbNomClien');
@@ -695,8 +591,7 @@ async function iniciarVistaVentas(nit,nombre,direccion){
                funciones.ObtenerUbicacion('lbDocLat','lbDocLong')
                document.getElementById('lbTotalPedido2').innerText = funciones.setMoneda(GlobalTotalDocumento,'Q');
 
-               //$('#ModalFinalizarPedido').modal('show');
-               document.getElementById('tab-dos').click()   
+               $('#ModalFinalizarPedido').modal('show');   
                                
            }
        }
@@ -1531,7 +1426,7 @@ async function fcnFinalizarPedido(){
     let longdoc = document.getElementById('lbDocLong').innerText;
 
 
-    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save fa-spin"></i>';
+    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1 fa-spin"></i>';
     document.getElementById('btnFinalizarPedido').disabled = true;
 
     gettempDocproductos(GlobalUsuario)
@@ -1636,7 +1531,7 @@ async function fcnFinalizarPedido(){
                                 .catch(()=>{
                                     hideWaitForm();    
                                     
-                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
                                     document.getElementById('btnFinalizarPedido').disabled = false;
 
                                     funciones.AvisoError('No se pudo guardar este pedido');
@@ -1676,7 +1571,7 @@ async function fcnFinalizarPedido(){
                             })
                             .catch(()=>{
                                 hideWaitForm();
-                                document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
                                 document.getElementById('btnFinalizarPedido').disabled = false;
                                 funciones.AvisoError('No se pudo guardar este pedido')
                             }) 
@@ -1684,7 +1579,7 @@ async function fcnFinalizarPedido(){
 
                     
                 }else{
-                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
                     document.getElementById('btnFinalizarPedido').disabled = false;
                 }
             })
@@ -1715,7 +1610,7 @@ async function fcnFinalizarPedido(){
     })
     .catch((error)=>{
         hideWaitForm();
-        document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+        document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
         document.getElementById('btnFinalizarPedido').disabled = false;
         funciones.AvisoError('No pude crear la tabla de productos del pedido ' + error);
     })
@@ -1874,7 +1769,7 @@ async function BACKUP_10_03_2023_fcnFinalizarPedido(){
                                 .catch(()=>{
                                     hideWaitForm();    
                                     
-                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
                                     document.getElementById('btnFinalizarPedido').disabled = false;
 
                                     funciones.AvisoError('No se pudo guardar este pedido');
@@ -1914,7 +1809,7 @@ async function BACKUP_10_03_2023_fcnFinalizarPedido(){
                             })
                             .catch(()=>{
                                 hideWaitForm();
-                                document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
                                 document.getElementById('btnFinalizarPedido').disabled = false;
                                 funciones.AvisoError('No se pudo guardar este pedido')
                             }) 
@@ -1950,7 +1845,7 @@ async function BACKUP_10_03_2023_fcnFinalizarPedido(){
     })
     .catch((error)=>{
         hideWaitForm();
-        document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+        document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-paper-plane mr-1"></i>Enviar';
         document.getElementById('btnFinalizarPedido').disabled = false;
         funciones.AvisoError('No pude crear la tabla de productos del pedido ' + error);
     })

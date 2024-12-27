@@ -226,13 +226,18 @@ router.post("/buscarproductotodos", async(req,res)=>{
             PRECIOS.PRECIO, 
             PRECIOS.MAYOREOA AS PRECIOA, 
             PRECIOS.MAYOREOB AS PRECIOB, 
-            PRECIOS.MAYOREOC AS PRECIOC
+            PRECIOS.MAYOREOC AS PRECIOC,
+            MARCAS.DESMARCA
         FROM     PRODUCTOS LEFT OUTER JOIN
                   MARCAS ON PRODUCTOS.CODMARCA = MARCAS.CODMARCA AND PRODUCTOS.EMPNIT = MARCAS.EMPNIT LEFT OUTER JOIN
                   PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
         WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') 
-        AND (PRODUCTOS.DESPROD LIKE '%${filtro}%') 
-        AND (PRODUCTOS.HABILITADO='SI')
+                AND (PRODUCTOS.CODPROD = '${filtro}') 
+                AND (PRODUCTOS.HABILITADO='SI')
+            OR
+            (PRODUCTOS.EMPNIT = '${sucursal}') 
+                AND (PRODUCTOS.DESPROD LIKE '%${filtro}%') 
+                AND (PRODUCTOS.HABILITADO='SI')
     `
             
     execute.Query(res,qry);
