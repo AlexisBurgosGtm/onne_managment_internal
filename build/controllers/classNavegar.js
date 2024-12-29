@@ -58,8 +58,8 @@ let classNavegar = {
                             </button> 
                             
                             <button class="btn btn-sm text-white"  id="btnMenu2VendedorClientes">
-                                <i class="fal fa-users"></i>
-                                Clientes
+                                <i class="fal fa-shopping-cart"></i>
+                                Facturar
                             </button>
                           
                             
@@ -70,8 +70,8 @@ let classNavegar = {
                             </button>
 
                             <button class="btn btn-sm text-white" id="btnMenu2VendedorLogro">
-                                <i class="fal fa-chart-pie"></i>
-                                Facturas
+                                <i class="fal fa-folder"></i>
+                                Documentos
                             </button>
 
                             <button class="btn btn-sm text-white hidden" id="btnMenu2Censo">
@@ -81,7 +81,7 @@ let classNavegar = {
 
                             <button class="btn btn-sm text-white"  id="btnMConfig">
                                 <i class="fal fa-cog"></i>
-                                Opciones
+                                Config
                             </button>
                     
                             `

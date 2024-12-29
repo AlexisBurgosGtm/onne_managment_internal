@@ -1,4 +1,7 @@
 let funciones = {
+    verFel: (uudi)=>{
+      window.open(`https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid=${uudi}`)
+    },
     beep(duration,type,finishedCallback){
   
       

@@ -209,6 +209,28 @@ router.post("/buscarproductotodos", async(req,res)=>{
   
     let qry ='';
     qry = `
+            SELECT TOP (50) PRODUCTOS.EMPNIT AS CODSUCURSAL, PRODUCTOS.CODPROD, PRODUCTOS.DESPROD, PRODUCTOS.DESPROD2, PRODUCTOS.DESPROD3, PRODUCTOS.TIPOPROD, PRODUCTOS.EXENTO, 
+                  PRODUCTOS.EXISTENCIA AS EXISTENCIA2, PRODUCTOS.NF, PRODUCTOS.HABILITADO, PRECIOS.CODMEDIDA, PRECIOS.EQUIVALE, PRECIOS.COSTO, PRECIOS.PRECIO, PRECIOS.MAYOREOA AS PRECIOA, 
+                  PRECIOS.MAYOREOB AS PRECIOB, PRECIOS.MAYOREOC AS PRECIOC, MARCAS.DESMARCA, view_invsaldo.EXISTENCIA
+            FROM  PRODUCTOS LEFT OUTER JOIN
+                  view_invsaldo ON PRODUCTOS.CODPROD = view_invsaldo.CODPROD AND PRODUCTOS.EMPNIT = view_invsaldo.EMPNIT LEFT OUTER JOIN
+                  MARCAS ON PRODUCTOS.CODMARCA = MARCAS.CODMARCA AND PRODUCTOS.EMPNIT = MARCAS.EMPNIT LEFT OUTER JOIN
+                  PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
+            WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') AND (PRODUCTOS.CODPROD = '${filtro}') AND (PRODUCTOS.HABILITADO = 'SI') OR
+                  (PRODUCTOS.EMPNIT = '${sucursal}') AND (PRODUCTOS.HABILITADO = 'SI') AND (PRODUCTOS.DESPROD LIKE '%${filtro}%')
+
+    `
+            
+    execute.Query(res,qry);
+
+})
+
+router.post("/FUNCIONAL_buscarproductotodos", async(req,res)=>{
+    
+    const {sucursal,filtro} = req.body;
+  
+    let qry ='';
+    qry = `
         SELECT TOP 50
             PRODUCTOS.EMPNIT AS CODSUCURSAL, 
             PRODUCTOS.CODPROD, 
@@ -243,6 +265,9 @@ router.post("/buscarproductotodos", async(req,res)=>{
     execute.Query(res,qry);
 
 })
+
+
+
 
 
 // obtiene el total de temp ventas según sea el usuario
@@ -556,14 +581,30 @@ router.post("/documentos", async (req,res)=>{
 router.post('/historialcliente',async (req,res)=>{
     const {sucursal,codcliente} = req.body;
     let qry = `
-    SELECT ME_Documentos.CODDOC, ME_Documentos.DOC_NUMERO AS CORRELATIVO, ME_Documentos.DOC_FECHA AS FECHA, ME_Documentos.NITCLIE, ME_Docproductos.CODPROD, ME_Docproductos.DESCRIPCION AS DESPROD,
-                          ME_Docproductos.CODMEDIDA, ME_Docproductos.CANTIDAD, ME_Docproductos.PRECIO, ME_Docproductos.TOTALPRECIO
-    FROM ME_Documentos LEFT OUTER JOIN
-                         ME_Docproductos ON ME_Documentos.DOC_NUMERO = ME_Docproductos.DOC_NUMERO AND ME_Documentos.CODDOC = ME_Docproductos.CODDOC AND 
-                         ME_Documentos.CODSUCURSAL = ME_Docproductos.CODSUCURSAL AND ME_Documentos.EMP_NIT = ME_Docproductos.EMP_NIT LEFT OUTER JOIN
-                         ME_Tipodocumentos ON ME_Documentos.CODSUCURSAL = ME_Tipodocumentos.CODSUCURSAL AND ME_Documentos.CODDOC = ME_Tipodocumentos.CODDOC AND 
-                         ME_Documentos.EMP_NIT = ME_Tipodocumentos.EMP_NIT
-    WHERE (ME_Tipodocumentos.TIPODOC = 'PED') AND (ME_Documentos.CODSUCURSAL = '${sucursal}') AND (ME_Documentos.NITCLIE = '${codcliente}') ORDER BY ME_Documentos.DOC_FECHA DESC
+    SELECT top 70 Documentos.CODDOC, 
+            Documentos.CORRELATIVO, 
+            Documentos.FECHA, 
+            Documentos.DOC_NIT AS NITCLIE, 
+            Docproductos.CODPROD, 
+            Docproductos.DESPROD,
+            Docproductos.CODMEDIDA, 
+            Docproductos.CANTIDAD, 
+            Docproductos.PRECIO, 
+            Docproductos.TOTALPRECIO
+    FROM Documentos LEFT OUTER JOIN
+            Docproductos ON Documentos.CORRELATIVO = Docproductos.CORRELATIVO 
+            AND Documentos.CODDOC = Docproductos.CODDOC 
+            AND Documentos.EMPNIT = Docproductos.EMPNIT 
+            AND Documentos.EMPNIT = Docproductos.EMPNIT 
+        LEFT OUTER JOIN
+            Tipodocumentos ON Documentos.EMPNIT = Tipodocumentos.EMPNIT 
+            AND Documentos.CODDOC = Tipodocumentos.CODDOC 
+            AND Documentos.EMPNIT = Tipodocumentos.EMPNIT
+    WHERE (Tipodocumentos.TIPODOC IN ('FAC','FCP','FEC','FEF','FES')) 
+        AND (Documentos.EMPNIT = '${sucursal}') 
+        AND (Documentos.CODCLIENTE = ${codcliente})
+        AND (Documentos.STATUS<>'A') 
+    ORDER BY Documentos.FECHA DESC
     `;
 
     execute.Query(res,qry);
@@ -624,25 +665,31 @@ router.post("/listapedidos", async(req,res)=>{
     const {sucursal,codven,fecha}  = req.body;
     
     let qry = '';
-    qry = `SELECT  ME_Documentos.CODDOC, ME_Documentos.DOC_NUMERO AS CORRELATIVO, 
-                    ME_Documentos.NITCLIE AS CODCLIE, 
-                    ME_Clientes.NOMFAC AS NEGOCIO, 
-                    ME_Documentos.DOC_NOMREF AS NOMCLIE, 
-                    ME_Documentos.DOC_DIRENTREGA AS DIRCLIE, '' AS DESMUNI, 
-                    ISNULL(ME_Documentos.DOC_TOTALVENTA, 0) AS IMPORTE, 
-                    ME_Documentos.DOC_FECHA AS FECHA, 
-                    ME_Documentos.LAT, 
-                    ME_Documentos.LONG, 
-                    ME_Documentos.DOC_OBS AS OBS, 
-                    ME_Documentos.DOC_MATSOLI AS DIRENTREGA, 
-                    ME_Documentos.DOC_ESTATUS AS ST,
-                    ME_Documentos.DOC_HORA AS HORA
-    FROM            ME_Documentos LEFT OUTER JOIN
-                             ME_Clientes ON ME_Documentos.NITCLIE = ME_Clientes.NITCLIE AND ME_Documentos.CODSUCURSAL = ME_Clientes.CODSUCURSAL
-    WHERE        (ME_Documentos.CODSUCURSAL = '${sucursal}') 
-                AND (ME_Documentos.DOC_FECHA = '${fecha}') AND (ME_Documentos.CODVEN = ${codven}) 
-                AND (ME_Documentos.DOC_ESTATUS <> 'A')
-    ORDER BY ME_Documentos.DOC_NUMERO`
+    qry = `SELECT   Documentos.CODDOC, Documentos.CORRELATIVO, 
+                    Documentos.CODCLIENTE AS CODCLIE, 
+                    Clientes.NEGOCIO, 
+                    Documentos.DOC_NOMCLIE AS NOMCLIE, 
+                    Documentos.DOC_DIRCLIE AS DIRCLIE, '' AS DESMUN,
+                    CASE WHEN Documentos.STATUS='A' THEN 0 ELSE ISNULL(Documentos.TOTALPRECIO,0) END AS IMPORTE,   
+                    ISNULL(Documentos.TOTALPRECIO, 0) AS IMPORTE2, 
+                    Documentos.FECHA, 
+                    Documentos.LAT, 
+                    Documentos.LONG, 
+                    Documentos.OBS, 
+                    Documentos.DIRENTREGA, 
+                    Documentos.STATUS AS ST,
+                    Documentos.HORA,
+                    isnull(Documentos.FEL_UUDI,'NO') AS FEL_UUDI,
+                    Documentos.FEL_SERIE,
+                    Documentos.FEL_NUMERO,
+                    Documentos.FEL_FECHA
+                FROM Documentos LEFT OUTER JOIN
+                    Clientes ON Documentos.CODCLIENTE = Clientes.CODCLIENTE 
+                    AND Documentos.EMPNIT = Clientes.EMPNIT
+                WHERE (Documentos.EMPNIT = '${sucursal}') 
+                AND (Documentos.FECHA = '${fecha}') 
+                AND (Documentos.CODVEN = ${codven}) 
+            ORDER BY Documentos.CORRELATIVO`
 
     
     execute.Query(res,qry);

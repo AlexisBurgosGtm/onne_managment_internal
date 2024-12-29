@@ -1372,7 +1372,7 @@ async function fcnEliminarTempVentas(usuario){
 
 async function fcnNuevoPedido(){
     
-    classNavegar.inicio('VENDEDOR');
+    classNavegar.inicio(3);
     
 };
 
@@ -1430,7 +1430,229 @@ async function fcnCargarComboTipoPrecio(){
 
 
 //FINALIZAR PEDIDO
-async function fcnFinalizarPedido(){
+function fcnFinalizarPedido(){
+    
+    /*
+    if(Number(GlobalTotalDocumento)<Number(GlobalVentaMinima)){
+        funciones.AvisoError('Pedido menor al mínimo de venta');
+        try {
+            funciones.hablar('Advertencia. Este pedido es menor al mínimo de venta permitido');    
+        } catch (error) {          
+        }      
+    };*/
+
+   
+
+    if(GlobalTotalDocumento==0){
+        funciones.AvisoError('Este pedido no tiene productos, revise por favor');
+        return;
+    };
+
+    if(GlobalSelectedCodCliente.toString()=='SI'){funciones.AvisoError('Datos del cliente incorrectos, por favor, seleccione cliente nuevamente');return;}
+
+    let codcliente = GlobalSelectedCodCliente;
+    let ClienteNombre = funciones.limpiarTexto(document.getElementById('txtNombre').value);
+    let dirclie = funciones.limpiarTexto(document.getElementById('txtDireccion').value); 
+    let obs = funciones.limpiarTexto(document.getElementById('txtEntregaObs').value); 
+    let direntrega = "";
+    let codbodega = '';
+    let cmbTipoEntrega = document.getElementById('cmbEntregaConcre').value; 
+    
+    let txtFecha = new Date(document.getElementById('txtFecha').value);
+    let anio = txtFecha.getFullYear();
+    let mes = txtFecha.getUTCMonth()+1;
+    let d = txtFecha.getUTCDate() 
+    let dia = d;
+
+    let fecha = funciones.devuelveFecha('txtFecha');
+    
+    let hora = txtFecha.getHours(); 
+    let minuto = txtFecha.getMinutes();
+
+    /*
+    let fe = txtFecha;
+    let ae = fe.getFullYear();
+    let me = fe.getUTCMonth()+1;
+    let de = fe.getUTCDate() 
+    */
+
+    let fechaentrega = funciones.devuelveFecha('txtFechaVence');  
+    let fechavence = funciones.devuelveFecha('txtFechaVence');  
+    
+    let coddoc = document.getElementById('cmbCoddoc').value;
+    let correlativoDoc = document.getElementById('txtCorrelativo').value;
+    let cmbVendedor = document.getElementById('cmbVendedor');
+    let nit = document.getElementById('txtNit').value;
+    let latdoc = document.getElementById('lbDocLat').innerText;
+    let longdoc = document.getElementById('lbDocLong').innerText;
+
+
+    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save fa-spin"></i>';
+    document.getElementById('btnFinalizarPedido').disabled = true;
+
+    gettempDocproductos(GlobalUsuario)
+    .then((response)=>{
+
+        let docproductos_ped = response;  
+
+        //guarda el pedido localmente
+        var datospedido = {
+                CODSUCURSAL:GlobalCodSucursal,
+                EMPNIT: GlobalEmpnit,
+                CODDOC:coddoc,
+                ANIO:anio,
+                MES:mes,
+                DIA:dia,
+                FECHA:fecha,
+                FECHAENTREGA:fechaentrega,
+                FORMAENTREGA:cmbTipoEntrega,
+                VENCE:fechaentrega,
+                CONCRE:cmbTipoEntrega,
+                CODCLIE: codcliente,
+                NOMCLIE:ClienteNombre,
+                TOTALCOSTO:GlobalTotalCostoDocumento,
+                TOTALPRECIO:GlobalTotalDocumento,
+                NITCLIE:nit,
+                DIRCLIE:dirclie,
+                OBS:obs,
+                DIRENTREGA:direntrega,
+                USUARIO:GlobalUsuario,
+                CODVEN:Number(cmbVendedor.value),
+                LAT:latdoc,
+                LONG:longdoc,
+                JSONPRODUCTOS:JSON.stringify(docproductos_ped)
+        };
+
+        //UNA VEZ OBTENIDO EL DETALLE, PROCEDE A GUARDARSE O ENVIARSE
+
+        //OBTIENE EL CORRELATIVO DEL DOCUMENTO
+        classTipoDocumentos.getCorrelativoDocumento('PED',GlobalCoddoc)
+        .then((correlativo)=>{
+
+            correlativoDoc = correlativo;             
+          
+            funciones.Confirmacion('¿Está seguro que desea Finalizar este Pedido')
+            .then((value)=>{
+                if(value==true){
+
+                    setLog(`<label class="text-danger">Creando el pedido a enviar...</label>`,'rootWait');
+                    $('#modalWait').modal('show');
+                                                
+                    //ENVIANDOLO ONLINE
+                        
+                        setLog(`<label class="text-info">Pedido creado, enviado pedido...</label>`,'rootWait');
+
+                        axios.post('/ventas/insertventa', {
+                            jsondocproductos:JSON.stringify(response),
+                            codsucursal:GlobalCodSucursal,
+                            empnit: GlobalEmpnit,
+                            coddoc:coddoc,
+                            correl: correlativoDoc,
+                            anio:anio,
+                            mes:mes,
+                            dia:dia,
+                            fecha:fecha,
+                            fechaentrega:fechaentrega,
+                            vence:fechavence,
+                            formaentrega:cmbTipoEntrega,
+                            concre:cmbTipoEntrega,
+                            codbodega:codbodega,
+                            codcliente: codcliente,
+                            nomclie:ClienteNombre,
+                            totalcosto:GlobalTotalCostoDocumento,
+                            totalprecio:GlobalTotalDocumento,
+                            nitclie:nit,
+                            dirclie:dirclie,
+                            obs:obs,
+                            direntrega:direntrega,
+                            usuario:GlobalUsuario,
+                            codven:cmbVendedor.value,
+                            lat:latdoc,
+                            long:longdoc,
+                            hora:hora,
+                            minuto:minuto,
+                            poriva:GlobalConfigIva
+                        })
+                        .then(async(response) => {
+
+                            const data = response.data;
+
+                            //si lanza error
+                            if(data.toString()=='error'){
+
+                                    hideWaitForm();
+                                                
+                                    funciones.AvisoError('Error al guardar la factura');
+        
+                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                    document.getElementById('btnFinalizarPedido').disabled = false;                                    
+                                     
+                            }else{
+                                //si no se inserto valores y compara si inserto o no
+                                if (Number(data.rowsAffected[0])==0){
+                                    
+                                    hideWaitForm();
+                                                
+                                    funciones.AvisoError('Error al guardar la factura');
+        
+                                    document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                                    document.getElementById('btnFinalizarPedido').disabled = false;                                    
+                                     
+                                }else{
+
+                                        hideWaitForm();
+
+                                        funciones.Aviso('Pedido Generado Exitosamente !!!')
+                                        document.getElementById('btnEntregaCancelar').click();                                                           
+                                        //actualiza la ubicación del empleado
+                                        await classEmpleados.updateMyLocation();            
+                                        //actualiza la última venta del cliente
+                                        apigen.updateClientesLastSale(nit,'VENTA');
+                                        //elimina el temp ventas asociado al empleado
+                                        deleteTempVenta(GlobalUsuario)     
+                                        //prepara todo para un nuevo pedido
+                                        fcnNuevoPedido();
+                                }
+                            }
+
+                           
+                        
+                        }, (error) => {
+                            console.log(error);
+                            //setLog(`<label class="text-info">Ha ocurrido un error y no se pudo enviar, se intentará guardar en el teléfono</label>`,'rootWait');
+                            hideWaitForm();
+                                        
+                            funciones.AvisoError('Error al guardar la factura');
+
+                            document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+                            document.getElementById('btnFinalizarPedido').disabled = false;                                    
+                             
+                        });        
+    
+                }
+            })
+
+        })
+        .catch(()=>{
+            
+            funciones.AvisoError('No se pudo obtener el correlativo de factura');
+
+            document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+            document.getElementById('btnFinalizarPedido').disabled = false;                                    
+                                                             
+        })
+
+    })
+    .catch((error)=>{
+        //hideWaitForm();
+        document.getElementById('btnFinalizarPedido').innerHTML = '<i class="fal fa-save"></i>Guardar Factura';
+        document.getElementById('btnFinalizarPedido').disabled = false;
+        funciones.AvisoError('No pude crear la tabla de productos del pedido ' + error);
+    })
+  
+};
+
+async function BACKUP_FUNCIONAL_fcnFinalizarPedido(){
     
     if(Number(GlobalTotalDocumento)<Number(GlobalVentaMinima)){
         funciones.AvisoError('Pedido menor al mínimo de venta');

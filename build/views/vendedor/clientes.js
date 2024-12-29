@@ -165,12 +165,12 @@ function getView(){
         tab_ajenos: ()=>{
             return `
             <div class="form-group p-2">
-                <label class="negrita">Clientes :</label>
+                <label class="negrita">Busque un cliente para la nueva Venta:</label>
                 <div class="input-group">
                                   
                     <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
                     <div class="input-group-append">
-                        <button class="btn btn-md btn-primary btn-round" id="btnClientesAjenosBuscar">
+                        <button class="btn btn-md btn-onne btn-round" id="btnClientesAjenosBuscar">
                             <i class="fal fa-search"></i>
                         </button>    
                     </div>
@@ -179,10 +179,10 @@ function getView(){
             </div>
 
             <div class="table-responsive">
-                <table class="table table-responsive table-striped table-hover table-bordered" id="">
-                    <thead class="bg-primary text-white">
+                <table class="table h-full col-12  table-hover" id="">
+                    <thead class="bg-onne text-white">
                         <tr>
-                            <td class="negrita">Cliente / Dirección</td>
+                            <td class="negrita">Cliente  -   Dirección</td>
                         </tr>
                     </thead>
                     <tbody id="tblClientesAjenos">
@@ -190,8 +190,8 @@ function getView(){
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-secondary btn-circle btn-xl hand shadow btn-bottom-r" id="btnTabAAtras">
-                <i class="fal fa-arrow-left"></i>
+            <button class="btn btn-success btn-circle btn-xl hand shadow btn-bottom-r" id="btnNuevoCliente">
+                <i class="fal fa-plus"></i>
             </button>
             `
         },
@@ -296,10 +296,13 @@ function getView(){
                 <div class="modal-dialog modal-lg modal-dialog-right" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <label class="modal-title text-danger h3" id="">Historial de Compras del Cliente</label>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                            
+                            <button class='btn btn-circle btn-xl hand shadow btn-secondary' data-dismiss="modal">
+                                <i class="fal fa-arrow-left"></i>
                             </button>
+
+                            <label class="modal-title text-danger h3" id="">Historial de Compras del Cliente</label>
+                            
                         </div>
 
                         <div class="modal-body">
@@ -314,6 +317,7 @@ function getView(){
                                 </table>
                             </div>
                         </div>
+                        
 
                     
                     </div>
@@ -592,8 +596,15 @@ async function addListeners(){
         document.getElementById('tab-no-visitados').click();
     });
 
-    document.getElementById('btnTabAAtras').addEventListener('click',()=>{
-        document.getElementById('tab-inicio').click();
+    //document.getElementById('btnTabAAtras').addEventListener('click',()=>{
+        //document.getElementById('tab-inicio').click();
+    //});
+    
+
+    document.getElementById('btnNuevoCliente').addEventListener('click',()=>{
+        
+        classNavegar.inicio_censo();
+        
     });
 
     document.getElementById('btnVvisitados').addEventListener('click',()=>{

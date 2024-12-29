@@ -192,7 +192,7 @@ let apigen = {
 
                         strdataVisitados = strdataVisitados + `
                     <tr class='${stClassClie}'>
-                        <td>${rows.NEGOCIO} // ${rows.NOMCLIE}
+                        <td>${funciones.limpiarTexto(rows.NEGOCIO)} // ${funciones.limpiarTexto(rows.NOMCLIE)}
                             <br>
                             <div class="row">
                                 <div class="col-4">
@@ -219,21 +219,22 @@ let apigen = {
                             <small class="text-info">Ref:${rows.REFERENCIA}</small>
 
                             <div class="row">
-                                <div class="col-4">
-                                    <button class="btn btn-success btn-sm" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
-                                        <i class="fal fa-map-marker"></i>Ubicac
-                                    </button>
-                                </div>
-                                <div class="col-4">
-                                    <button class="btn btn-warning btn-sm" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
-                                        <i class="fal fa-book"></i>Historial
-                                    </button>
-                                </div>
-                                <div class="col-4">
-                                    <button class="btn btn-info btn-sm" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
-                                        <i class="fal fa-shopping-cart"></i>Vender
-                                    </button>
-                                </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
+                                                <i class="fal fa-map-marker"></i>Ver en mapa
+                                            </button>
+                                        </div>  
+                                        <div class="col-4">
+                                            <button class="btn btn-secondary shadow btn-sm" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                                <i class="fal fa-book"></i>Historial
+                                            </button>   
+                                        </div>
+                                    
+                                        <div class="col-4">
+                                            <button class="btn btn-info btn-sm" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
+                                                <i class="fal fa-shopping-cart"></i>Nueva Factura
+                                            </button>
+                                        </div>
                             </div>
 
                         </td>
@@ -243,7 +244,7 @@ let apigen = {
                     }else{
                         strdata = strdata + `
                             <tr class='col-12 border-bottom border-info'>
-                                <td>${rows.NEGOCIO} // ${rows.NOMCLIE}
+                                <td>${funciones.limpiarTexto(rows.NEGOCIO)} // ${funciones.limpiarTexto(rows.NOMCLIE)}
                                     <br>
                                     <div class="row">
                                         <div class="col-4">
@@ -273,18 +274,18 @@ let apigen = {
                                         
                                         <div class="col-4">
                                             <button class="btn btn-outline-primary btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
-                                                <i class="fal fa-map-marker"></i>Ubicac
+                                                <i class="fal fa-map-marker"></i>Ver en mapa
                                             </button>
                                         </div>  
                                         <div class="col-4">
-                                            <button class="btn btn-outline-warning shadow btn-sm" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                            <button class="btn btn-secondary shadow btn-sm" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
                                                 <i class="fal fa-book"></i>Historial
                                             </button>   
                                         </div>
                                     
                                         <div class="col-4">
                                             <button class="btn btn-info btn-sm" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
-                                                <i class="fal fa-shopping-cart"></i>Vender
+                                                <i class="fal fa-shopping-cart"></i>Nueva Factura
                                             </button>
                                         </div>
                                     </div>
@@ -369,38 +370,41 @@ let apigen = {
             
             data.map((rows)=>{                    
                         strdata = strdata + `
-                    <tr class=''>
-                        <td>${rows.NEGOCIO} // ${rows.NOMCLIE}
+                    <tr class='card-rounded col-12 border-secondary shadow'>
+                        <td>${funciones.limpiarTexto(rows.NEGOCIO)} - ${funciones.limpiarTexto(rows.NOMCLIE)}
                             <br>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <small>Cod: ${rows.CODIGO}</small>    
                                 </div>
-                                <div class="col-6">
-                                    <small>Tel: ${rows.TELEFONO}</small>    
+                                <div class="col-4">
+                                    <small class="negrita text-danger">Tel: ${rows.TELEFONO}</small>    
+                                </div>
+                                <div class="col-4">
+                                    <small class="negrita">Visita: ${rows.VISITA}</small>    
                                 </div>
                             </div>
-                            <small>${rows.DIRCLIE}, ${rows.DESMUNI}<b></b></small>
+                            <small>${funciones.limpiarTexto(rows.DIRCLIE)}, ${rows.DESMUNI}<b></b></small>
                             <br>
-                            <small class="text-info">Ref:${rows.REFERENCIA}</small>
+                            <small class="text-info">Referencia:${funciones.limpiarTexto(rows.REFERENCIA)}</small>
                             
                             <div class="row">
                                 
                                 <div class="col-4">
-                                    <button class="btn btn-outline-primary btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
-                                        <i class="fal fa-map-marker"></i>Ubicac
+                                    <button class="btn btn-info btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
+                                        <i class="fal fa-map-marker"></i>Ver en mapa
                                     </button>
                                 </div>
                                                                         
                                 <div class="col-4">
-                                    <button class="btn btn-outline-warning btn-sm shadow" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                    <button class="btn btn-secondary btn-sm shadow" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
                                         <i class="fal fa-book"></i>Historial
                                     </button>
                                 </div>
                                 
                                 <div class="col-4">
-                                    <button class="btn btn-info btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
-                                        <i class="fal fa-shopping-cart"></i>Vender
+                                    <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
+                                        <i class="fal fa-shopping-cart"></i>Nueva factura
                                     </button>
                                 </div>
                                 
@@ -460,7 +464,7 @@ let apigen = {
         let strdata = ''; 
 
         axios.post('/ventas/historialcliente', {
-            sucursal:GlobalSistema,
+            sucursal:GlobalEmpnit,
             codcliente: codcliente
         })
         .then((response) => {
@@ -469,11 +473,11 @@ let apigen = {
             data.map((rows)=>{                    
                         strdata = strdata + `
                         <tr>
-                        <td class="text-danger">${rows.FECHA.toString().replace('T00:00:00.000Z','')}</td>
-                        <td>${rows.DESPROD}<br>
-                            <small><b>${rows.CODMEDIDA} - ${rows.CANTIDAD}</b></small>
-                        </td>
-                        <td>${funciones.setMoneda(rows.TOTALPRECIO,'Q')}</td>
+                            <td class="text-danger">${funciones.convertDateNormal(rows.FECHA)}</td>
+                            <td>${rows.DESPROD}<br>
+                                <small><b>${rows.CODMEDIDA} - ${rows.CANTIDAD}</b></small>
+                            </td>
+                            <td>${funciones.setMoneda(rows.TOTALPRECIO,'Q')}</td>
                         </tr>
                         `    
             })
@@ -538,11 +542,10 @@ let apigen = {
         let lbTotal = document.getElementById(idLbTotal);
         lbTotal.innerText = '---';
 
-        let tableheader = `<table class="table table-responsive table-hover table-striped table-bordered">
-                            <thead class="bg-trans-gradient text-white">
+        let tableheader = `<table class="table h-full table-striped table-bordered">
+                            <thead class="bg-onne text-white">
                                 <tr>
                                     <td>Documento</td>
-                                    <td>Cliente</td>
                                     <td>Importe</td>
                                 </tr>
                             </thead>
@@ -563,13 +566,15 @@ let apigen = {
             data.map((rows)=>{
                     total = total + Number(rows.IMPORTE);
                     totalpedidos = totalpedidos + 1;
-                    strdata = strdata + `<tr>
-                                <td colspan="2">
-                                        <b class="text-danger">${rows.CODDOC + '-' + rows.CORRELATIVO}</b>
+                    let strClassFel = ''; if(rows.FEL_UUDI.toString()=='NO'){strClassFel='hidden'};
+                    strdata = strdata + `
+                            <tr>
+                                <td>
+                                    <b class="text-danger">${rows.CODDOC + '-' + rows.CORRELATIVO}</b>
                                     <br>
-                                        ${rows.NEGOCIO} // ${rows.NOMCLIE}
+                                        N:${rows.NEGOCIO} - C:${rows.NOMCLIE}
                                     <br>
-                                        <small class="text-secondary">${rows.DIRCLIE + ', ' + rows.DESMUNI}</small>
+                                        <small class="text-secondary">${rows.DIRCLIE + ', ' + rows.DESMUN}</small>
                                     <br>
                                         <small class="text-white bg-secondary">${rows.OBS}</small>
                                     <br>
@@ -583,29 +588,24 @@ let apigen = {
                                             </button>    
                                         </div>
                                         <div class="col-3">
-                                            <button class="btn btn-danger btn-sm btn-circle"
-                                                onclick="deletePedidoVendedor('${rows.FECHA.toString().replace('T00:00:00.000Z','')}','${rows.CODDOC}','${rows.CORRELATIVO}','${rows.ST}');">
-                                                <i class="fal fa-trash"></i>
-                                            </button>    
-                                        </div>
-                                        <div class="col-3">
-                                            <button class="btn btn-outline-success btn-sm btn-circle"
-                                                onclick="funciones.enviarPedidoWhatsapp2('${rows.FECHA.toString().replace('T00:00:00.000Z','')}','${rows.CODDOC}','${rows.CORRELATIVO}');">
-                                                w
+                                            <button class="${strClassFel} btn btn-outline-primary btn-sm btn-circle"
+                                                onclick="funciones.verFel('${rows.FEL_UUDI}');">
+                                                <i class="fal fa-eye"></i>
                                             </button>    
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <b>${funciones.setMoneda(rows.IMPORTE,'Q')}</b>
+                                    <br>
+                                    <small>Status: ${rows.ST}</small>
                                 </td>
                             </tr>`
             })
             container.innerHTML = tableheader + strdata + tablefoooter;
             //lbTotal.innerText = `${funciones.setMoneda(total,'Q ')} - Pedidos: ${totalpedidos} - Promedio:${funciones.setMoneda((Number(total)/Number(totalpedidos)),'Q')}`;
-            lbTotal.innerHTML = `<h3 class="negrita text-danger">Importe: ${funciones.setMoneda(total,'Q ')}</h3>
-                                 <h3 class="negrita text-danger">Pedidos: ${totalpedidos}</h3>
-                                 <h3 class="negrita text-danger">Promedio:${funciones.setMoneda((Number(total)/Number(totalpedidos)),'Q')}</h3>`;
+            lbTotal.innerHTML = `<h5 class="negrita text-danger">Importe: ${funciones.setMoneda(total,'Q ')}</h5>
+                                 <h5 class="negrita text-danger">Facturas: ${totalpedidos}</h5>`;
         }, (error) => {
             funciones.AvisoError('Error en la solicitud');
             strdata = '';

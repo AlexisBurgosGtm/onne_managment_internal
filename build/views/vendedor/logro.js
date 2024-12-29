@@ -2,9 +2,9 @@ function getView(){
     let view ={
         encabezado : ()=>{
             return `
-            <div class="row bg-trans-gradient text-white">
+            <div class="row bg-onne text-white">
                 <div class="col-12">
-                    <h5>Seleccione un Mes y un Reporte</h5>
+                    <h5>Parametros</h5>
                 </div>               
             </div>
 
@@ -38,10 +38,10 @@ function getView(){
                     <div class="form-group">
                         <label>Seleccione un Reporte</label>
                         <select class="form-control border-danger negrita text-danger" id="cmbReporte">
-                            <option value="1">PEDIDOS DEL DIA (DIA)</option>
+                            <option value="1">FACTURAS DEL DIA (DIA)</option>
                             <option value="2">MARCAS VENDIDAS (DIA)</option>
                             <option value="3">PRODUCTOS VENDIDOS (DIA)</option>
-                            <option value="4">VENTAS POR FECHA (MES)</option>
+                            <option value="4">VENTAS DEL MES</option>
                             <option class="hidden" value="5">PRODUCTOS DEL MES (MES)</option>
                             <option class="hidden" value="6">MARCAS DEL MES (MES)</option>
                             <option class="hidden" value="7">VENTAS NETAS - OBJETIVO (MES)</option>
