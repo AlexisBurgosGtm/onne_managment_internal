@@ -1,4 +1,9 @@
 let funciones = {
+    CERTIFICAR_FEL: (coddoc,correlativo)=>{
+
+      
+
+    },
     verFel: (uudi)=>{
       window.open(`https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid=${uudi}`)
     },

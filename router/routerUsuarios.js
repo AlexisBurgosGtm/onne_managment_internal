@@ -8,9 +8,10 @@ router.post("/updatepass", async(req,res)=>{
     const {sucursal, codven, nuevaclave} = req.body;
         
     let qry =''; 
-    qry = `UPDATE ME_USUARIOS
-            SET PASS='${nuevaclave}'
-            WHERE CODSUCURSAL='${sucursal}'AND CODUSUARIO=${codven};`;     
+    qry = `UPDATE EMPLEADOS
+            SET CLAVE='${nuevaclave}'
+            WHERE EMPNIT='${sucursal}'
+                AND CODEMPLEADO=${codven};`;     
     
       
     execute.Query(res, qry);

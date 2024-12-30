@@ -90,20 +90,26 @@ router.post("/pedidosgenerados", async(req,res)=>{
 });
 
 router.post("/detallepedido", async(req,res)=>{
-    const {sucursal,fecha,coddoc,correlativo}  = req.body;
+    const {sucursal,coddoc,correlativo}  = req.body;
 
-    let ncorrelativo = correlativo;
-    
-        
+            
     let qry = '';
-    qry = `SELECT ME_Docproductos.CODPROD, ME_Docproductos.DESCRIPCION AS DESPROD, ME_Docproductos.CODMEDIDA, ME_Docproductos.CANTIDAD, ME_Docproductos.PRECIO, ME_Docproductos.TOTALPRECIO AS IMPORTE, ME_Docproductos.DOC_ITEM, ME_Docproductos.TOTALCOSTO
-            FROM ME_Documentos LEFT OUTER JOIN
-            ME_Docproductos ON ME_Documentos.CODSUCURSAL = ME_Docproductos.CODSUCURSAL AND ME_Documentos.DOC_NUMERO = ME_Docproductos.DOC_NUMERO AND 
-            ME_Documentos.CODDOC = ME_Docproductos.CODDOC AND ME_Documentos.EMP_NIT = ME_Docproductos.EMP_NIT
-            WHERE  (ME_Documentos.CODSUCURSAL = '${sucursal}') 
-            AND (ME_Documentos.DOC_FECHA = '${fecha}') 
-            AND (ME_Documentos.CODDOC = '${coddoc}') 
-            AND (ME_Documentos.DOC_NUMERO = '${ncorrelativo}')`;
+    qry = `SELECT 
+            Docproductos.CODPROD, 
+            Docproductos.DESPROD,
+            Docproductos.CODMEDIDA, 
+            Docproductos.CANTIDAD, 
+            Docproductos.PRECIO, 
+            Docproductos.TOTALPRECIO AS IMPORTE, 
+            Docproductos.TOTALCOSTO
+        FROM Documentos LEFT OUTER JOIN
+            Docproductos ON Documentos.EMPNIT = Docproductos.EMPNIT 
+            AND Documentos.CORRELATIVO = Docproductos.CORRELATIVO 
+            AND Documentos.CODDOC = Docproductos.CODDOC
+            AND Documentos.EMPNIT = Docproductos.EMPNIT
+        WHERE  (Documentos.EMPNIT = '${sucursal}') 
+            AND (Documentos.CODDOC = '${coddoc}') 
+            AND (Documentos.CORRELATIVO = ${correlativo})`;
 
     execute.Query(res,qry);
 });

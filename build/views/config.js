@@ -3,7 +3,7 @@ function getView(){
         body : ()=>{
             return `
                 <div class="card card-rounded shadow">
-                    <div class="card-header bg-secondary text-white">
+                    <div class="card-header bg-onne text-white">
                         <h3 class="negrita">Configuraciones</h3>
                     </div>
                     <div class="card-body">
@@ -12,13 +12,15 @@ function getView(){
 
                         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="form-group">
-                                <label class="negrita text-success">Nueva Clave de Inicio</label>
-                                <input type="text" class="form-control" id="txtPassNueva">
+                                <label class="negrita text-primary">Nueva Clave de Inicio</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="txtPassNueva">
+                                    <button class="btn btn-primary" id="btnActualizarPass">
+                                        <i class="fal fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <button class="btn btn-outline-success btn-lg hand shadow" id="btnActualizarPass">
-                                <i class="fal fa-save"></i>
-                                Cambiar Clave
-                            </button>
+                            
                         </div>
 
                         <hr class="solid">
@@ -149,13 +151,13 @@ function addListeners(){
                     funciones.Aviso('Clave actualizada exitosamente !!');
                     
                     btnActualizarPass.disabled = false;
-                    btnActualizarPass.innerHTML = `<i class="fal fa-save"></i> Cambiar Clave`;
+                    btnActualizarPass.innerHTML = `<i class="fal fa-save"></i>`;
                     GlobalPassUsuario = txtPassNueva.value;
                 })
                 .catch(()=>{
                     funciones.AvisoError('No se pudo cambiar la clave de usuario');
                     btnActualizarPass.disabled = false;
-                    btnActualizarPass.innerHTML = `<i class="fal fa-save"></i> Cambiar Clave`;
+                    btnActualizarPass.innerHTML = `<i class="fal fa-save"></i>`;
                 })
 
 

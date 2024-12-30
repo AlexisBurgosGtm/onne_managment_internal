@@ -39,9 +39,9 @@ function getView(){
                         <label>Seleccione un Reporte</label>
                         <select class="form-control border-danger negrita text-danger" id="cmbReporte">
                             <option value="1">FACTURAS DEL DIA (DIA)</option>
-                            <option value="2">MARCAS VENDIDAS (DIA)</option>
                             <option value="3">PRODUCTOS VENDIDOS (DIA)</option>
                             <option value="4">VENTAS DEL MES</option>
+                            <option class="hidden" value="2">MARCAS VENDIDAS (DIA)</option>
                             <option class="hidden" value="5">PRODUCTOS DEL MES (MES)</option>
                             <option class="hidden" value="6">MARCAS DEL MES (MES)</option>
                             <option class="hidden" value="7">VENTAS NETAS - OBJETIVO (MES)</option>
@@ -68,8 +68,8 @@ function getView(){
             <div class="card">          
             <br>
             <div class="table-responsive">
-                <table class="table table-responsive table-hover table-striped table-bordered">
-                    <thead class="bg-trans-gradient text-white">
+                <table class="table h-full col-12 table-hover table-striped table-bordered">
+                    <thead class="bg-onne text-white">
                         <tr>
                             <td>Producto</td>
                             <td>Medida</td>
@@ -86,11 +86,11 @@ function getView(){
             <div class="">
                 <div class="col-1"></div>
                 <div class="col-5">
-                    <label>Total Pedido : </label>
+                    <label>Total Factura : </label>
                     <h2 class="text-danger" id="lbTotalDetallePedido"></h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="row hidden">
                 <button class="btn btn-info btn-lg" id="btnEditarPedido">
                     <i class="fal fa-edit"></i>
                     Editar Pedido
@@ -264,7 +264,7 @@ function getCargarGrid(){
             break;
         
         case '4':
-            //VENTAS POR FECHA
+            //VENTAS POR FECHA MES
             getRptDinero(cmbMes.value, cmbAnio.value);
             break;
         case '5':
@@ -346,18 +346,17 @@ function deletePedidoVendedor(fecha,coddoc,correlativo,st){
 
 };
 
-function getDetallePedido(fecha,coddoc,correlativo,codclie,nomclie,dirclie,st){
+function getDetallePedido(coddoc,correlativo,codclie,nomclie,dirclie,st){
 
     GlobalSelectedSt = st;
-    GlobalSelectedFecha = fecha;
     GlobalSelectedCoddoc = coddoc;
     GlobalSelectedCorrelativo = correlativo;
     GlobalSelectedCodCliente=codclie;
     GlobalSelectedNomCliente=nomclie;
     GlobalSelectedDirCliente=dirclie;
 
-    lbMenuTitulo.innerText = `Pedido: ${coddoc}-${correlativo}`;
-    apigen.digitadorDetallePedido(fecha,coddoc,correlativo,'tblDetallePedido','lbTotalDetallePedido')
+    lbMenuTitulo.innerText = `Factura sistema: ${coddoc}-${correlativo}`;
+    apigen.digitadorDetallePedido(coddoc,correlativo,'tblDetallePedido','lbTotalDetallePedido')
     $("#modalMenu").modal('show');
     
 };

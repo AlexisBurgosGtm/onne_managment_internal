@@ -114,7 +114,7 @@ let apigen = {
     config_cambiar_clave: (sucursal,codven,nuevaclave)=>{
         return new Promise((resolve,reject)=>{
             axios.post('/usuarios/updatepass',{
-               sucursal:sucursal,
+               sucursal:GlobalEmpnit,
                codven:codven,
                nuevaclave:nuevaclave
             })
@@ -566,7 +566,7 @@ let apigen = {
             data.map((rows)=>{
                     total = total + Number(rows.IMPORTE);
                     totalpedidos = totalpedidos + 1;
-                    let strClassFel = ''; if(rows.FEL_UUDI.toString()=='NO'){strClassFel='hidden'};
+                    let strClassFel = ''; let strClassFelCert ='hidden'; if(rows.FEL_UUDI.toString()=='NO'){strClassFel='hidden';strClassFelCert=''};
                     strdata = strdata + `
                             <tr>
                                 <td>
@@ -579,18 +579,23 @@ let apigen = {
                                         <small class="text-white bg-secondary">${rows.OBS}</small>
                                     <br>
                                     <div class="row">
-                                        <div class="col-3">
-                                        </div>
-                                        <div class="col-3">
-                                            <button class="btn btn-info btn-sm btn-circle"
-                                                onclick="getDetallePedido('${rows.FECHA.toString().replace('T00:00:00.000Z','')}','${rows.CODDOC}','${rows.CORRELATIVO}','${rows.CODCLIE}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.ST}');">
-                                                <i class="fal fa-edit"></i>
+                                        <div class="col-4">
+                                            <button class="btn btn-info btn-sm"
+                                                onclick="getDetallePedido('${rows.CODDOC}','${rows.CORRELATIVO}','${rows.CODCLIE}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.ST}');">
+                                                <i class="fal fa-edit"></i>Ver detalles
                                             </button>    
                                         </div>
-                                        <div class="col-3">
-                                            <button class="${strClassFel} btn btn-outline-primary btn-sm btn-circle"
+                                        <div class="col-4">
+                                            <button class="${strClassFelCert} btn btn-danger btn-sm"
+                                                onclick="funciones.CERTIFICAR_FEL('${rows.CODDOC}','${rows.CORRELATIVO}');">
+                                                <i class="fal fa-sync"></i>Certificar
+                                            </button>
+                                        
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="${strClassFel} btn btn-outline-primary btn-sm"
                                                 onclick="funciones.verFel('${rows.FEL_UUDI}');">
-                                                <i class="fal fa-eye"></i>
+                                                <i class="fal fa-eye"></i>Ver PDF
                                             </button>    
                                         </div>
                                     </div>
@@ -728,8 +733,8 @@ let apigen = {
         lbTotal.innerText = '---';
 
         let strdata = '';
-        let tbl = `<table class="table table-responsive table-hover table-striped table-bordered">
-                    <thead class="bg-trans-gradient text-white"><tr>
+        let tbl = `<table class="table h-full table-hover table-striped table-bordered">
+                    <thead class="bg-onne text-white"><tr>
                         <td>Producto</td>
                         <td>Unidades</td>
                         <td>Importe</td>
@@ -780,8 +785,8 @@ let apigen = {
         lbTotal.innerText = '---';
 
         let strdata = '';
-        let tbl = `<table class="table table-responsive table-hover table-striped">
-                        <thead class="bg-trans-gradient text-white">
+        let tbl = `<table class="table h-full col-12 table-hover table-striped">
+                        <thead class="bg-onne text-white">
                             <tr>
                                 <td>Fecha</td>
                                 <td>Pedidos</td>
@@ -821,14 +826,8 @@ let apigen = {
             lbTotal.innerHTML = `
                     Vendido: <b class="text-info">${funciones.setMoneda(total,'Q ')}</b>
                     <br>
-                    Pedidos: <b class="text-info">${pedidos.toString()}</b> 
-                    <br>
-                    Objetivo: <b class="text-danger">${funciones.setMoneda(GlobalObjetivoVenta,'Q')}</b>
-                    <br>
-                    Faltan: <b class="text-danger">${funciones.setMoneda(faltan,'Q')}</b>
-                    <br>
-                    Logro: <b class="text-danger">${funciones.setMargen((logro*100),'%')}</b>
-                                ` ;
+                    Facturas: <b class="text-info">${pedidos.toString()}</b> 
+                     ` ;
         }, (error) => {
             funciones.AvisoError('Error en la solicitud');
             strdata = '';
@@ -2538,7 +2537,7 @@ let apigen = {
         });
            
     },
-    digitadorDetallePedido: async(fecha,coddoc,correlativo,idContenedor,idLbTotal)=>{
+    digitadorDetallePedido: async(coddoc,correlativo,idContenedor,idLbTotal)=>{
 
         let container = document.getElementById(idContenedor);
         container.innerHTML = GlobalLoader;
@@ -2552,8 +2551,7 @@ let apigen = {
         GlobalSelectedCorrelativo = correlativo;
 
         axios.post('/digitacion/detallepedido', {
-            sucursal: GlobalCodSucursal,
-            fecha:fecha,
+            sucursal: GlobalEmpnit,
             coddoc:coddoc,
             correlativo:correlativo
         })
@@ -2563,16 +2561,16 @@ let apigen = {
             data.map((rows)=>{
                     total = total + Number(rows.IMPORTE);
                     strdata = strdata + `
-                            <tr id='${rows.DOC_ITEM}'>
+                            <tr>
                                 <td colspan="3">${rows.DESPROD}
                                     <br>
                                     <small class="text-danger">${rows.CODPROD}</small>
                                     <br>
-                                    <b class="text-info">${rows.CODMEDIDA}</b>-<b>Cant: ${rows.CANTIDAD}</b>
+                                    <b class="negrita">${rows.CODMEDIDA}</b>-<b>Cant: ${rows.CANTIDAD}</b>
                                 </td>
                                 <td>${funciones.setMoneda(rows.PRECIO,"")}</td>
                                 <td>${funciones.setMoneda(rows.IMPORTE,"")}
-                                    <div class="row">
+                                    <div class="row hidden">
                                         <div class="col-6">
                                             <button class="btn btn-danger btn-md btn-circle"
                                                 onclick="deleteProductoPedido('${rows.DOC_ITEM}','${GlobalSelectedCoddoc}','${GlobalSelectedCorrelativo}',${rows.IMPORTE},${rows.TOTALCOSTO})">

@@ -1444,7 +1444,7 @@ function fcnFinalizarPedido(){
    
 
     if(GlobalTotalDocumento==0){
-        funciones.AvisoError('Este pedido no tiene productos, revise por favor');
+        funciones.AvisoError('Esta factura no tiene productos, revise por favor');
         return;
     };
 
@@ -1531,16 +1531,16 @@ function fcnFinalizarPedido(){
 
             correlativoDoc = correlativo;             
           
-            funciones.Confirmacion('¿Está seguro que desea Finalizar este Pedido')
+            funciones.Confirmacion('¿Está seguro que desea Finalizar esta Venta')
             .then((value)=>{
                 if(value==true){
 
-                    setLog(`<label class="text-danger">Creando el pedido a enviar...</label>`,'rootWait');
+                    setLog(`<label class="text-danger">Creando factura a enviar...</label>`,'rootWait');
                     $('#modalWait').modal('show');
                                                 
                     //ENVIANDOLO ONLINE
                         
-                        setLog(`<label class="text-info">Pedido creado, enviado pedido...</label>`,'rootWait');
+                        setLog(`<label class="text-info">Factura creada, enviando factura...</label>`,'rootWait');
 
                         axios.post('/ventas/insertventa', {
                             jsondocproductos:JSON.stringify(response),
@@ -1602,7 +1602,7 @@ function fcnFinalizarPedido(){
 
                                         hideWaitForm();
 
-                                        funciones.Aviso('Pedido Generado Exitosamente !!!')
+                                        funciones.Aviso('Factura Generada Exitosamente !!!')
                                         document.getElementById('btnEntregaCancelar').click();                                                           
                                         //actualiza la ubicación del empleado
                                         await classEmpleados.updateMyLocation();            
