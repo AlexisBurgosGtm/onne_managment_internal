@@ -1,4 +1,4 @@
-const SQL = require('./connection');
+const execute = require('./connection');
 const express = require('express');
 const router = express.Router();
 var axios = require('axios');
@@ -8,50 +8,49 @@ var axios = require('axios');
 let FEL = {
     IVA: 1.12,
     CodigoEstablecimiento:"1",
-    NITEmisor:"108983668",
-    NombreComercial:"COMMUNITY - ONNE BUSSINES",
-    NombreEmisor:"COMMUNITY - ONNE BUSSINES",
-    Direccion:"5 AVENIDA RESIDENCIAL PAISAJES II 5-03 B ZONA 8",
-    CodigoPostal:"01057",
-    Municipio:"MIXCO",
-    Departamento:"GUATEMALA",
-    ACCESO_REQ_NOMBRE:"108983668",
-    ACCESO_REQ_CLAVE:"10C31B59EBA52440AA96D5753D84CB4D",
-    ACCESO_FIRMA_USUARIO:"108983668",
-    ACCESO_FIRMA_CLAVE:"c6342c726fd2f28a656e55bcea33abf6",
+    NITEmisor:"109225961",
+    NombreComercial:"FARMACIA BIENESTAR",
+    NombreEmisor:"TRIDENTE SIN FRONTERAS, SOCIEDAD ANONIMA",
+    Direccion:"AVENIDA PNC ZONA 0",
+    CodigoPostal:"14018",
+    Municipio:"CANILLA",
+    Departamento:"QUICHE",
+    ACCESO_REQ_NOMBRE:"109225961PRO",
+    ACCESO_REQ_CLAVE:"4228A707E8C511FD2BC1BE789AFE9D44",
+    ACCESO_FIRMA_USUARIO:"109225961PRO",
+    ACCESO_FIRMA_CLAVE:"9d56208067b2eb68802f301647dd644a",
     URL_REPORT_INFILE: "https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid=",
     CONFIG_FEL_HABILITADO: 'SI'
 };
 
-// C30070E7-D7F6-41E5-8551-5B5B5BE32905
 
 let QRYS = {
-    qryFacturaNormal: (nofactura)=>{
+    qryFacturaNormal: (empnit,coddoc, correlativo)=>{
         
-        let qry = "SELECT " +
-        " `tabPOS Invoice`.company AS EMPNIT, `tabPOS Invoice`.name AS CODDOC,  `tabPOS Invoice`.posting_date AS FECHA, " + 
-        " tabCustomer.custom_nit AS NITCLIE, `tabPOS Invoice`.TITLE AS NOMCLIE, " + " 'CIUDAD' AS DIRCLIE," +
-        " `tabPOS Invoice Item`.item_code AS CODPROD, `tabPOS Invoice Item`.description AS DESPROD, " + 
-        " `tabPOS Invoice Item`.UOM AS CODMEDIDA,  `tabPOS Invoice Item`.QTY AS CANTIDAD, " + 
-        " `tabPOS Invoice Item`.stock_qty AS TOTALUNIDADES," + 
-        " `tabPOS Invoice Item`.price_list_rate AS PRECIO, `tabPOS Invoice Item`.amount AS IMPORTE, " + 
-        " `tabPOS Invoice`.NET_TOTAL AS TOTAL, 0 AS EXCENTO  " + 
-        "FROM  `tabPOS Invoice`  INNER JOIN  `tabPOS Invoice Item` ON `tabPOS Invoice`.NAME = `tabPOS Invoice Item`.parent " + 
-        "INNER JOIN tabCustomer ON `tabPOS Invoice`.customer = tabCustomer.name  " + 
-        " WHERE `tabPOS Invoice`.NAME = '" + nofactura + "' " + 
-        "ORDER BY  `tabPOS Invoice Item`.description;"
+        let qry = `
+        SELECT DOCUMENTOS.EMPNIT, DOCUMENTOS.CODDOC, DOCUMENTOS.CORRELATIVO, DOCUMENTOS.FECHA, CLIENTES.NIT AS NITCLIE, DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, DOCUMENTOS.DOC_DIRCLIE AS DIRCLIE, 
+                  DOCPRODUCTOS.CODPROD, DOCPRODUCTOS.DESPROD, DOCPRODUCTOS.CODMEDIDA, DOCPRODUCTOS.CANTIDAD, DOCPRODUCTOS.TOTALUNIDADES, DOCPRODUCTOS.PRECIO, DOCPRODUCTOS.TOTALPRECIO AS IMPORTE, 
+                  DOCPRODUCTOS.EXENTO AS EXCENTO
+FROM     DOCUMENTOS LEFT OUTER JOIN
+                  CLIENTES ON DOCUMENTOS.EMPNIT = CLIENTES.EMPNIT AND DOCUMENTOS.CODCLIENTE = CLIENTES.CODCLIENTE LEFT OUTER JOIN
+                  DOCPRODUCTOS ON DOCUMENTOS.CORRELATIVO = DOCPRODUCTOS.CORRELATIVO AND DOCUMENTOS.CODDOC = DOCPRODUCTOS.CODDOC AND DOCUMENTOS.EMPNIT = DOCPRODUCTOS.EMPNIT
+WHERE  (DOCUMENTOS.EMPNIT = '${empnit}') AND (DOCUMENTOS.CODDOC = '${coddoc}') AND (DOCUMENTOS.CORRELATIVO =${correlativo})
+        `
 
         return qry;
 
     },
-    qryUpdateDatosFel:(nofactura,uudi,serie,numero,fecha,errores)=>{
-        let qry = 'UPDATE `tabPOS Invoice` ' + `
-                SET custom_uuid = '${uudi}', 
-                terms = '${errores}', 
-                custom_serie = '${serie}', 
-                custom_numero = '${numero}', 
-                custom_fecha_certificacion = '${fecha}'
-            WHERE name = '${nofactura}'`
+    qryUpdateDatosFel:(empnit,coddoc,correlativo,uudi,serie,numero,fecha,errores)=>{
+        
+        let qry = `UPDATE DOCUMENTOS
+                    SET FEL_UUDI='${uudi}',
+                    FEL_SERIE='${serie}',
+                    FEL_NUMERO='${numero}',
+                    FEL_FECHA='${fecha}'
+                WHERE EMPNIT='${empnit}'
+                    AND CODDOC='${coddoc}'
+                    AND CORRELATIVO=${correlativo}`
+
         
         return qry
     }
@@ -60,19 +59,19 @@ let QRYS = {
 // certifica factura normal iva
 router.post("/fel_factura_iva_normal", async(req,res)=>{
    
-    const {nofactura,fecha} =req.body;
+    const {empnit,coddoc,correlativo,fecha} =req.body;
 	
-    fcn_certificar_factura_iva_normal(res,nofactura,fecha)
+    fcn_certificar_factura_iva_normal(res,empnit,coddoc,correlativo,fecha)
     
 });
 
 
 // TIPOS DE DOCUMENTOS A CERTIICAR
-function fcn_certificar_factura_iva_normal(res,nofactura,fecha){
+function fcn_certificar_factura_iva_normal(res,empnit,coddoc,correlativo,fecha){
         
     return new Promise((resolve,reject)=>{
         // arma el xml
-        funciones.getXmlFel(nofactura,fecha)
+        funciones.getXmlFel(empnit,coddoc,correlativo,fecha)
         .then((xmlstring)=>{   
                 
                 // lo convierte a base 64   
@@ -80,6 +79,7 @@ function fcn_certificar_factura_iva_normal(res,nofactura,fecha){
                 .then((xmlconvertido)=>{
                         
                         // lo envia a firmar (verifica que esté correcto)
+                        let nofactura = `${empnit}-${coddoc}-${correlativo}`
                         funciones.solicitar_firma_FEL(nofactura,xmlconvertido)
                         .then((data)=>{
                             if(data.resultado==true){
@@ -100,8 +100,9 @@ function fcn_certificar_factura_iva_normal(res,nofactura,fecha){
                                                     url_infile_pdf:FEL.URL_REPORT_INFILE.toString() + data.uuid.toString() 
                                                 }]
 
+                        
         
-                                                update_documento_feldata(nofactura,data.uuid.toString(),data.serie.toString(),data.numero.toString(),data.fecha.toString(),'SN')
+                                                update_documento_feldata(empnit,coddoc,correlativo,data.uuid.toString(),data.serie.toString(),data.numero.toString(),data.fecha.toString(),'SN')
                                                
                                                 res.send(certificacion);
                                                 /* 
@@ -114,13 +115,13 @@ function fcn_certificar_factura_iva_normal(res,nofactura,fecha){
                                                 })
                                                 */
                                         }else{
-                                            update_documento_feldata(nofactura,'SN','SN','SN','SN',data.descripcion_errores)
+                                            update_documento_feldata(empnit,coddoc,correlativo,'SN','SN','SN','SN',data.descripcion_errores)
                                             res.send(data.descripcion_errores);
                                         }
                                         
                                 })
                                 .catch((error)=>{
-                                    res.send('error al certificar' + error)
+                                    res.send('error al certificar ' + error)
                                 })
                             }else{
                                 res.sen('Factura no se pudo firmar. Error: ' + data.descripcion)
@@ -138,18 +139,19 @@ function fcn_certificar_factura_iva_normal(res,nofactura,fecha){
 
 };
 
-function update_documento_feldata(nofactura,uudi,serie,numero,fecha,errores){
+function update_documento_feldata(empnit,coddoc,correlativo,uudi,serie,numero,fecha,errores){
   
-    let qry = QRYS.qryUpdateDatosFel(nofactura,uudi,serie,numero,fecha,errores);
+    let qry = QRYS.qryUpdateDatosFel(empnit,coddoc,correlativo,uudi,serie,numero,fecha,errores);
 
-    SQL.update_fel_data(qry);
+    //SQL.update_fel_data(qry);
+    execute.QueryData(qry)
 
 };
 
 
 // FUNCIONES AUXILIARES
 let funciones = {
-        getXmlFel(nofactura,fecha){
+        getXmlFel(empnit,coddoc,correlativo,fecha){
 
             // usé "let" para las variables que arman el xml y "var" para las que solo meten valores
             let xmlstring = '';
@@ -181,7 +183,7 @@ let funciones = {
                                     
                 
                     let frases =    `<dte:Frases>
-                                        <dte:Frase CodigoEscenario="1" TipoFrase="1" />
+                                        <dte:Frase CodigoEscenario="2" TipoFrase="1" />
                                     </dte:Frases>`
             
                     let totales = '';
@@ -190,7 +192,7 @@ let funciones = {
                     let footer =   `</dte:DatosEmision>
                             </dte:DTE>
                             <dte:Adenda>
-                                <dte:Valor1>${nofactura}</dte:Valor1>
+                                <dte:Valor1>${correlativo}</dte:Valor1>
                             </dte:Adenda>
                         </dte:SAT>
                     </dte:GTDocumento>`
@@ -198,7 +200,7 @@ let funciones = {
                     let strdata ='';
             
 
-                    SQL.getData(QRYS.qryFacturaNormal(nofactura))
+                    execute.QueryData(QRYS.qryFacturaNormal(empnit,coddoc,correlativo))
                     .then((results)=>{
 
                         const data = results;
@@ -212,7 +214,7 @@ let funciones = {
                         let total =0;
                         let totaliva = 0;
                         let numerolinea = 0;
-                        data.map((rows)=>{
+                        data.recordset.map((rows)=>{
                             // datos del cliente - receptor
                             receptor_nit = rows.NITCLIE;
                             receptor_nombre = rows.NOMCLIE;
@@ -296,7 +298,11 @@ let funciones = {
             reemplazarCon = reemplazarCon.replace(/\$(?=[$&`"'\d])/g, "$$$$"),
             modif = "g" + (ignorarMayMin ? "i" : ""),
             regex = new RegExp(reemplazarQue, modif);
-            return texto.replace(regex,reemplazarCon);
+            let valor = texto.replace(regex,reemplazarCon);
+            valor = valor.replace('/','');
+            valor = valor.replace(' pulg','');
+            return valor;
+            
         },
         getStrItem(numerolinea,cantidad,codmedida,descripcion,precioun,descuento,subtotal,iva){
             

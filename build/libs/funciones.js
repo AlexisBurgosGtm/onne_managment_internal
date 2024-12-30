@@ -1,7 +1,32 @@
 let funciones = {
     CERTIFICAR_FEL: (coddoc,correlativo)=>{
 
-      
+        return new Promise((resolve,reject)=>{
+
+          axios.post('/fel/fel_factura_iva_normal',{
+                    empnit:GlobalEmpnit,
+                    coddoc:coddoc,
+                    correlativo:correlativo,
+                    fecha:funciones.getFecha()
+                  })
+          .then((response) => {
+            
+              if(response.data.toString().includes('Factura no se pudo firmar')==true){
+                  console.log(response.data.toString())
+                  reject(response.data.toString())
+              }else{
+                resolve(response);
+              }
+
+           
+
+          }, (error) => {
+              console.log(error);
+              reject();
+          });
+
+        })
+
 
     },
     verFel: (uudi)=>{

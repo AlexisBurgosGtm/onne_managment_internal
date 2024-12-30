@@ -1,5 +1,5 @@
 ﻿
-const config = {
+const config= {
 	user: 'db_a6478c_onneweb_admin',
 	password: 'razors1805',
 	server: 'sql5092.site4now.net',
@@ -9,7 +9,7 @@ const config = {
 
 
 
-const configxx = {
+const configx = {
 	user: 'iEx',
 	password: 'iEx',
 	server: 'DESKTOP-3L7R1E4\\SQL22',
@@ -56,6 +56,39 @@ let execute = {
 		  	res.send('error');   
 		  	sql.close();
 		}
+	},
+	QueryData : (sqlqry)=>{	
+		
+		//console.log('ejecutando consulta... ' + sqlqry);
+		
+		return new Promise((resolve,reject)=>{
+
+			try {
+				const pool1 = new sql.ConnectionPool(config, err => {
+				  new sql.Request(pool1)
+				  .query(sqlqry, (err, result) => {
+					  if(err){
+						  console.log(err.message);
+						  reject('error');
+					  }else{
+						  resolve(result);
+					  }					
+				  })
+				  sql.close();  
+				})
+				pool1.on('error', err => {
+					  console.log('error sql = ' + err);
+					  reject('error');
+						sql.close();
+				})
+			  } catch (error) {
+				  console.log(error);
+					reject('error');   
+					sql.close();
+			  }
+
+		})
+		
 	},
 	QueryBackup : (res,sqlqry)=>{	
 		

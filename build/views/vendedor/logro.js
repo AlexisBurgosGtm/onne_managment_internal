@@ -593,3 +593,29 @@ function fcnDeletePedidoCargado(coddoc,correlativo){
     })
     
 };
+
+
+
+function fcn_certificar(coddoc,correlativo){
+
+    funciones.Confirmacion('¿Está seguro que desea certificar FEL esta Factura?')
+    .then((value)=>{
+        if(value==true){
+
+                funciones.CERTIFICAR_FEL(coddoc,correlativo)
+                .then((data)=>{
+                    
+                    funciones.Aviso('Factura certificada exitosamente!!');
+
+                    apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+
+                })
+                .catch(()=>{
+                    funciones.AvisoError('Error al certificars')
+                })
+        }
+    })
+
+    
+
+}

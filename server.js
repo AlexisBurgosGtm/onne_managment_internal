@@ -16,6 +16,7 @@ let routerDigitacion = require('./router/routerDigitacion');
 let routerUsuarios = require('./router/routerUsuarios');
 let routerCenso = require('./router/routerCenso');
 var routerConfig = require('./router/router_config');
+var router_fel = require('./router/routerFEL');
 
 var http = require('http').Server(app);
 //var io = require('socket.io')(http);
@@ -24,10 +25,20 @@ var io = require('socket.io')(http, { cors: { origin: '*' } });
 
 const PORT = process.env.PORT || 5100;
 
+
+
 const cors = require('cors');
 app.use(cors({
     origin: '' //orign: ["www.app1.com","www.app2.com"]
 }));
+
+
+
+const FEL_URL_LOGIN = "https://felcloud-instance-three.feel.com.gt/api/v2/servicios/externos/login";
+const FEL_URL_CONSULTARECEPTORES = 'https://consultareceptores.feel.com.gt/rest/action';
+const FEL_URL_CUI = "https://felcloud-instance-three.feel.com.gt/api/v2/servicios/externos/cui";
+
+
 
 app.use(bodyParser.json());
 
@@ -50,6 +61,18 @@ router.use(function (req,res,next) {
   //console.log("/" + req.toString());
   next();
 });
+
+
+// FEL *******************************
+
+
+
+
+
+
+// FEL *******************************
+
+
 
 app.get("/",function(req,res){
   execute.start();
@@ -97,6 +120,9 @@ app.use('/digitacion', routerDigitacion);
 
 // Router para usuarios
 app.use('/usuarios', routerUsuarios);
+
+
+app.use('/fel', router_fel);
 
 
 app.use("/",router);

@@ -587,7 +587,7 @@ let apigen = {
                                         </div>
                                         <div class="col-4">
                                             <button class="${strClassFelCert} btn btn-danger btn-sm"
-                                                onclick="funciones.CERTIFICAR_FEL('${rows.CODDOC}','${rows.CORRELATIVO}');">
+                                                onclick="fcn_certificar('${rows.CODDOC}','${rows.CORRELATIVO}');">
                                                 <i class="fal fa-sync"></i>Certificar
                                             </button>
                                         
