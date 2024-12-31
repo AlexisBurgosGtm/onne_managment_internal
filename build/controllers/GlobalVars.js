@@ -2,6 +2,8 @@ let versionapp = 'mod 30.12.2024';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
+let GlobalUrlCalls = '';
+
 let root = document.getElementById('root');
 let rootMenu = document.getElementById('rootMenu');
 let rootMenuFooter = document.getElementById('rootMenuFooter');

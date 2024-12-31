@@ -33,7 +33,7 @@ let classNavegar = {
                 break;
 
             case '1':
-
+                classNavegar.inicio_gerente();
                 break;
 
             default:
@@ -331,5 +331,19 @@ let classNavegar = {
             GlobalSelectedForm ='REPARTIDOR';
             initView();
         })
+    },
+    inicio_gerente : async ()=>{
+       
+        let strFooter =    `
+                            `
+        rootMenuFooter.innerHTML = strFooter;
+                                               
+        funciones.loadScript('./views/mgm_gerencia/inicio_gerencia.js','root')
+        .then(()=>{
+            GlobalSelectedForm ='GERENCIA';
+            initView();
+        })
+                  
+             
     },
 }

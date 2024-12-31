@@ -17,6 +17,7 @@ let routerUsuarios = require('./router/routerUsuarios');
 let routerCenso = require('./router/routerCenso');
 var routerConfig = require('./router/router_config');
 var router_fel = require('./router/routerFEL');
+var router_reportes = require('./router/router_reportes');
 
 var http = require('http').Server(app);
 //var io = require('socket.io')(http);
@@ -121,7 +122,7 @@ app.use('/digitacion', routerDigitacion);
 // Router para usuarios
 app.use('/usuarios', routerUsuarios);
 
-
+app.use('/reportes', router_reportes);
 app.use('/fel', router_fel);
 
 

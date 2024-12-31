@@ -84,7 +84,7 @@ let apigen = {
                                     classNavegar.inicio_supervisor();    
                                     break;
                                 case '1':
-                                    classNavegar.inicio_repartidor();
+                                    classNavegar.inicio_gerente();
                                     break;
                             }
                                
