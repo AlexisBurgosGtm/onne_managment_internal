@@ -125,12 +125,13 @@ let classTipoDocumentos = {
         return new Promise((resolve,reject)=>{
            
             let data = {
-                sucursal:GlobalCodSucursal,
+                sucursal:GlobalEmpnit,
                 coddoc:coddoc,
                 correlativo:nuevocorrelativo
             }
 
-            axios.post('/tipodocumentos/updatecorrelativo', data)
+            //updatecorrelativo
+            axios.post('/tipodocumentos/update_correlativo_auto', data)
             .then((response) => {
                 let data = response.data;
                 if(Number(data.rowsAffected[0])>0){

@@ -665,31 +665,40 @@ router.post("/listapedidos", async(req,res)=>{
     const {sucursal,codven,fecha}  = req.body;
     
     let qry = '';
-    qry = `SELECT   Documentos.CODDOC, Documentos.CORRELATIVO, 
-                    Documentos.CODCLIENTE AS CODCLIE, 
-                    Clientes.NEGOCIO, 
-                    Documentos.DOC_NOMCLIE AS NOMCLIE, 
-                    Documentos.DOC_DIRCLIE AS DIRCLIE, '' AS DESMUN,
-                    CASE WHEN Documentos.STATUS='A' THEN 0 ELSE ISNULL(Documentos.TOTALPRECIO,0) END AS IMPORTE,   
-                    ISNULL(Documentos.TOTALPRECIO, 0) AS IMPORTE2, 
-                    Documentos.FECHA, 
-                    Documentos.LAT, 
-                    Documentos.LONG, 
-                    Documentos.OBS, 
-                    Documentos.DIRENTREGA, 
-                    Documentos.STATUS AS ST,
-                    Documentos.HORA,
-                    isnull(Documentos.FEL_UUDI,'NO') AS FEL_UUDI,
-                    Documentos.FEL_SERIE,
-                    Documentos.FEL_NUMERO,
-                    Documentos.FEL_FECHA
-                FROM Documentos LEFT OUTER JOIN
-                    Clientes ON Documentos.CODCLIENTE = Clientes.CODCLIENTE 
-                    AND Documentos.EMPNIT = Clientes.EMPNIT
-                WHERE (Documentos.EMPNIT = '${sucursal}') 
-                AND (Documentos.FECHA = '${fecha}') 
-                AND (Documentos.CODVEN = ${codven}) 
-            ORDER BY Documentos.CORRELATIVO`
+    qry = `SELECT DOCUMENTOS.CODDOC, DOCUMENTOS.CORRELATIVO, DOCUMENTOS.CODCLIENTE AS CODCLIE, CLIENTES.NEGOCIO, DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, DOCUMENTOS.DOC_DIRCLIE AS DIRCLIE, '' AS DESMUN, 
+                  CASE WHEN Documentos.STATUS = 'A' THEN 0 ELSE ISNULL(Documentos.TOTALPRECIO, 0) END AS IMPORTE, ISNULL(DOCUMENTOS.TOTALPRECIO, 0) AS IMPORTE2, DOCUMENTOS.FECHA, DOCUMENTOS.LAT, DOCUMENTOS.LONG, 
+                  DOCUMENTOS.OBS, DOCUMENTOS.DIRENTREGA, DOCUMENTOS.STATUS AS ST, DOCUMENTOS.HORA, ISNULL(DOCUMENTOS.FEL_UUDI, 'NO') AS FEL_UUDI, DOCUMENTOS.FEL_SERIE, DOCUMENTOS.FEL_NUMERO, 
+                  DOCUMENTOS.FEL_FECHA, TIPODOCUMENTOS.TIPODOC
+FROM     DOCUMENTOS LEFT OUTER JOIN
+                  TIPODOCUMENTOS ON DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC AND DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT LEFT OUTER JOIN
+                  CLIENTES ON DOCUMENTOS.CODCLIENTE = CLIENTES.CODCLIENTE AND DOCUMENTOS.EMPNIT = CLIENTES.EMPNIT
+WHERE  (DOCUMENTOS.EMPNIT = '${sucursal}') 
+AND (DOCUMENTOS.FECHA = '${fecha}') 
+AND (DOCUMENTOS.CODVEN = ${codven}) AND (TIPODOCUMENTOS.TIPODOC IN('FAC','FEF','FEC','FES','FCP','FPC'))
+ORDER BY DOCUMENTOS.CORRELATIVO`
+
+    
+    execute.Query(res,qry);
+});
+
+
+router.post("/listancr", async(req,res)=>{
+    const {sucursal,codven,fecha}  = req.body;
+    
+    let qry = '';
+    qry = `
+    SELECT DOCUMENTOS.CODDOC, DOCUMENTOS.CORRELATIVO, DOCUMENTOS.CODCLIENTE AS CODCLIE, CLIENTES.NEGOCIO, DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, DOCUMENTOS.DOC_DIRCLIE AS DIRCLIE, '' AS DESMUN, 
+                  CASE WHEN Documentos.STATUS = 'A' THEN 0 ELSE ISNULL(Documentos.TOTALPRECIO, 0) END AS IMPORTE, ISNULL(DOCUMENTOS.TOTALPRECIO, 0) AS IMPORTE2, DOCUMENTOS.FECHA, DOCUMENTOS.LAT, DOCUMENTOS.LONG, 
+                  DOCUMENTOS.OBS, DOCUMENTOS.DIRENTREGA, DOCUMENTOS.STATUS AS ST, DOCUMENTOS.HORA, ISNULL(DOCUMENTOS.FEL_UUDI, 'NO') AS FEL_UUDI, DOCUMENTOS.FEL_SERIE, DOCUMENTOS.FEL_NUMERO, 
+                  DOCUMENTOS.FEL_FECHA, TIPODOCUMENTOS.TIPODOC
+FROM     DOCUMENTOS LEFT OUTER JOIN
+                  TIPODOCUMENTOS ON DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC AND DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT LEFT OUTER JOIN
+                  CLIENTES ON DOCUMENTOS.CODCLIENTE = CLIENTES.CODCLIENTE AND DOCUMENTOS.EMPNIT = CLIENTES.EMPNIT
+WHERE  (DOCUMENTOS.EMPNIT = '${sucursal}') 
+AND (DOCUMENTOS.FECHA = '${fecha}') 
+AND (DOCUMENTOS.CODVEN = ${codven}) AND (TIPODOCUMENTOS.TIPODOC IN('DEV','FNC'))
+ORDER BY DOCUMENTOS.CORRELATIVO
+    `
 
     
     execute.Query(res,qry);

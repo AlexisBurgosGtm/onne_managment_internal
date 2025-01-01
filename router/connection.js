@@ -1,5 +1,5 @@
 ﻿
-const config= {
+const configX= {
 	user: 'db_a6478c_onneweb_admin',
 	password: 'razors1805',
 	server: 'sql5092.site4now.net',
@@ -9,7 +9,7 @@ const config= {
 
 
 
-const configx = {
+const config = {
 	user: 'iEx',
 	password: 'iEx',
 	server: 'DESKTOP-3L7R1E4\\SQL22',

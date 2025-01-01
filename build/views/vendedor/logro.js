@@ -41,6 +41,7 @@ function getView(){
                             <option value="1">FACTURAS DEL DIA (DIA)</option>
                             <option value="3">PRODUCTOS VENDIDOS (DIA)</option>
                             <option value="4">VENTAS DEL MES</option>
+                            <option value="8">NOTAS DE CRÉDITO</option>
                             <option class="hidden" value="2">MARCAS VENDIDAS (DIA)</option>
                             <option class="hidden" value="5">PRODUCTOS DEL MES (MES)</option>
                             <option class="hidden" value="6">MARCAS DEL MES (MES)</option>
@@ -235,7 +236,7 @@ function addListeners(){
     });
 
 
-    apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+    apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
 
    
 
@@ -250,7 +251,7 @@ function getCargarGrid(){
     switch (cmbReporte.value.toString()) {
         case '1':
             //PEDIDOS POR FECHA
-            apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+            apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
             break;
     
         case '2':
@@ -281,6 +282,12 @@ function getCargarGrid(){
             //VENTAS NETAS MES
             getRptDinero2(cmbMes.value, cmbAnio.value);
             break;
+        case '8':
+                //NOTAS DE CREDITO
+                apigen.MGM_NCR_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+                break;
+
+
         default:
             break;
     }
@@ -324,8 +331,8 @@ function deletePedidoVendedor(fecha,coddoc,correlativo,st){
                             .then(()=>{
                                 funciones.Aviso('Pedido Eliminado Exitosamente!!');
                                 console.log('recargandolista');
-                                //apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFechaPedido'),'tblListaPedidos','lbTotalPedidos');
-                                apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+                                //apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFechaPedido'),'tblListaPedidos','lbTotalPedidos');
+                                apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
                             })
                             .catch(()=>{
                                 funciones.AvisoError('No se pudo eliminar')
@@ -377,7 +384,7 @@ function deleteProductoPedido(idRow,coddoc,correlativo,totalprecio,totalcosto){
             apigen.digitadorQuitarRowPedido(idRow,coddoc,correlativo,totalprecio,totalcosto)
             .then(async()=>{
                 
-                await apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFechaPedido'),'tblListaPedidos','lbTotalPedidos');
+                await apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFechaPedido'),'tblListaPedidos','lbTotalPedidos');
 
                 document.getElementById(idRow).remove();
                 
@@ -607,7 +614,7 @@ function fcn_certificar(coddoc,correlativo){
                     
                     funciones.Aviso('Factura certificada exitosamente!!');
 
-                    apigen.pedidosVendedor(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+                    apigen.MGM_FACTURAS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
 
                 })
                 .catch(()=>{
