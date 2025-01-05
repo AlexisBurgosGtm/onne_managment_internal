@@ -52,26 +52,29 @@ let classNavegar = {
 
        
 
-        let strFooter =    `<button class="btn btn-sm text-white hidden"  id="btnMenu2VendedorClientesMapa">
-                                <i class="fal fa-map"></i>
-                                Mapa
-                            </button> 
-                            
-                            <button class="btn btn-sm text-white"  id="btnMenu2VendedorClientes">
+        let strFooter =    `<button class="btn btn-sm text-white"  id="btnMenu2VendedorClientes">
                                 <i class="fal fa-shopping-cart"></i>
                                 Facturar
-                            </button>
-                          
-                            
-
-                            <button class="btn btn-sm text-white hidden" id="btnPedidosPend">
-                                <i class="fal fa-bell"></i>
-                                Pendientes
-                            </button>
+                            </button>                            
 
                             <button class="btn btn-sm text-white" id="btnMenu2VendedorLogro">
                                 <i class="fal fa-folder"></i>
                                 Documentos
+                            </button>
+
+                            <button class="btn btn-sm text-white"  id="btnMConfig">
+                                <i class="fal fa-cog"></i>
+                                Config
+                            </button>
+
+                            <button class="btn btn-sm text-white hidden"  id="btnMenu2VendedorClientesMapa">
+                                <i class="fal fa-map"></i>
+                                Mapa
+                            </button>
+
+                            <button class="btn btn-sm text-white hidden" id="btnPedidosPend">
+                                <i class="fal fa-bell"></i>
+                                Pendientes
                             </button>
 
                             <button class="btn btn-sm text-white hidden" id="btnMenu2Censo">
@@ -79,10 +82,7 @@ let classNavegar = {
                                 Cliente nuevo
                             </button>
 
-                            <button class="btn btn-sm text-white"  id="btnMConfig">
-                                <i class="fal fa-cog"></i>
-                                Config
-                            </button>
+                            
                     
                             `
 

@@ -7,7 +7,7 @@ var axios = require('axios');
 
 let FEL = {
     IVA: 1.12,
-    CodigoEstablecimiento:"1",
+    CodigoEstablecimiento:"3",
     NITEmisor:"109225961",
     NombreComercial:"FARMACIA BIENESTAR",
     NombreEmisor:"TRIDENTE SIN FRONTERAS, SOCIEDAD ANONIMA",
@@ -169,7 +169,8 @@ let funciones = {
                                         <dte:DatosGenerales CodigoMoneda="GTQ" FechaHoraEmision="${fechaemision}" NumeroAcceso="${numeroacceso}" Tipo="FACT" />
                                     `
             
-                    let emisor = `  <dte:Emisor AfiliacionIVA="GEN" CodigoEstablecimiento="${FEL.CodigoEstablecimiento}" CorreoEmisor="" NITEmisor="${FEL.NITEmisor}" NombreComercial="${FEL.NombreComercial}" NombreEmisor="${FEL.NombreEmisor}">
+                    let emisor = `  <dte:Emisor AfiliacionIVA="GEN" CodigoEstablecimiento="${FEL.CodigoEstablecimiento}" CorreoEmisor="" 
+                                            NITEmisor="${FEL.NITEmisor}" NombreComercial="${FEL.NombreComercial}" NombreEmisor="${FEL.NombreEmisor}">
                                     <dte:DireccionEmisor>
                                     <dte:Direccion>${FEL.Direccion}</dte:Direccion>
                                     <dte:CodigoPostal>${FEL.CodigoPostal}</dte:CodigoPostal>
@@ -183,7 +184,7 @@ let funciones = {
                                     
                 
                     let frases =    `<dte:Frases>
-                                        <dte:Frase CodigoEscenario="2" TipoFrase="1" />
+                                        <dte:Frase CodigoEscenario="1" TipoFrase="1" />
                                     </dte:Frases>`
             
                     let totales = '';
@@ -300,6 +301,7 @@ let funciones = {
             regex = new RegExp(reemplazarQue, modif);
             let valor = texto.replace(regex,reemplazarCon);
             valor = valor.replace('/','');
+            valor = valor.replace('-','');
             valor = valor.replace(' pulg','');
             return valor;
             

@@ -651,7 +651,7 @@ let apigen = {
             data.map((rows)=>{
                     total = total + Number(rows.IMPORTE);
                     totalpedidos = totalpedidos + 1;
-                    let strClassFel = ''; let strClassFelCert ='hidden'; if(rows.FEL_UUDI.toString()=='NO'){strClassFel='hidden';strClassFelCert=''};
+                    let strClassFel = ''; let strClassFelCert ='hidden'; if(rows.FEL_UUDI.toString()=='SN'){strClassFel='hidden';strClassFelCert=''};
                     strdata = strdata + `
                             <tr>
                                 <td>
