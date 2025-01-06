@@ -193,6 +193,12 @@ async function addListeners(){
     });
 
 
+    document.getElementById('btnNuevoClienteUbicacion').addEventListener('click',()=>{
+
+        document.getElementById('btnTabListado').click();
+
+    });
+
 
     //carga la ubicación actual y general el mapa
     showUbicacion()

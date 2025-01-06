@@ -77,12 +77,10 @@ function getView(){
             <div class="col-md-4 col-sm-12 col-lg-4 col-lx-4"></div>
         </div>
 
-        <img src='http://alexissoporte-001-site1.etempurl.com/fondo' width='450px' height='200px'>
-
        
-         <div class="form-group" align="right">
-                                <small class="">Onne Managment - ${versionapp}</small>
-                            </div>
+        <div class="form-group" align="right">
+            <small class="">Onne Managment - ${versionapp}</small>
+        </div>
            
             
                        
