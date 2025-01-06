@@ -689,6 +689,11 @@ let apigen = {
                                     <b>${funciones.setMoneda(rows.IMPORTE,'Q')}</b>
                                     <br>
                                     <small>Status: ${rows.ST}</small>
+                                    <br>
+                                    <button class="${strClassFel} btn btn-warning btn-sm"
+                                        onclick="funciones.Aviso('En construccion');">
+                                        <i class="fal fa-dollar-sign"></i>Crear NC
+                                    </button> 
                                 </td>
                             </tr>`
             })

@@ -141,7 +141,7 @@ function getView(){
                         
                         <div class="table-responsive border-top-rounded border-bottom-rounded shadow">
                             <table class="table table-hover table-striped"><!--mt-5-->
-                                <thead class="bg-primary text-white">
+                                <thead class="bg-onne text-white">
                                     <tr>
                                         <th class="">Producto</th>
                                         <th class="">Subtotal</th>
@@ -153,9 +153,7 @@ function getView(){
                     </div>
                     <div>
 
-                        <button class="btn btn-xl btn-secondary btn-bottom-ml btn-circle hand shadow" id="btnCambiarCliente">
-                            <i class="fal fa-arrow-left"></i>
-                        </button>
+                       
                     
                         <button class="btn btn-circle btn-xl btn-success shadow btn-bottom-mr hand" id="btnAgregarProd">
                             <i class="fal fa-plus"></i>
@@ -179,7 +177,7 @@ function getView(){
             <div class="modal fade  modal-with-scroll" id="ModalBusqueda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-right" role="document">
                     <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
+                        <div class="modal-header bg-onne text-white">
                             <label class="h5" id="">Búsqueda de Productos</label>
                         </div>
 
@@ -188,9 +186,9 @@ function getView(){
                                 <div class="input-group">
                                     <select class="form-control negrita col-3 border-primary" id="cmbTipoPrecio">
                                         <option value="P">PUBLICO</option>
-                                        <option value="C">MAYOREO C</option>
-                                        <option value="B">MAYOREO B</option>
-                                        <option value="A">MAYOREO A</option>
+                                        <option value="C">PRECIO C</option>
+                                        <option value="B">PRECIO B</option>
+                                        <option value="A">PRECIO A</option>
                                     </select>
                                     <input id="txtBusqueda" type="text" class="form-control col-8 shadow border-primary text-primary" placeholder="Buscar código o descripción..." aria-label="" aria-describedby="button-addon4" />
                                     <div class="input-group-prepend">
@@ -200,7 +198,7 @@ function getView(){
                                     </div>
                                 </div>
                             <hr class="solid">
-                        <table class="table table-responsive table-bordered border-primary">
+                        <table class="table table-responsive table-bordered border-onne">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <td>Producto</td>
@@ -570,12 +568,9 @@ async function iniciarVistaVentas(nit,nombre,direccion){
 
 
     let lbNomClien = document.getElementById('lbNomClien');
-    lbNomClien.innerText = `${nombre} // ${direccion}`;
+    lbNomClien.innerText = `${nombre} - ${direccion}`;
     
-    document.getElementById('btnCambiarCliente').addEventListener('click',()=>{
-        classNavegar.inicioVendedor();
-    })
-
+  
 
     let txtFecha = document.getElementById('txtFecha');txtFecha.value = funciones.getFecha();
     document.getElementById('txtFechaVence').value  = funciones.getFecha();

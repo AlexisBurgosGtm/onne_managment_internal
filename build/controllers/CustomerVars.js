@@ -8,6 +8,5 @@ let GlobalEmpNombre = '';
 let GlobalVentaMinima = 1;
 
 let dataEmpresas = [ 
-    {codsucursal:"FURIZAR0001",nomsucursal:"FARMACIA URIZAR",color:"success"},
-    {codsucursal:"ONNE000",nomsucursal:"ONNE SYSTEMS",color:"success"},
+    {codsucursal:"TRIDENTE000",nomsucursal:"DOGUERIA TRIDENTE SIN FRONTERAS",color:"success"}
 ];

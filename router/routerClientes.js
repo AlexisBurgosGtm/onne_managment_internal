@@ -144,7 +144,10 @@ router.post("/listaajenosvendedor", async(req,res)=>{
                             DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
                             MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO
             WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
-            AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+                    AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+                OR
+                    (CLIENTES.EMPNIT = '${sucursal}') 
+                    AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
     `
     
     execute.Query(res,qry);
