@@ -1,4 +1,19 @@
-﻿
+﻿const configx = {
+	user: 'iEx',
+	password: 'iEx',
+	server: 'DESKTOP-3L7R1E4\\SQL22',
+	database: 'ONNE',
+	pool: {	
+		max: 100,	
+		min: 0,	
+		idleTimeoutMillis: 30000
+	},
+	options: {
+    	encrypt: false, // for azure
+    	trustServerCertificate: true // change to true for local dev / self-signed certs
+  }
+};
+
 
 
 const config = {

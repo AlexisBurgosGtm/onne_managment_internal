@@ -353,7 +353,7 @@ let apigen = {
         });
            
     },
-    clientesAjenosVendedor: async(sucursal,filtro,idContenedor)=>{
+    clientesAjenosVendedor: async(sucursal,filtro,visita,idContenedor)=>{
     
         let container = document.getElementById(idContenedor);
         container.innerHTML = GlobalLoader;
@@ -363,7 +363,8 @@ let apigen = {
         axios.post('/clientes/listaajenosvendedor', {
             app:GlobalSistema,
             sucursal: sucursal,
-            filtro: filtro
+            filtro: filtro,
+            visita:visita
         })
         .then((response) => {
             const data = response.data.recordset;
@@ -381,7 +382,9 @@ let apigen = {
                                     <small class="negrita text-danger">Tel: ${rows.TELEFONO}</small>    
                                 </div>
                                 <div class="col-4">
-                                    <small class="negrita">Visita: ${rows.VISITA}</small>    
+                                    <small class="negrita">Visita: ${rows.VISITA}</small> 
+                                    <br>
+                                    <small class="negrita text-danger">Última Venta: ${funciones.convertDateNormal(rows.LASTSALE)}</small>   
                                 </div>
                             </div>
                             <small>${funciones.limpiarTexto(rows.DIRCLIE)}, ${rows.DESMUNI}<b></b></small>
@@ -652,6 +655,7 @@ let apigen = {
                     total = total + Number(rows.IMPORTE);
                     totalpedidos = totalpedidos + 1;
                     let strClassFel = ''; let strClassFelCert ='hidden'; if(rows.FEL_UUDI.toString()=='SN'){strClassFel='hidden';strClassFelCert=''};
+                    strClassFelCert ='hidden';
                     strdata = strdata + `
                             <tr>
                                 <td>

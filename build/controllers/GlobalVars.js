@@ -1,4 +1,4 @@
-let versionapp = 'mod 06.01.2025';
+let versionapp = 'mod 12.01.2025';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
@@ -64,6 +64,7 @@ let GlobalSelectedExento = 0;
 let GlobalSelectedCosto = 0;
 let GlobalSelectedPrecio = 0;
 let GlobalSelectedExistencia = 0;
+let GlobalSelectedBono = 0;
 // global vars para cantidad producto
 
 let GlobalSelectedCodEmbarque ='';

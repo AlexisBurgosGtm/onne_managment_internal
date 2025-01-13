@@ -199,7 +199,7 @@ function getView(){
                                 </div>
                             <hr class="solid">
                         <table class="table table-responsive table-bordered border-onne">
-                            <thead class="bg-primary text-white">
+                            <thead class="bg-onne text-white">
                                 <tr>
                                     <td>Producto</td>
                                     <td>Precio</td>                         
@@ -754,13 +754,14 @@ function fcnIniciarModalCantidadProductos(){
     let txtSubTotal = document.getElementById('txtSubTotal'); //label
 
     btnAgregarProducto.addEventListener('click',()=>{
+
         GlobalSelectedCantidad = Number(txtCantidad.value);
         let totalunidades = (Number(GlobalSelectedEquivale) * Number(GlobalSelectedCantidad));
         let totalexento = GlobalSelectedCantidad * GlobalSelectedExento;
 
         
         
-        fcnAgregarProductoVenta(GlobalSelectedCodprod,GlobalSelectedDesprod,GlobalSelectedCodmedida,GlobalSelectedCantidad,GlobalSelectedEquivale,totalunidades,GlobalSelectedCosto,GlobalSelectedPrecio,totalexento);
+        fcnAgregarProductoVenta(GlobalSelectedCodprod,GlobalSelectedDesprod,GlobalSelectedCodmedida,GlobalSelectedCantidad,GlobalSelectedEquivale,totalunidades,GlobalSelectedCosto,GlobalSelectedPrecio,totalexento,GlobalSelectedBono);
         
         
     });
@@ -840,24 +841,26 @@ function fcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
                 }
 
                 str += `
-            <tr class="border-primary" id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});" class="border-bottom">
+            <tr class="border-primary" id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)},${Number(rows.BONO)});" class="border-bottom">
                 <td >
                     ${funciones.quitarCaracteres(rows.DESPROD,'"'," pulg",true)}
                     <br>
-                    <small class="text-danger"><b>${rows.CODPROD}</b></small>
-                    <small class="text-info">//Descripción:${rows.DESPROD3}</small>
+                    <small class="text-danger negrita">Cod: ${rows.CODPROD}</small>
+                    <br>
+                    <small class="text-info">BONO: &nbsp ${funciones.setMoneda(rows.BONO,'Q')}</small>
                     <br>
                     <b class"bg-danger text-white">${rows.CODMEDIDA}</b><small>(${rows.EQUIVALE})</small>
                     <br>
-                    <small class="negrita">Marca:${rows.DESMARCA}</small>
+                    <small class="negrita">Marca: &nbsp ${rows.DESMARCA}</small>
+
                 </td>
                 <td>${funciones.setMoneda(pre || 0,'Q ')}
                     <br>
                     <small class="${strC}">E:${funciones.setMoneda(exist,'')}</small>
                 </td>
                 <td>
-                    <button class="btn btn-sm btn-primary hand shadow btn-circle text-white" 
-                    onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});">
+                    <button class="btn btn-sm btn-secondary hand shadow btn-circle text-white" 
+                    onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)},${Number(rows.BONO)});">
                         +
                     </button>
                 </td>
@@ -879,91 +882,9 @@ function fcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
 
 };
 
-function BACKUPfcnBusquedaProducto(idFiltro,idTablaResultado,idTipoPrecio){
-    
-    let cmbTipoPrecio = document.getElementById(idTipoPrecio);
-
-    let filtro = document.getElementById(idFiltro).value;
-    
-    let tabla = document.getElementById(idTablaResultado);
-    tabla.innerHTML = GlobalLoader;
-
-
-    let str = ""; 
-
-    selectProducto(filtro)
-    .then((response) => {
-        const data = response;
-        //con esta variable determino el tipo de precio a usar            
-        let pre = 0;
-            
-            data.map((rows)=>{
-                let exist = Number(rows.EXISTENCIA)/Number(rows.EQUIVALE); let strC = '';
-                if(Number(rows.EXISTENCIA<=0)){strC='bg-danger text-white'}else{strC='bg-success text-white'};
-                let totalexento = 0;
-                if (rows.EXENTO==1){totalexento=Number(rows.PRECIO)}
-                
-                switch (cmbTipoPrecio.value) {
-                    case 'P':
-                        pre = Number(rows.PRECIO)
-                        break;
-                    case 'C':
-                        pre = Number(rows.PRECIOC)
-                        break;
-                    case 'B':
-                        pre = Number(rows.PRECIOB)
-                        break;
-                    case 'A':
-                        pre = Number(rows.PRECIOA)
-                        break;
-                    case 'K':
-                        pre = Number(0.01)
-                        break;
-     
-                }
-
-                str += `
-            <tr class="border-primary" id="${rows.CODPROD}" onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});" class="border-bottom">
-                <td >
-                    ${funciones.quitarCaracteres(rows.DESPROD,'"'," pulg",true)}
-                    <br>
-                    <small class="text-danger"><b>${rows.CODPROD}</b></small>
-                    <small class="text-info">//Descripción:${rows.DESPROD3}</small>
-                    <br>
-                    <b class"bg-danger text-white">${rows.CODMEDIDA}</b><small>(${rows.EQUIVALE})</small>
-                    <br>
-                    <small class="negrita">Marca:${rows.DESMARCA}</small>
-                </td>
-                <td>${funciones.setMoneda(pre || 0,'Q ')}
-                    <br>
-                    <small class="${strC}">E:${funciones.setMoneda(exist,'')}</small>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-primary hand shadow btn-circle text-white" 
-                    onclick="getDataMedidaProducto('${rows.CODPROD}','${funciones.quitarCaracteres(rows.DESPROD,'"'," plg",true)}','${rows.CODMEDIDA}',1,${rows.EQUIVALE},${rows.EQUIVALE},${rows.COSTO},${pre},${totalexento},${Number(rows.EXISTENCIA)});">
-                        +
-                    </button>
-                </td>
-            </tr>`
-            })
-            tabla.innerHTML= str;
-        
-    }, (error) => {
-        console.log(error);
-        tabla.innerHTML ='<label>Debe descargar los productos al menos una vez al día.. Descárguelos nuevamente por favor.</label>';
-    })
-    .catch((error)=>{
-        //funciones.AvisoError(error);
-        tabla.innerHTML ='<label>Debe descargar los productos al menos una vez al día.. Descárguelos nuevamente por favor.</label>';
-    })
-
-
-
-
-};
 
 //gestiona la apertura de la cantidad
-function getDataMedidaProducto(codprod,desprod,codmedida,cantidad,equivale,totalunidades,costo,precio,exento,existencia){
+function getDataMedidaProducto(codprod,desprod,codmedida,cantidad,equivale,totalunidades,costo,precio,exento,existencia,bono){
     console.log('existencia: ' + existencia);
 
     if(parseInt(existencia)>0){
@@ -974,9 +895,11 @@ function getDataMedidaProducto(codprod,desprod,codmedida,cantidad,equivale,total
         GlobalSelectedCosto = parseFloat(costo);
         GlobalSelectedPrecio = parseFloat(precio);
         
+
         GlobalSelectedExento = parseInt(exento);
         GlobalSelectedExistencia = parseInt(existencia);
-    
+        GlobalSelectedBono = bono;
+
         //modal para la cantidad del producto
         document.getElementById('txtDesProducto').innerText = desprod; //label
         document.getElementById('txtCodMedida').innerText = codmedida; //label
@@ -996,7 +919,7 @@ function getDataMedidaProducto(codprod,desprod,codmedida,cantidad,equivale,total
 //GRID TEMP VENTAS
 
 // agrega el producto a temp_ventas
-async function fcnAgregarProductoVenta(codprod,desprod,codmedida,cantidad,equivale,totalunidades,costo,precio,exento){
+async function fcnAgregarProductoVenta(codprod,desprod,codmedida,cantidad,equivale,totalunidades,costo,precio,exento,bono){
    
     db_totalunidades_producto(codprod)
     .then((totaluns)=>{
@@ -1034,7 +957,8 @@ async function fcnAgregarProductoVenta(codprod,desprod,codmedida,cantidad,equiva
                         EXENTO:exento,
                         USUARIO:GlobalUsuario,
                         TIPOPRECIO:cmbTipoPrecio.value,
-                        EXISTENCIA:GlobalSelectedExistencia
+                        EXISTENCIA:GlobalSelectedExistencia,
+                        BONO:Number(bono)
                     };
     
                     insertTempVentas(data)

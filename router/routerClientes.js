@@ -117,42 +117,87 @@ router.post("/listavendedor", async(req,res)=>{
 
 router.post("/listaajenosvendedor", async(req,res)=>{
 
-    const {sucursal,filtro, dia}  = req.body;
+    const {sucursal,filtro, visita}  = req.body;
 
     let qry = '';
-    qry = `
-                SELECT TOP 50
-                    CLIENTES.CODCLIENTE AS CODIGO, 
-                    CLIENTES.NIT, 
-                    CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
-                    CLIENTES.DIRCLIENTE AS DIRCLIE, 
-                    CLIENTES.TELEFONOCLIENTE AS TELEFONO, 
-                    CLIENTES.EMAILCLIENTE, 
-                    CLIENTES.LATITUDCLIENTE AS LAT, 
-                    CLIENTES.LONGITUDCLIENTE AS LONG,
-                    CLIENTES.PROVINCIA AS REFERENCIA, 
-                    CLIENTES.DIAVISITA AS VISITA,
-                    '' AS STVISITA, 
-                    CLIENTES.CODRUTA, 
-                    CLIENTES.HABILITADO, 
-                    CLIENTES.TIPONEGOCIO, 
-                    CLIENTES.NEGOCIO, 
-                    CLIENTES.LASTSALE, 
-                    MUNICIPIOS.DESMUNICIPIO AS DESMUNI, 
-                    DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO
-            FROM     CLIENTES LEFT OUTER JOIN
-                            DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
-                            MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO
-            WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
-                    AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
-                OR
-                    (CLIENTES.EMPNIT = '${sucursal}') 
-                    AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
-    `
+
+    switch (visita) {
+        case 'TODOS':
+            qry = `
+            SELECT TOP 50
+                CLIENTES.CODCLIENTE AS CODIGO, 
+                CLIENTES.NIT, 
+                CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
+                CLIENTES.DIRCLIENTE AS DIRCLIE, 
+                CLIENTES.TELEFONOCLIENTE AS TELEFONO, 
+                CLIENTES.EMAILCLIENTE, 
+                CLIENTES.LATITUDCLIENTE AS LAT, 
+                CLIENTES.LONGITUDCLIENTE AS LONG,
+                CLIENTES.PROVINCIA AS REFERENCIA, 
+                CLIENTES.DIAVISITA AS VISITA,
+                '' AS STVISITA, 
+                CLIENTES.CODRUTA, 
+                CLIENTES.HABILITADO, 
+                CLIENTES.TIPONEGOCIO, 
+                CLIENTES.NEGOCIO, 
+                ISNULL(CLIENTES.LASTSALE,'2020-01-01') AS LASTSALE, 
+                MUNICIPIOS.DESMUNICIPIO AS DESMUNI, 
+                DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO
+        FROM     CLIENTES LEFT OUTER JOIN
+                        DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                        MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO
+        WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+            OR
+                (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
+                    `
+            break;
+    
+        default:
+            qry = `
+            SELECT TOP 150
+                CLIENTES.CODCLIENTE AS CODIGO, 
+                CLIENTES.NIT, 
+                CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
+                CLIENTES.DIRCLIENTE AS DIRCLIE, 
+                CLIENTES.TELEFONOCLIENTE AS TELEFONO, 
+                CLIENTES.EMAILCLIENTE, 
+                CLIENTES.LATITUDCLIENTE AS LAT, 
+                CLIENTES.LONGITUDCLIENTE AS LONG,
+                CLIENTES.PROVINCIA AS REFERENCIA, 
+                CLIENTES.DIAVISITA AS VISITA,
+                '' AS STVISITA, 
+                CLIENTES.CODRUTA, 
+                CLIENTES.HABILITADO, 
+                CLIENTES.TIPONEGOCIO, 
+                CLIENTES.NEGOCIO, 
+                 ISNULL(CLIENTES.LASTSALE,'2020-01-01') AS LASTSALE,  
+                MUNICIPIOS.DESMUNICIPIO AS DESMUNI, 
+                DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO
+        FROM     CLIENTES LEFT OUTER JOIN
+                        DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                        MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO
+        WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+                AND (CLIENTES.DIAVISITA='${visita}')
+            OR
+                (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
+                AND (CLIENTES.DIAVISITA='${visita}')
+                `
+
+            break;
+    }
+
+   
     
     execute.Query(res,qry);
 
 })
+
+
+
 
 //LISTADO DE CLIENTES POR SUCURSAL
 router.post('/clientesvendedor',async(req,res)=>{

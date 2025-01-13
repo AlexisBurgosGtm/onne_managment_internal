@@ -1,5 +1,5 @@
-const DbName = "onne_managment_v1";
-const DbName_old = "onne_managment_v1";
+const DbName = "onne_managment_v3";
+const DbName_old = "onne_managment_v3";
 
 var tblDocumentos = {
     name: 'documentos',
@@ -98,7 +98,9 @@ var tblTempventas = {
         USUARIO:{dataType: "string"},
         TIPOPRECIO:{dataType: "string"},
         TIPOPROD:{dataType: "string"},
-        EXISTENCIA:{dataType: "number"}
+        EXISTENCIA:{dataType: "number"},
+        BONO:{dataType: "number"},
+        NOLOTE:{dataType: "string"}
     }
 };
 

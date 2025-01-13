@@ -168,8 +168,11 @@ function getView(){
                 <label class="negrita">Busque un cliente para la nueva Venta:</label>
                 <div class="input-group">
                                   
-                    <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
-                    <div class="input-group-append">
+                    <div class="input-group">
+                        <select class="form-control negrita text-primary" id="cmbVisita">
+                        </select>
+                        <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
+                    
                         <button class="btn btn-md btn-onne btn-round" id="btnClientesAjenosBuscar">
                             <i class="fal fa-search"></i>
                         </button>    
@@ -588,6 +591,16 @@ async function setRecordatorioVisita(codigo, nit, nombre, direccion){
 
 async function addListeners(){
 
+
+    let cmbVisita = document.getElementById('cmbVisita');
+    cmbVisita.innerHTML = `<option value='TODOS'>TODOS</option>` + funciones.ComboSemana("LETRAS");
+
+    let fa = new Date();
+    cmbVisita.value = funciones.getDiaSemana(fa.getDay());
+
+
+
+
     document.getElementById('btnTabNVAtras').addEventListener('click',()=>{
         document.getElementById('tab-inicio').click();
     });
@@ -596,10 +609,7 @@ async function addListeners(){
         document.getElementById('tab-no-visitados').click();
     });
 
-    //document.getElementById('btnTabAAtras').addEventListener('click',()=>{
-        //document.getElementById('tab-inicio').click();
-    //});
-    
+ 
 
     document.getElementById('btnNuevoCliente').addEventListener('click',()=>{
         
@@ -690,10 +700,11 @@ async function addListeners(){
     let btnClientesAjenosBuscar = document.getElementById('btnClientesAjenosBuscar');
     btnClientesAjenosBuscar.addEventListener('click', async ()=>{
         let txtClientesAjenosBuscar = document.getElementById('txtClientesAjenosBuscar');
-        await apigen.clientesAjenosVendedor(GlobalCodSucursal,txtClientesAjenosBuscar.value,'tblClientesAjenos')
+        await apigen.clientesAjenosVendedor(GlobalCodSucursal,txtClientesAjenosBuscar.value,cmbVisita.value,'tblClientesAjenos')
     })
     
-    await apigen.vendedorTotalDia(GlobalCodSucursal,GlobalCodUsuario,funciones.getFecha(),'lbTotalDia');
+
+    //await apigen.vendedorTotalDia(GlobalCodSucursal,GlobalCodUsuario,funciones.getFecha(),'lbTotalDia');
 
     //verifica si hay pedidos pendientes
     dbCargarPedidosPendientes();

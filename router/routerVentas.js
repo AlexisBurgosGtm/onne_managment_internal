@@ -209,57 +209,27 @@ router.post("/buscarproductotodos", async(req,res)=>{
   
     let qry ='';
     qry = `
-            SELECT TOP (50) PRODUCTOS.EMPNIT AS CODSUCURSAL, PRODUCTOS.CODPROD, PRODUCTOS.DESPROD, PRODUCTOS.DESPROD2, PRODUCTOS.DESPROD3, PRODUCTOS.TIPOPROD, PRODUCTOS.EXENTO, 
-                  PRODUCTOS.EXISTENCIA AS EXISTENCIA2, PRODUCTOS.NF, PRODUCTOS.HABILITADO, PRECIOS.CODMEDIDA, PRECIOS.EQUIVALE, PRECIOS.COSTO, PRECIOS.PRECIO, PRECIOS.MAYOREOA AS PRECIOA, 
-                  PRECIOS.MAYOREOB AS PRECIOB, PRECIOS.MAYOREOC AS PRECIOC, MARCAS.DESMARCA, view_invsaldo.EXISTENCIA
+            SELECT TOP (30) PRODUCTOS.EMPNIT AS CODSUCURSAL, PRODUCTOS.CODPROD, PRODUCTOS.DESPROD, 
+                    PRODUCTOS.DESPROD2, PRODUCTOS.DESPROD3, PRODUCTOS.TIPOPROD, 
+                    PRODUCTOS.EXENTO, 
+                    PRODUCTOS.EXISTENCIA AS EXISTENCIA2, PRODUCTOS.NF, 
+                    PRODUCTOS.HABILITADO, PRECIOS.CODMEDIDA, PRECIOS.EQUIVALE, 
+                    PRECIOS.COSTO, PRECIOS.PRECIO, PRECIOS.MAYOREOA AS PRECIOA, 
+                  PRECIOS.MAYOREOB AS PRECIOB, PRECIOS.MAYOREOC AS PRECIOC, 
+                  MARCAS.DESMARCA, view_invsaldo.EXISTENCIA, 
+                  (ISNULL(PRODUCTOS.BONO,0) * PRECIOS.EQUIVALE) AS BONO
             FROM  PRODUCTOS LEFT OUTER JOIN
                   view_invsaldo ON PRODUCTOS.CODPROD = view_invsaldo.CODPROD AND PRODUCTOS.EMPNIT = view_invsaldo.EMPNIT LEFT OUTER JOIN
                   MARCAS ON PRODUCTOS.CODMARCA = MARCAS.CODMARCA AND PRODUCTOS.EMPNIT = MARCAS.EMPNIT LEFT OUTER JOIN
                   PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
-            WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') AND (PRODUCTOS.CODPROD = '${filtro}') AND (PRODUCTOS.HABILITADO = 'SI') OR
-                  (PRODUCTOS.EMPNIT = '${sucursal}') AND (PRODUCTOS.HABILITADO = 'SI') AND (PRODUCTOS.DESPROD LIKE '%${filtro}%')
-
-    `
-            
-    execute.Query(res,qry);
-
-})
-
-router.post("/FUNCIONAL_buscarproductotodos", async(req,res)=>{
-    
-    const {sucursal,filtro} = req.body;
-  
-    let qry ='';
-    qry = `
-        SELECT TOP 50
-            PRODUCTOS.EMPNIT AS CODSUCURSAL, 
-            PRODUCTOS.CODPROD, 
-            PRODUCTOS.DESPROD, 
-            PRODUCTOS.DESPROD2, 
-            PRODUCTOS.DESPROD3, 
-            PRODUCTOS.TIPOPROD,
-            PRODUCTOS.EXENTO, 
-            PRODUCTOS.EXISTENCIA, 
-            PRODUCTOS.NF, 
-            PRODUCTOS.HABILITADO, 
-            PRECIOS.CODMEDIDA, 
-            PRECIOS.EQUIVALE, 
-            PRECIOS.COSTO, 
-            PRECIOS.PRECIO, 
-            PRECIOS.MAYOREOA AS PRECIOA, 
-            PRECIOS.MAYOREOB AS PRECIOB, 
-            PRECIOS.MAYOREOC AS PRECIOC,
-            MARCAS.DESMARCA
-        FROM     PRODUCTOS LEFT OUTER JOIN
-                  MARCAS ON PRODUCTOS.CODMARCA = MARCAS.CODMARCA AND PRODUCTOS.EMPNIT = MARCAS.EMPNIT LEFT OUTER JOIN
-                  PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
-        WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') 
-                AND (PRODUCTOS.CODPROD = '${filtro}') 
-                AND (PRODUCTOS.HABILITADO='SI')
+            WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') 
+                    AND (PRODUCTOS.CODPROD = '${filtro}') 
+                    AND (PRODUCTOS.HABILITADO = 'SI') 
             OR
-            (PRODUCTOS.EMPNIT = '${sucursal}') 
-                AND (PRODUCTOS.DESPROD LIKE '%${filtro}%') 
-                AND (PRODUCTOS.HABILITADO='SI')
+                  (PRODUCTOS.EMPNIT = '${sucursal}') 
+                  AND (PRODUCTOS.HABILITADO = 'SI') 
+                  AND (PRODUCTOS.DESPROD LIKE '%${filtro}%')
+
     `
             
     execute.Query(res,qry);
@@ -416,159 +386,6 @@ router.get("/buscarcliente", async(req,res)=>{
 
 });
 
-// INSERTA UN PEDIDO EN LAS TABLAS DE DOCUMENTOS Y DOCPRODUCTOS
-router.post("/documentos", async (req,res)=>{
-    
-    const {app,empnit,anio,mes,dia,coddoc,fecha,fechaentrega,formaentrega,codcliente,nomclie,codbodega,totalcosto,totalprecio,nitclie,dirclie,obs,direntrega,usuario,codven,lat,long} = req.body;
-    
-
-    let correlativo = req.body.correlativo;
-    let ncorrelativo = correlativo;
-
-    //variables sin asignar
-    let concre = 'CRE';
-    let abono = totalprecio; 
-    let saldo = totalprecio;
-    let pagotarjeta = 0; let recargotarjeta = 0;
-    let codrep = 0;
-    let totalexento=0;
-
-    switch (correlativo.toString().length) {
-        case 1:
-            correlativo = '         ' + correlativo;
-        break;
-        case 2:
-            correlativo = '        ' + correlativo;
-        break;
-        case 3:
-            correlativo = '       ' + correlativo;
-            
-        break;
-        case 4:
-            correlativo = '      ' + correlativo;
-            break;
-        case 5:
-            correlativo = '     ' + correlativo;
-            break;
-        case 6:
-            correlativo = '    ' + correlativo;
-            break;
-        case 7:
-            correlativo = '   ' + correlativo;
-            break;
-        case 8:
-            correlativo = '  ' + correlativo;
-        break;
-        case 9:
-            correlativo = ' ' + correlativo;
-        break;
-        case 10:
-            correlativo = correlativo;
-        break;
-        default:
-            break;
-    };
-    
-    let nuevocorrelativo = Number(ncorrelativo) + 1;
-
-
-    let qry = ''; // inserta los datos en la tabla documentos
-    let qrydoc = ''; // inserta los datos de la tabla docproductos
-    let qrycorrelativo = ''; //actualiza el correlativo del documento
-
-            qry = `INSERT INTO ME_DOCUMENTOS (
-                EMP_NIT, DOC_ANO, DOC_MES, CODDOC, DOC_NUMERO, 
-                CODCAJA, DOC_FECHA, DOC_NUMREF, DOC_NOMREF, BODEGAENTRADA,
-                BODEGASALIDA, USUARIO, DOC_ESTATUS, DOC_TOTALCOSTO, DOC_TOTALVENTA,
-                DOC_HORA, DOC_FVENCE, DOC_DIASCREDITO, DOC_CONTADOCREDITO, DOC_DESCUENTOTOTAL,
-                DOC_DESCUENTOPROD, DOC_PORDESCUTOTAL, DOC_IVA, DOC_SUBTOTALIVA, DOC_SUBTOTAL,
-                NITCLIE, DOC_PORDESCUFAC, CODVEN, DOC_ABONOS, DOC_SALDO,
-                DOC_VUELTO, DOC_NIT, DOC_PAGO, DOC_CODREF, DOC_TIPOCAMBIO,
-                DOC_PARCIAL, DOC_ANTICIPO, ANT_CODDOC, ANT_DOCNUMERO, DOC_OBS,
-                DOC_PORCENTAJEIVA, DOC_ENVIO, DOC_CUOTAS, DOC_TIPOCUOTA, 
-                DIVA_NUMINT, FRT_CODIGO, TRANSPORTE, DOC_REFPEDIDO, DOC_REFFACTURA,
-                CODPROV, DOC_TOTALOTROS, DOC_RECIBO, DOC_MATSOLI, DOC_REFERENCIA, 
-                DOC_LUGAR, DOC_ANOMBREDE, DOC_IVAEXO, DOC_VALOREXO, DOC_SECTOR,
-                DOC_DIRENTREGA, DOC_CANTENV, DOC_EXP, DOC_FECHAENT, TIPOPRODUCCION,
-                DOC_TOTCOSINV, DOC_TOTALFIN, USUARIOENUSO, DOC_IMPUESTO1, DOC_TOTALIMPU1,
-                DOC_PORCOMI, DOC_DOLARES, CODMESA, DOC_TIPOOPE, USUARIOAUTORIZA, 
-                NUMAUTORIZA, DOC_TEMPORADA, DOC_INGUAT,
-                CODVENBOD,
-                CODHABI, DOC_SERIE,
-                CTABAN, NUMINTBAN, 
-                CODVENEMP,
-                DOC_TOTCOSDOL, DOC_TOTCOSINVDOL, CODUNIDAD,
-                TOTCOMBUSTIBLE, DOC_CODCONTRA, DOC_NUMCONTRA, INTERES, ABONOINTERES,
-                SALDOINTERES, NUMEROCORTE, DOC_PORLOCAL, DOC_NUMORDEN, DOC_FENTREGA,
-                DOC_INTERESADO, DOC_RECIBE, NUMEROROLLO, COD_CENTRO, GENCUOTA,
-                DOC_PORINGUAT, DOC_INGUATEXENTO, DOC_TIPOTRANIVA, DOC_PORTIMBREPRE, DOC_TIMBREPRENSA,
-                ABONOSANTICIPO, SALDOANTICIPO, DOC_PRODEXENTO, PUNTOSGANADOS, PUNTOSUSADOS,
-                APL_ANTICIPO, COD_DEPARTA, FIRMAELECTRONICA, DOC_CODDOCRETENCION, DOC_SERIERETENCION,
-                DOC_NUMRETENCION, FIRMAISC, ISCENVIADO, LAT, LONG, CODSUCURSAL
-                ) 
-                VALUES (
-                '${empnit}', ${anio}, ${mes}, '${coddoc}', '${correlativo}',
-                '', '${fecha}', '', '${nomclie}', '',
-                '${codbodega}', '${usuario}', 'O', ${totalcosto}, ${totalprecio},
-                0, '${fecha}', 0, '${concre}', 0,
-                0, 0, 0, ${totalprecio}, ${totalprecio},
-                '${nitclie}', 0, '${codven}', 0, ${saldo}, 
-                0, '${nitclie}', 0, '', 1, 
-                0, 0, '', '', '${obs}',
-                0, 0, 0, 0, 
-                0, '', '${formaentrega}', '', '',
-                '', 0, 0, '${direntrega}', '', 
-                '', '', '', 0, '', 
-                '${dirclie}', '', '', '${fechaentrega}', '',
-                ${totalcosto}, 0, '', 0, 0,
-                0, 0, '', 0,'',
-                0, 0, 0,
-                0,
-                '', '', 
-                0, 0, 
-                0,
-                0, 0, '',
-                0, '', '', 0, 0, 
-                0, 0, 0, '','NO',
-                '', '', 0, '', '',
-                0, 'N', 'C', 0, 0,
-                0, 0, 0, 0, 0,
-                '', '', '', '', '',
-                '', '', 0, ${lat},${long},'${app}'
-                );`
-                  //GETANSINULL()
-            qrydoc = `INSERT INTO ME_DOCPRODUCTOS 
-                  (EMP_NIT,DOC_ANO,DOC_MES,CODDOC,DOC_NUMERO,
-                  DOC_ITEM,CODPROD,CODMEDIDA,CANTIDAD,EQUIVALE,
-                  CANTIDADINV,COSTO,PRECIO,TOTALCOSTO,TOTALPRECIO,
-                  BODEGAENTRADA,BODEGASALIDA,SUBTOTAL,DESCUENTOPROD,PORDESCUPROD,
-                  DESCUENTOFAC,PORDESCUFAC,TOTALDESCUENTO,DESCRIPCION,SUBTOTALPROD,
-                  TIPOCAMBIO,PRODPRECIO,CANTIDADENVIADA,CODFAC,NUMFAC,
-                  ITEMFAC,NOAFECTAINV, DOCPESO,COSTOINV,FLETE,TOTALPRECIOFIN,PRECIOFIN,TOTALCOSTOINV,CANTIDADBONI,CODOPR,NUMOPR,
-                  ITEMOPR,CODINV,NUMINV,ITEMINV,TIPOCLIE,LISTA,PORIVA,VALORIVA,NOLOTE,VALORIMPU1,DESEMPAQUE,
-                  SALDOINVANTCOM,NCUENTAMESA,CUENTACERRADA,COSTODOL,COSTOINVDOL,TOTALCOSTODOL,TOTALCOSTOINVDOL,
-                  IMPCOMBUSTIBLE,CODVENPROD,COMIVEN,SOBREPRECIO,CODREG,NUMREG,ITEMREG,CANTIDADORIGINAL,CANTIDADMODIFICADA,NSERIETARJETA,
-                  CODOC,NUMOC,PORTIMBREPRENSA,VALORTIMBREPRENSA,CODTIPODESCU,TOTALPUNTOS,ITEMOC,CODPRODORIGEN,CODMEDIDAORIGEN,
-                  CANTIDADDEVUELTA,CODARANCEL,TIPOPRECIO,CODSUCURSAL) 
-                  SELECT 
-                  EMPNIT,${anio} as DOC_ANO,${mes} AS DOC_MES,'${coddoc}' AS CODDOC,'${correlativo}' AS DOC_NUMERO,
-                  ID AS DOC_ITEM,CODPROD,CODMEDIDA,CANTIDAD, EQUIVALE,
-                  TOTALUNIDADES AS CANTIDADINV,COSTO,PRECIO,TOTALCOSTO,TOTALPRECIO,
-                  '','${codbodega}',
-                  TOTALPRECIO,0,0,0,0,0,DESPROD,TOTALPRECIO,1,PRECIO,0,'','',0,0,
-                  0,COSTO,0,TOTALPRECIO,
-                  PRECIO,TOTALCOSTO,0,'','',0,'','',0,
-                  'P',
-                  '',
-                  0,0,'SN',0,'',0,'',0,0,COSTO,0,TOTALCOSTO,0,0,0,0,'','',0,0,0,'','','',0,0,'',0,0,'','',0,'',TIPOPRECIO,'${app}'
-                  FROM ME_TEMP_VENTAS   
-                  WHERE EMPNIT='${empnit}' AND USUARIO='${usuario}';`
-            qrycorrelativo =`UPDATE ME_TIPODOCUMENTOS SET CORRELATIVO=${nuevocorrelativo} WHERE CODSUCURSAL='${app}' AND CODDOC='${coddoc}';`
-            
- 
-    execute.Query(res,qrycorrelativo + qry + qrydoc);
-    
-});
 
 
 
@@ -1053,7 +870,8 @@ router.post("/insertventa", async (req,res)=>{
             ,TIPOPRECIO
             ,LASTUPDATE
             ,TOTALUNIDADES_DEVUELTAS
-            ,POR_IVA)
+            ,POR_IVA
+            ,BONO)
         SELECT 
             '${p.EMPNIT}' AS EMPNIT
             ,${anio} AS ANIO
@@ -1089,7 +907,8 @@ router.post("/insertventa", async (req,res)=>{
             ,'${p.TIPOPRECIO}' AS TIPOPRECIO
             ,'${fecha}' AS LASTUPDATE
             ,0 AS TOTALUNIDADES_DEVUELTAS
-            ,${poriva} AS POR_IVA;`
+            ,${poriva} AS POR_IVA
+            ,${p.BONO};`
     });
 
 
@@ -1173,7 +992,7 @@ router.post("/insertventa", async (req,res)=>{
                     ,'${dirclie}' AS DOC_DIRCLIE
                     ,${totalcosto} AS TOTALCOSTO
                     ,${totalprecio} AS TOTALPRECIO
-                    ,'ONNE-MANAGMENT' AS CODEMBARQUE
+                    ,'APP' AS CODEMBARQUE
                     ,'O' AS STATUS
                     ,'${usuario}' AS USUARIO
                     ,'${concre}' AS CONCRE
@@ -1188,7 +1007,7 @@ router.post("/insertventa", async (req,res)=>{
                     ,${abono} AS DOC_ABONO
                     ,'' AS OBSMARCA
                     ,0 AS TOTALDESCUENTO
-                    ,0 AS CODCAJA
+                    ,1 AS CODCAJA
                     ,0 AS TOTALTARJETA
                     ,0 AS RECARGOTARJETA
                     ,'' AS DIRENTREGA
@@ -1233,47 +1052,6 @@ router.post("/updatecorrelativo", async (req,res)=>{
 
 });
 
-function getCorrelativo(correlativo){
-    let numdoc = '';
-
-    switch (correlativo.toString().length) {
-        case 1:
-            numdoc = '         ' + correlativo;
-        break;
-        case 2:
-            numdoc = '        ' + correlativo;
-        break;
-        case 3:
-            numdoc = '       ' + correlativo;
-        break;
-        case 4:
-            numdoc = '      ' + correlativo;
-            break;
-        case 5:
-            numdoc = '     ' + correlativo;
-            break;
-        case 6:
-            numdoc = '    ' + correlativo;
-            break;
-        case 7:
-            numdoc = '   ' + correlativo;
-            break;
-        case 8:
-            numdoc = '  ' + correlativo;
-        break;
-        case 9:
-            numdoc = ' ' + correlativo;
-        break;
-        case 10:
-            numdoc = correlativo;
-        break;
-        default:
-            break;
-    };
-
-    return numdoc;
-
-};
 
 
 
