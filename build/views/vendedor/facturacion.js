@@ -557,7 +557,7 @@ function getView(){
 
 };
 
-async function iniciarVistaVentas(nit,nombre,direccion){
+async function iniciarVistaVentas(codcliente,nombre,direccion,nit){
 
     
     //inicializa la vista
@@ -1353,15 +1353,7 @@ async function fcnCargarComboTipoPrecio(){
 //FINALIZAR PEDIDO
 function fcnFinalizarPedido(){
     
-    /*
-    if(Number(GlobalTotalDocumento)<Number(GlobalVentaMinima)){
-        funciones.AvisoError('Pedido menor al mínimo de venta');
-        try {
-            funciones.hablar('Advertencia. Este pedido es menor al mínimo de venta permitido');    
-        } catch (error) {          
-        }      
-    };*/
-
+   
    
 
     if(GlobalTotalDocumento==0){
@@ -1478,10 +1470,10 @@ function fcnFinalizarPedido(){
                             formaentrega:cmbTipoEntrega,
                             concre:cmbTipoEntrega,
                             codbodega:codbodega,
-                            codcliente: codcliente,
                             nomclie:ClienteNombre,
                             totalcosto:GlobalTotalCostoDocumento,
                             totalprecio:GlobalTotalDocumento,
+                            codcliente: codcliente,
                             nitclie:nit,
                             dirclie:dirclie,
                             obs:obs,

@@ -503,7 +503,7 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
     GlobalSelectedDirCliente = direccion;
     
 
-    classNavegar.ventas(GlobalSelectedCodCliente,GlobalSelectedNomCliente,GlobalSelectedDirCliente);
+    classNavegar.ventas(GlobalSelectedCodCliente,GlobalSelectedNomCliente,GlobalSelectedDirCliente,nit);
 
     //showMenuLateral('Opciones del Cliente');
 
