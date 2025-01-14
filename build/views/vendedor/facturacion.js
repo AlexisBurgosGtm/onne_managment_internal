@@ -1053,6 +1053,8 @@ async function fcnCargarGridTempVentas(idContenedor){
                                         Cant:<b class="text-danger h4" id=${idcant}>${rows.CANTIDAD}</b>  ${rows.CODMEDIDA}  ||  Precio:<b>${funciones.setMoneda(rows.PRECIO,'Q')}</b>
                                     </small>
                                 <br>
+                                    <small>Bono: ${funciones.setMoneda(rows.BONO,'Q')}</small>
+                                <br>
                                 <div class="row">
                                     <div class="col-4"></div>
                                     <div class="col-4 " align="right">

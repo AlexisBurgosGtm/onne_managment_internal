@@ -1,4 +1,4 @@
-﻿const configx = {
+﻿const configX = {
 	user: 'iEx',
 	password: 'iEx',
 	server: 'DESKTOP-3L7R1E4\\SQL22',
