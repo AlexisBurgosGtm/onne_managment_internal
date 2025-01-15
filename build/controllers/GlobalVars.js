@@ -16,6 +16,7 @@ const hideMenuLateral =()=>{ $("#modalMenu").modal('hide'); lbMenuTitulo.innerTe
 
 
 
+
 let GlobalSelectedClientesDia ='SN';
 let GlobalSelectedDiaUpdated  = 0;
 let SelectedCodUpdate = '';
@@ -159,3 +160,64 @@ var logger = function()
 }();
 
 
+
+function get_print_factura(coddoc,correlativo){
+
+
+    let rootPrint = document.getElementById('rootPrint');
+
+    rootPrint.innerHTML = GlobalLoader;
+    
+    //$("#modal_imprimir").modal('show');
+
+    apigen.promise_detalle_pedido(coddoc,correlativo)
+    .then((data)=>{
+
+        let strProductos = '';
+        data.recordset.map((r)=>{
+
+            strProductos += `
+                    <tr>
+                        <td>${r.DESPROD}
+                            <br>
+                            <small class="negrita">${r.CODMEDIDA}</small>
+                        </td>
+                        <td>${r.CANTIDAD}</td>
+                        <td>${funciones.setMoneda(r.IMPORTE,"Q")}</td>
+                    </tr>
+                    `
+
+        })
+
+        let formato = `
+            <h5 class="negrita">${GlobalEmpNombre}</h5>
+            <br>
+            <h5>Tel: ${GlobalEmpTelefono}</h5>
+            <br>
+            <small>Recordatorio de Pedido</small>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <td>PRODUCTO - </td> <td>CANT - </td> <td>IMPORTE</td>
+                    </tr>
+                </thead>
+                <tbody>${strProductos}</tbody>
+            </table>
+            <br><br>
+            <small>Este no es un documento fiscal</small>
+        `
+        rootPrint.innerHTML = formato;
+
+        //funciones.imprimirSelec('rootPrint');
+
+    })
+    .catch(()=>{
+        rootPrint.innerHTML = 'Ups... el formato no funciona';
+
+    })
+
+    
+    
+
+}

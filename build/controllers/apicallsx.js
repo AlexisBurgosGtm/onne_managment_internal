@@ -406,7 +406,7 @@ let apigen = {
                                 </div>
                                 
                                 <div class="col-4">
-                                    <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
+                                    <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
                                         <i class="fal fa-shopping-cart"></i>Nueva factura
                                     </button>
                                 </div>
@@ -656,10 +656,13 @@ let apigen = {
                     totalpedidos = totalpedidos + 1;
                     let strClassFel = ''; let strClassFelCert ='hidden'; if(rows.FEL_UUDI.toString()=='SN'){strClassFel='hidden';strClassFelCert=''};
                     strClassFelCert ='hidden';
-                    strdata = strdata + `
+                    strdata += `
                             <tr>
                                 <td>
                                     <b class="text-danger">${rows.CODDOC + '-' + rows.CORRELATIVO}</b>
+                                    <button class="btn btn-secondary btn-md hand shadow" onclick="get_print_factura('${rows.CODDOC}','${rows.CORRELATIVO}')">
+                                        <i class="fal fa-print"></i> Imprimir comprobante
+                                    </button>
                                     <br>
                                         N:${rows.NEGOCIO} - C:${rows.NOMCLIE}
                                     <br>
@@ -2686,6 +2689,36 @@ let apigen = {
         });
            
     },
+    promise_detalle_pedido: (coddoc,correlativo)=>{
+
+        return new Promise((resolve,reject)=>{
+    
+                axios.post('/digitacion/detallepedido', {
+                    sucursal: GlobalEmpnit,
+                    coddoc:coddoc,
+                    correlativo:correlativo
+                })
+                .then((response) => {
+                
+                    if(response.status.toString()=='200'){
+                        let data = response.data;
+                        if(Number(data.rowsAffected[0])>0){
+                            resolve(data);             
+                        }else{
+                            reject();
+                        }            
+                    }else{
+                        reject();
+                    }
+                    
+                }, (error) => {
+                    reject();
+                });
+
+        })
+        
+           
+    },
     digitadorDetallePedidoWhatsapp: async(fecha,coddoc,correlativo,numero)=>{
 
 
@@ -2768,53 +2801,6 @@ let apigen = {
             container.innerHTML = '';
         });
            
-    },
-    digitadorBloquearPedido: async(sucursal,codven,coddoc,correlativo)=>{
-        
-        return new Promise((resolve,reject)=>{
-            axios.put('/digitacion/pedidobloquear',{
-                sucursal:sucursal,
-                coddoc:coddoc,
-                correlativo:correlativo,
-                codven:codven
-            })
-            .then((response) => {
-                
-               resolve();             
-            }, (error) => {
-                
-                reject();
-            });
-
-
-        })
-    },
-    digitadorQuitarRowPedido: async(item,coddoc,correlativo,totalprecio,totalcosto)=>{
-        console.log(item)
-        console.log(coddoc)
-        console.log(correlativo)
-        console.log(totalprecio)
-        console.log(totalcosto)
-
-        return new Promise((resolve,reject)=>{
-            axios.put('/digitacion/pedidoquitaritem',{
-                sucursal:GlobalCodSucursal,
-                coddoc:coddoc,
-                correlativo:correlativo,
-                item:item,
-                totalprecio:totalprecio,
-                totalcosto:totalcosto
-            })
-            .then((response) => {
-                
-               resolve();             
-            }, (error) => {
-                console.log(error);        
-                reject(error);
-            });
-
-
-        })
     },
     digitadorConfirmarPedido: async(sucursal,codven,coddoc,correlativo,embarque)=>{
         return new Promise((resolve,reject)=>{

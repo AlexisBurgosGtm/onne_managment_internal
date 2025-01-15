@@ -2,7 +2,9 @@ let GlobalToken = '';
 let GlobalCodSucursal = '';
 
 let GlobalEmpnit = '';
-let GlobalEmpNombre = '';
+let GlobalEmpNombre = "DROGUERIA TRIDENTE SIN FRONTERAS";;
+let GlobalEmpTelefono = "7777-7777"
+
 
 
 let GlobalVentaMinima = 1;

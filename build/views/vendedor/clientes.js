@@ -489,6 +489,12 @@ function Lmap(lat,long){
 function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
     
     
+    console.log('getMenuCliente')
+    console.log(codigo)
+    console.log(nombre)
+    console.log(direccion)
+    console.log(nit)
+    
     //map.remove()
     //map = Lmap(lat,long,nombre,telefono);
 
@@ -509,28 +515,7 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
 
 };
 
-function getMenuCliente2(codigo,nombre,direccion,telefono,lat,long,nit){
-    
-    
-    //map.remove()
-    //map = Lmap(lat,long,nombre,telefono);
 
-    document.getElementById('lbNombreCliente').innerHTML = nombre;
-    document.getElementById('txtCodClie').value = codigo;
-    document.getElementById('txtNitClie').value = nit;
-    document.getElementById('txtDirClie').value = direccion;
-    document.getElementById('txtTelClie').value = telefono;
-    
-    GlobalSelectedCodCliente = codigo;
-    GlobalSelectedNomCliente = nombre;
-    GlobalSelectedDirCliente = direccion;
-    
-
-    //classNavegar.ventas(GlobalSelectedCodCliente,GlobalSelectedNomCliente,GlobalSelectedDirCliente);
-
-    showMenuLateral('Opciones del Cliente');
-
-};
 
 function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio){
     
@@ -641,47 +626,8 @@ async function addListeners(){
         hideMenuLateral()
     });
 
-    let btnTiendaCerrada = document.getElementById('btnTiendaCerrada');
-    btnTiendaCerrada.addEventListener('click',()=>{
-        funciones.Confirmacion('Se marcará este cliente como CERRADA. ¿Está seguro?')
-        .then((value)=>{
-            if(value==true){
-                apigen.updateClientesLastSale(GlobalSelectedCodCliente,'CERRADO')
-                .then(async()=>{
-                    funciones.Aviso('TIENDA CERRADA');
-                    //await apigen.clientesVendedor(GlobalCodSucursal,GlobalCodUsuario,cmbDiaVisita.value,'tblClientes','tblClientesVisitados')
-                })
-                .catch(()=>{
-                    funciones.AvisoError('No se marcar esta tienda. Inténtelo de nuevo')
-                })
-                
-                hideMenuLateral();
-            }
-        })
-        
-        
-    });
-
-    let btnNoDinero = document.getElementById('btnNoDinero');
-    btnNoDinero.addEventListener('click',()=>{
-        funciones.Confirmacion('Se marcará este cliente como SIN DINERO. ¿Está seguro?')
-        .then(async(value)=>{
-            if(value==true){
-                apigen.updateClientesLastSale(GlobalSelectedCodCliente,'NODINERO')
-                .then(async()=>{
-                    funciones.Aviso('TIENDA SIN DINERO');
-                    //await apigen.clientesVendedor(GlobalCodSucursal,GlobalCodUsuario,cmbDiaVisita.value,'tblClientes','tblClientesVisitados')
-                })
-                .catch(()=>{
-                    funciones.AvisoError('No se marcar esta tienda. Inténtelo de nuevo')
-                })
-
-                hideMenuLateral();
-            }
-        })
-        
-        
-    });
+  
+   
 
 
     let btnVenderCliente = document.getElementById('btnVenderCliente');

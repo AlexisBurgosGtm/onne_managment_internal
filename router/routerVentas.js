@@ -908,7 +908,7 @@ router.post("/insertventa", async (req,res)=>{
             ,'${fecha}' AS LASTUPDATE
             ,0 AS TOTALUNIDADES_DEVUELTAS
             ,${poriva} AS POR_IVA
-            ,${p.BONO};`
+            ,${Number(p.BONO) * Number(p.CANTIDAD)} AS BONO;`
     });
 
 
