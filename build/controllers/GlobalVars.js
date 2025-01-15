@@ -1,4 +1,4 @@
-let versionapp = 'mod 14.01.2025';
+let versionapp = 'mod 15.01.2025:2';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 
@@ -168,7 +168,7 @@ function get_print_factura(coddoc,correlativo){
 
     rootPrint.innerHTML = GlobalLoader;
     
-    //$("#modal_imprimir").modal('show');
+    $("#modal_imprimir").modal('show');
 
     apigen.promise_detalle_pedido(coddoc,correlativo)
     .then((data)=>{

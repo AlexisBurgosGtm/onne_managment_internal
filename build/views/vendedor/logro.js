@@ -40,8 +40,10 @@ function getView(){
                         <select class="form-control border-danger negrita text-danger" id="cmbReporte">
                             <option value="1">FACTURAS DEL DIA (DIA)</option>
                             <option value="3">PRODUCTOS VENDIDOS (DIA)</option>
+                            <option value="9">BONOS EN FACTURAS (DIA)</option>
                             <option value="4">VENTAS DEL MES</option>
                             <option value="8">NOTAS DE CRÉDITO</option>
+                            
                             <option class="hidden" value="2">MARCAS VENDIDAS (DIA)</option>
                             <option class="hidden" value="5">PRODUCTOS DEL MES (MES)</option>
                             <option class="hidden" value="6">MARCAS DEL MES (MES)</option>
@@ -286,6 +288,11 @@ function getCargarGrid(){
                 //NOTAS DE CREDITO
                 apigen.MGM_NCR_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
                 break;
+        case '9':
+            //BONOS POR FECHA
+            apigen.MGM_BONOS_VENDEDOR(GlobalCodSucursal,GlobalCodUsuario,funciones.devuelveFecha('txtFecha'),'tblReport','containerTotal');
+                        
+            break;
 
 
         default:

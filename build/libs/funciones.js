@@ -814,26 +814,9 @@ let funciones = {
     },
     getComboTipoClientes:()=>{
       return `
-        <option value="TIENDITA">TIENDITA</option>
-        <option value="ABARROTERIA">ABARROTERIA</option>
         <option value="FARMACIA">FARMACIA</option>
-        <option value="LIBRERIA">LIBRERIA</option>
-        <option value="PIÑATERIA">PIÑATERIA</option>
-        <option value="MUNDO DE 3">MUNDO DE 3</option>
-        <option value="RESTAURANTE">RESTAURANTE</option>
-        <option value="COMEDOR">COMEDOR</option>
-        <option value="PAPEROS">PAPEROS</option>
-        <option value="HOTEL">HOTEL</option>
-        <option value="AUTOHOTEL">AUTOHOTEL</option>
-        <option value="CARNICERIA">CARNICERIA</option>
-        <option value="MERCERIA">MERCERIA</option>
-        <option value="BAR">BAR</option>
-        <option value="BARBERIA">BARBERIA</option>
-        <option value="SALON DE BELLEZA">SALON DE BELLEZA</option>
-        <option value="COLEGIO">COLEGIO</option>
-        <option value="MINISUPER">MINISUPER</option>
-        <option value="SUPERMERCADO">SUPERMERCADO</option>
-        <option value="RUTEROS">RUTEROS</option>
+        <option value="MEDICO">MEDICO</option>
+        <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
         <option value="OTROS">OTROS</option>
       `
     },

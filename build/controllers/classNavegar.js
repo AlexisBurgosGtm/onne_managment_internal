@@ -62,10 +62,17 @@ let classNavegar = {
                                 Documentos
                             </button>
 
+                            <button class="btn btn-sm text-white"  id="btnMenu2VendedorCxc">
+                                <i class="fal fa-list"></i>
+                                CxC
+                            </button>
+
                             <button class="btn btn-sm text-white"  id="btnMConfig">
                                 <i class="fal fa-cog"></i>
                                 Config
                             </button>
+
+                             
 
                             <button class="btn btn-sm text-white hidden"  id="btnMenu2VendedorClientesMapa">
                                 <i class="fal fa-map"></i>
@@ -108,6 +115,10 @@ let classNavegar = {
                         classNavegar.logrovendedor();
                     });
 
+                    let btnMenu2VendedorCxc = document.getElementById('btnMenu2VendedorCxc');
+                    btnMenu2VendedorCxc.addEventListener('click',()=>{
+                        classNavegar.cxc();
+                    });
                  
                     
                     let btnMenu2Censo = document.getElementById('btnMenu2Censo');
@@ -172,6 +183,15 @@ let classNavegar = {
                 window.history.pushState({"page":2}, "facturacion", GlobalUrl + '/facturacion')
             })
           
+    },
+    cxc: async()=>{
+        
+        funciones.loadScript('./views/cxc/cxc.js','root')
+        .then(()=>{
+            GlobalSelectedForm ='CXC';
+            initView();
+        })
+      
     },
     vendedorCenso: async()=>{
         

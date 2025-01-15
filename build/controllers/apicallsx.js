@@ -660,9 +660,7 @@ let apigen = {
                             <tr>
                                 <td>
                                     <b class="text-danger">${rows.CODDOC + '-' + rows.CORRELATIVO}</b>
-                                    <button class="btn btn-secondary btn-md hand shadow" onclick="get_print_factura('${rows.CODDOC}','${rows.CORRELATIVO}')">
-                                        <i class="fal fa-print"></i> Imprimir comprobante
-                                    </button>
+                                   
                                     <br>
                                         N:${rows.NEGOCIO} - C:${rows.NOMCLIE}
                                     <br>
@@ -671,23 +669,29 @@ let apigen = {
                                         <small class="text-white bg-secondary">${rows.OBS}</small>
                                     <br>
                                     <div class="row">
-                                        <div class="col-4">
-                                            <button class="btn btn-info btn-sm"
-                                                onclick="getDetallePedido('${rows.CODDOC}','${rows.CORRELATIVO}','${rows.CODCLIE}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.ST}');">
-                                                <i class="fal fa-edit"></i>Ver detalles
-                                            </button>    
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="${strClassFelCert} btn btn-danger btn-sm"
-                                                onclick="fcn_certificar('${rows.CODDOC}','${rows.CORRELATIVO}');">
-                                                <i class="fal fa-sync"></i>Certificar
+                                        <div class="col-3">
+                                            <button class="btn btn-secondary btn-sm hand shadow" onclick="get_print_factura('${rows.CODDOC}','${rows.CORRELATIVO}')">
+                                                <i class="fal fa-print"></i> <small>Comprobante</small>
                                             </button>
                                         
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
+                                            <button class="btn btn-info btn-sm"
+                                                onclick="getDetallePedido('${rows.CODDOC}','${rows.CORRELATIVO}','${rows.CODCLIE}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.ST}');">
+                                                <i class="fal fa-edit"></i><small>Detalles</small>
+                                            </button>    
+                                        </div>
+                                        <div class="col-3">
+                                            <button class="${strClassFelCert} btn btn-danger btn-sm"
+                                                onclick="fcn_certificar('${rows.CODDOC}','${rows.CORRELATIVO}');">
+                                                <i class="fal fa-sync"></i><small>Certificar</small>
+                                            </button>
+                                        
+                                        </div>
+                                        <div class="col-3">
                                             <button class="${strClassFel} btn btn-outline-primary btn-sm"
                                                 onclick="funciones.verFel('${rows.FEL_UUDI}');">
-                                                <i class="fal fa-eye"></i>Ver PDF
+                                                <i class="fal fa-eye"></i><small>Ver FEL</small>
                                             </button>    
                                         </div>
                                     </div>
@@ -697,10 +701,68 @@ let apigen = {
                                     <br>
                                     <small>Status: ${rows.ST}</small>
                                     <br>
-                                    <button class="${strClassFel} btn btn-warning btn-sm"
+                                    <button class="${strClassFel} btn btn-warning btn-sm hidden"
                                         onclick="funciones.Aviso('En construccion');">
                                         <i class="fal fa-dollar-sign"></i>Crear NC
                                     </button> 
+                                </td>
+                            </tr>`
+            })
+            container.innerHTML = tableheader + strdata + tablefoooter;
+            //lbTotal.innerText = `${funciones.setMoneda(total,'Q ')} - Pedidos: ${totalpedidos} - Promedio:${funciones.setMoneda((Number(total)/Number(totalpedidos)),'Q')}`;
+            lbTotal.innerHTML = `<h5 class="negrita text-danger">Importe: ${funciones.setMoneda(total,'Q ')}</h5>
+                                 <h5 class="negrita text-danger">Facturas: ${totalpedidos}</h5>`;
+        }, (error) => {
+            funciones.AvisoError('Error en la solicitud');
+            strdata = '';
+            container.innerHTML = '';
+            lbTotal.innerHTML = '-- --';
+        });
+           
+    },
+    MGM_BONOS_VENDEDOR: (sucursal,codven,fecha,idContenedor,idLbTotal)=>{
+
+        let container = document.getElementById(idContenedor);
+        container.innerHTML = GlobalLoader;
+        
+        let lbTotal = document.getElementById(idLbTotal);
+        lbTotal.innerText = '---';
+
+        let tableheader = `<table class="table h-full table-striped table-bordered">
+                            <thead class="bg-onne text-white">
+                                <tr>
+                                    <td>Documento</td>
+                                    <td>Bonos</td>
+                                </tr>
+                            </thead>
+                            <tbody id="">`;
+        let tablefoooter ='</tbody></table>';
+
+        let strdata = '';
+        let totalpedidos = 0;
+        axios.post('/ventas/lista_bonos', {
+            sucursal: sucursal,
+            codven:codven,
+            fecha:fecha   
+        })
+        .then((response) => {
+            const data = response.data.recordset;
+            let total =0;
+            data.map((rows)=>{
+                    total = total + Number(rows.IMPORTE);
+                    
+                    strdata += `
+                            <tr>
+                                <td>
+                                    <b class="text-danger">${rows.CODDOC + '-' + rows.CORRELATIVO}</b>
+                                   
+                                    <br>
+                                        N:${rows.NEGOCIO} - C:${rows.NOMCLIE}
+                                    <br>
+                                        <small class="text-secondary">${rows.DIRCLIE + ', ' + rows.DESMUN}</small>
+                                </td>
+                                <td>
+                                    <b>${funciones.setMoneda(rows.IMPORTE,'Q')}</b>
                                 </td>
                             </tr>`
             })

@@ -62,6 +62,11 @@ function getView(){
                                 <br>
                                 
                                 <div class="form-group">
+                                    <label>Giro de Negocio:</label>
+                                    <select id="cmbTipoNegocio" class="form-control"></select>    
+                                </div>
+
+                                <div class="form-group">
                                     <label>Nombre del Negocio:</label>
                                     <input id="txtNegocio" class="form-control" type="text" placeholder="nombre del negocio"  maxlenght="150">    
                                 </div>
@@ -171,8 +176,8 @@ async function addListeners(){
 
    
 
-    //let cmbTipoNegocio = document.getElementById('cmbTipoNegocio')
-    //cmbTipoNegocio.innerHTML = funciones.getComboTipoClientes();
+    let cmbTipoNegocio = document.getElementById('cmbTipoNegocio')
+    cmbTipoNegocio.innerHTML = funciones.getComboTipoClientes();
 
     let f = new Date();
     cmbVisitaCliente.value = funciones.getDiaSemana(f.getDay());
@@ -273,11 +278,11 @@ function fcnGuardarCliente(){
     return new Promise((resolve,reject)=>{
 
         let txtNit = document.getElementById('txtNit');
-        //let cmbTipoNegocio = document.getElementById('cmbTipoNegocio');
+        let cmbTipoNegocio = document.getElementById('cmbTipoNegocio');
         let cmbVisitaCliente = document.getElementById('cmbVisitaCliente');
-        let txtNegocio = document.getElementById('txtNegocio'); 
-        let txtNomcliente = document.getElementById('txtNomcliente');
-        let txtDircliente = document.getElementById('txtDircliente');
+        let txtNegocio = document.getElementById('txtNegocio') || ''; 
+        let nomclie = document.getElementById('txtNomcliente').value || '';
+        let dirclie = document.getElementById('txtDircliente').value || 'CIUDAD';
         let txtReferencia = document.getElementById('txtReferencia');
         let cmbMunicipio = document.getElementById('cmbMunicipio');
         let cmbDepartamento = document.getElementById('cmbDepartamento');
@@ -286,17 +291,21 @@ function fcnGuardarCliente(){
         let txtLatitud = document.getElementById('txtLatitud');
         let txtLongitud = document.getElementById('txtLongitud');
         let codruta = 1;
+
+
+        if(nomclie==''){funciones.AvisoError('Escriba un nombre de cliente');return;}
+       
        
         axios.post('/censo/nuevocliente',{
             sucursal:GlobalEmpnit,
             codven:GlobalCodUsuario,
             codruta:codruta,
             fecha:funciones.getFecha(),
-            tiponegocio:'OTROS',//cmbTipoNegocio.value,
+            tiponegocio:cmbTipoNegocio.value,
             nitclie:txtNit.value,
             negocio: funciones.limpiarTexto(txtNegocio.value),
-            nomclie: funciones.limpiarTexto(txtNomcliente.value), 
-            dirclie: funciones.limpiarTexto(txtDircliente.value), 
+            nomclie: funciones.limpiarTexto(nomclie), 
+            dirclie: funciones.limpiarTexto(dirclie), 
             codmun:cmbMunicipio.value,
             coddepto:cmbDepartamento.value,
             referencia: funciones.limpiarTexto(txtReferencia.value), 
