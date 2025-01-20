@@ -139,67 +139,8 @@ router.post('/eliminarpedidocargado',async(req,res)=>{
 })
 
 
-// VENTANA DE VENTAS
-///////////////////////////////////////
-router.get("/json", async(req,res)=>{
-    let qry = `SELECT       ME_Productos.CODPROD, ME_Productos.DESPROD, ME_Precios.CODMEDIDA, ME_Precios.EQUIVALE, ME_Precios.COSTO, ME_Precios.PRECIO
-    FROM            ME_Productos INNER JOIN
-                             ME_Precios ON ME_Productos.EMP_NIT = ME_Precios.EMP_NIT AND ME_Productos.CODPROD = ME_Precios.CODPROD AND ME_Productos.CODSUCURSAL = ME_Precios.CODSUCURSAL
-    WHERE        (ME_Productos.CODSUCURSAL = 'ME-IZABAL') FOR XML AUTO`
-    execute.Query(res,qry);
 
-})
 
-// VENTAS BUSCAR PRODUCTO POR DESCRIPCION
-router.get("/buscarproducto", async(req,res)=>{
-    
-    const {empnit,filtro,app,tipoprecio} = req.query;
-    // app= sucusal
-    // K= CAMBIO DE PRODUCTO
-
-    let qry ='';
-
-    let campoprecio = '';
-    let equ = '<>0'; //equivalente diferente a cero para que jale todos
-    switch (tipoprecio) {
-        case 'P':
-            campoprecio = 'ME_PRECIOS.PRECIO';        
-            break;
-        case 'C':
-            campoprecio = 'ME_PRECIOS.MAYORISTA';
-            break;
-        case 'B':
-            campoprecio = 'ME_PRECIOS.ESCALA';
-            break;
-        case 'A':
-            campoprecio = 'ME_PRECIOS.OFERTA';
-            break;
-        case 'K':
-            campoprecio = '0.01';
-            equ = '=1'; //equivalente =1 para que solo me jale las unidades
-
-            break;
-        default:
-            campoprecio = 'ME_PRECIOS.PRECIO';
-            break;
-    }
-    
-    
-    qry = `SELECT TOP 20 ME_Productos.CODPROD, ME_Productos.DESPROD, ME_Precios.CODMEDIDA, 
-                ME_Precios.EQUIVALE, ME_Precios.COSTO, ${campoprecio} AS PRECIO, 
-                ME_Marcas.DESMARCA, 0 AS EXENTO, ISNULL(ME_PRODUCTOS.EXISTENCIA,0) AS EXISTENCIA,
-                ME_Productos.DESPROD3
-            FROM ME_Productos LEFT OUTER JOIN
-                ME_Marcas ON ME_Productos.CODSUCURSAL = ME_Marcas.CODSUCURSAL AND ME_Productos.CODMARCA = ME_Marcas.CODMARCA LEFT OUTER JOIN
-                ME_Precios ON ME_Productos.CODSUCURSAL = ME_Precios.CODSUCURSAL AND ME_Productos.CODPROD = ME_Precios.CODPROD
-            WHERE (ME_Productos.DESPROD LIKE '%${filtro}%') AND (ME_Productos.CODSUCURSAL = '${app}') AND (ME_Precios.EQUIVALE ${equ}) 
-                OR (ME_Productos.CODPROD = '${filtro}') AND (ME_Productos.CODSUCURSAL = '${app}') AND (ME_Precios.EQUIVALE ${equ})
-            ORDER BY ME_Precios.CODPROD, ME_Precios.CODMEDIDA` 
-    
-        
-    execute.Query(res,qry);
-
-})
 
 
 // VENTAS BUSCAR PRODUCTO POR DESCRIPCION
@@ -224,11 +165,13 @@ router.post("/buscarproductotodos", async(req,res)=>{
                   PRECIOS ON PRODUCTOS.CODPROD = PRECIOS.CODPROD AND PRODUCTOS.EMPNIT = PRECIOS.EMPNIT
             WHERE  (PRODUCTOS.EMPNIT = '${sucursal}') 
                     AND (PRODUCTOS.CODPROD = '${filtro}') 
-                    AND (PRODUCTOS.HABILITADO = 'SI') 
+                    AND (PRODUCTOS.HABILITADO = 'SI')
+                    AND (PRECIOS.COSTO IS NOT NULL) 
             OR
                   (PRODUCTOS.EMPNIT = '${sucursal}') 
                   AND (PRODUCTOS.HABILITADO = 'SI') 
                   AND (PRODUCTOS.DESPROD LIKE '%${filtro}%')
+                  AND (PRECIOS.COSTO IS NOT NULL)
 
     `
             
