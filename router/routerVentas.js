@@ -146,8 +146,10 @@ router.post('/eliminarpedidocargado',async(req,res)=>{
 // VENTAS BUSCAR PRODUCTO POR DESCRIPCION
 router.post("/buscarproductotodos", async(req,res)=>{
     
-    const {sucursal,filtro} = req.body;
+    
+    const {sucursal,filtro,tipoprod} = req.body;
   
+
     let qry ='';
     qry = `
             SELECT TOP (30) PRODUCTOS.EMPNIT AS CODSUCURSAL, PRODUCTOS.CODPROD, PRODUCTOS.DESPROD, 
@@ -167,11 +169,13 @@ router.post("/buscarproductotodos", async(req,res)=>{
                     AND (PRODUCTOS.CODPROD = '${filtro}') 
                     AND (PRODUCTOS.HABILITADO = 'SI')
                     AND (PRECIOS.COSTO IS NOT NULL) 
+                    AND (PRODUCTOS.TIPOPROD='${tipoprod}')
             OR
                   (PRODUCTOS.EMPNIT = '${sucursal}') 
                   AND (PRODUCTOS.HABILITADO = 'SI') 
                   AND (PRODUCTOS.DESPROD LIKE '%${filtro}%')
                   AND (PRECIOS.COSTO IS NOT NULL)
+                  AND (PRODUCTOS.TIPOPROD='${tipoprod}')
 
     `
             

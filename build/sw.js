@@ -1,5 +1,5 @@
-const staticCacheName = 'OBpre-cache-v6.01-2025';
-const dynamicCacheName = 'OBruntime-cache-v6.01-2025';
+const staticCacheName = 'OBpre-cache-v22.01-2025';
+const dynamicCacheName = 'OBruntime-cache-v22.01-2025';
 
 console.log(staticCacheName);
 

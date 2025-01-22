@@ -136,7 +136,8 @@ let apigen = {
 
             axios.post('/ventas/buscarproductotodos', {
                 sucursal:GlobalCodSucursal,
-                filtro:filtro
+                filtro:filtro,
+                tipoprod:GlobalTipoProd
             })  
             .then(async(response) => {
                
