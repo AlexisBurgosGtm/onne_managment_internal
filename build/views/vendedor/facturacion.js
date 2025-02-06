@@ -438,14 +438,14 @@ function getView(){
                     <div class="modal-content">
                         <br><br><br><br><br>
                         <div class="modal-header">
-                            <label class="modal-title" id="txtDesProducto">Azucar don Justo Cabal Kilo</label>
+                            <h3 class="modal-title text-center negrita" id="txtDesProducto">Azucar don Justo Cabal Kilo</h3>
                         </div>
                         <div class="modal-body" align="right">
                             <div class="col-8">
                                 <div class="row">
                                     <b id="txtCodMedida">UNIDAD</b>
                                 </div>
-                                
+                                <br>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="input-group">
@@ -456,7 +456,7 @@ function getView(){
                                                 </button>
                                             </div>
                                 
-                                            <input type="number" class="text-center form-control" id="txtCantidad" value="1">    
+                                            <input type="number" style="font-size:140%" class="text-center form-control" id="txtCantidad" value="1">    
                                 
                                             <div class="input-group-append">
                                                 <button class="btn btn-md btn-icon btn-round btn-info" id="btnCantidadUp">
@@ -474,6 +474,16 @@ function getView(){
                                     <label>Subtotal:</label>
                                     <label class="text-danger" id="txtSubTotal">Q500</label>
                                 </div>
+                                <br>
+                                <br>
+                                    <div class="form-group">
+                                        <label class="negrita text-danger">¿Incluye el bono?</label>
+                                        <select class="negrita text-danger" id="cmbIncluyeBono">
+                                            <option value="SI">SI</option>
+                                            <option value="NO">NO</option>
+                                        </select>
+                                    </div>
+                                <br>
                                 <br>
                                 <div class="row">
                                     <div class="col-6">
@@ -512,7 +522,7 @@ function getView(){
                                         
                                         <div class="form-group">
                                             <label>Nueva cantidad:</label>
-                                            <input type="number" class="form-control border-info shadow col-10" id="txtCantNuevaCant">
+                                            <input type="number"  style="font-size:140%"  class="form-control border-info shadow col-10" id="txtCantNuevaCant">
                                         </div>                                                             
                                             
                                     </div>
@@ -755,11 +765,15 @@ function fcnIniciarModalCantidadProductos(){
     let btnCantidadDown = document.getElementById('btnCantidadDown');
     let txtSubTotal = document.getElementById('txtSubTotal'); //label
 
+  
+  
+
     btnAgregarProducto.addEventListener('click',()=>{
 
         GlobalSelectedCantidad = Number(txtCantidad.value);
         let totalunidades = (Number(GlobalSelectedEquivale) * Number(GlobalSelectedCantidad));
         let totalexento = GlobalSelectedCantidad * GlobalSelectedExento;
+
 
         
         
@@ -909,6 +923,11 @@ function getDataMedidaProducto(codprod,desprod,codmedida,cantidad,equivale,total
         document.getElementById('txtSubTotal').innerText = funciones.setMoneda(precio,'Q'); //label
             
         document.getElementById('txtCantidad').value = 1;
+
+        if(Number(GlobalSelectedBono)==0){document.getElementById('cmbIncluyeBono').value='NO';document.getElementById('cmbIncluyeBono').disabled=true}
+        else{
+            document.getElementById('cmbIncluyeBono').value='SI';document.getElementById('cmbIncluyeBono').disabled=false;
+        }
     
         $("#ModalCantidadProducto").modal('show');    
     }else{
@@ -941,6 +960,12 @@ async function fcnAgregarProductoVenta(codprod,desprod,codmedida,cantidad,equiva
             let totalprecio = Number(precio) * Number(cantidad);
             console.log('intenta agregar la fila')
             let coddoc = document.getElementById('cmbCoddoc').value;
+
+            let cmbIncluyeBono = document.getElementById('cmbIncluyeBono').value;
+            if(cmbIncluyeBono=='NO'){bono=0};
+            console.log(cmbIncluyeBono)
+            console.log(bono)
+
             try {        
                     var data = {
                         EMPNIT:GlobalEmpnit,  
