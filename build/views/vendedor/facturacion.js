@@ -380,9 +380,9 @@ function getView(){
                                                 <div class="form-group">
                                                     <label>Forma de Pago / Vence:</label>
                                                     
-                                                        <select id="cmbEntregaConcre" class="form-control">
-                                                            <option value="CON">CONTADO</option>
+                                                        <select id="cmbEntregaConcre" class="form-control" disabled>
                                                             <option value="CRE">CREDITO</option>
+                                                            <option value="CON">CONTADO</option>
                                                         </select>
                                                         <input type="date" class="form-control negrita text-danger hidden" id="txtFechaVence">
                                                     
