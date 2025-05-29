@@ -4,6 +4,32 @@ const router = express.Router();
 
 
 
+router.post("/editar_cliente", async(req,res)=>{
+
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia} = req.body;
+
+    let qry = `UPDATE CLIENTES SET
+                        NIT='${nitclie}',
+                        NOMBRECLIENTE='${nomclie}',
+                        DIRCLIENTE='${dirclie}',
+                        TIPONEGOCIO='${tiponegocio}',
+                        NEGOCIO='${negocio}',
+                        LATITUDCLIENTE='${lat}',
+                        LONGITUDCLIENTE='${long}',
+                        TELEFONOCLIENTE='${telefono}',
+                        PROVINCIA='${referencia}'
+            WHERE CODCLIENTE=${codclie} AND EMPNIT='${sucursal}';
+            `
+    
+
+ 
+    
+     execute.Query(res,qry);
+     
+
+    
+});
+
 router.post("/solicitud_cambios_cliente", async(req,res)=>{
 
     const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long} = req.body;

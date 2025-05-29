@@ -186,6 +186,7 @@ function getView(){
                     <thead class="bg-onne text-white">
                         <tr>
                             <td class="negrita">Cliente  -   Dirección</td>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody id="tblClientesAjenos">
@@ -363,6 +364,18 @@ function getView(){
                                     <label class="negrita">Dirección</label>
                                     <input type="text" id="txtEditDireccion" class="form-control">
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="negrita">Referencia</label>
+                                    <input type="text" id="txtEditReferencia" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="negrita">Telefono</label>
+                                    <input type="text" id="txtEditTelefono" class="form-control">
+                                </div>
+
+                                
                                
                                 <div class="row">
                                     
@@ -375,13 +388,13 @@ function getView(){
                                     <div class="col-5">
                                         <div class="form-group">
                                             <label>Latitud</label>
-                                            <input type="number" id="txtEditLatitud" class="form-control">
+                                            <input type="number" id="txtEditLatitud" class="form-control" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
                                             <label>Longitud</label>
-                                            <input type="number" id="txtEditLongitud" class="form-control">
+                                            <input type="number" id="txtEditLongitud" class="form-control" disabled="true">
                                         </div>
                                     </div>
 
@@ -397,7 +410,7 @@ function getView(){
                                     </div>
                                     <div class="col-6">
                                         <button class="btn btn-info btn-circle btn-xl hand shadow" id="btnEnviarCambiosCliente">
-                                            <i class="fal fa-paper-plane"></i>
+                                            <i class="fal fa-save"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -517,15 +530,16 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
 
 
 
-function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio){
+function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia){
     
-    
-    //map.remove()
-    //map = Lmap(lat,long,nombre,telefono);
+  
 
     document.getElementById('txtEditNit').value = nit;
     document.getElementById('txtEditNombre').value = nombre;
     document.getElementById('txtEditDireccion').value = direccion; 
+    document.getElementById('txtEditTelefono').value = telefono;
+    document.getElementById('txtEditReferencia').value = referencia; 
+    
     document.getElementById('txtEditLatitud').value = lat;
     document.getElementById('txtEditLongitud').value = long;
     document.getElementById('cmbEditTipoNegocio').value = tiponegocio;
@@ -693,7 +707,7 @@ async function addListeners(){
     let btnEnviarCambiosCliente = document.getElementById('btnEnviarCambiosCliente');
     btnEnviarCambiosCliente.addEventListener('click',()=>{
 
-        funciones.Confirmacion('¿Está seguro que desea Enviar esta solicitud de Cambio de Datos?')
+        funciones.Confirmacion('¿Está seguro que desea actualizar los datos de este cliente?')
         .then(()=>{
 
             btnEnviarCambiosCliente.disabled = true;
@@ -704,6 +718,9 @@ async function addListeners(){
             let negocio = document.getElementById('txtEditNegocio').value || 'SN';
             let nombre = document.getElementById('txtEditNombre').value || 'SN';
             let direccion = document.getElementById('txtEditDireccion').value || 'SN';
+            let telefono = document.getElementById('txtEditTelefono').value || '00';
+            let referencia = document.getElementById('txtEditReferencia').value || 'SN';
+
             let latitud = document.getElementById('txtEditLatitud').value || 0;
             let longitud = document.getElementById('txtEditLongitud').value || 0;
 
@@ -711,7 +728,7 @@ async function addListeners(){
             if (nombre=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
 
 
-            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,negocio,nombre,direccion,latitud,longitud)
+            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia)
             .then(()=>{
                 funciones.Aviso('Solicitud enviada exitosamente!!');
                 btnEnviarCambiosCliente.disabled = false;
@@ -769,7 +786,38 @@ function inicializarVista(){
 
 
 
-function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long){
+function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia){
+    
+    return new Promise((resolve,reject)=>{
+        axios.post('/clientes/editar_cliente',{
+           sucursal: GlobalCodSucursal,
+           codclie: codclie,
+           nitclie: nitclie,
+           tiponegocio: tiponegocio,
+           negocio: negocio,
+           nomclie: nomclie,
+           dirclie: dirclie,
+           lat: lat,
+           long: long,
+           telefono:telefono,
+           referencia:referencia
+        })
+        .then((response) => {
+            console.log(response);
+            const data = response.data;
+            if (data.rowsAffected[0]==0){
+                reject();
+            }else{
+                resolve();
+            }            
+        }, (error) => {
+            reject();
+        });
+    })
+
+}
+
+function BACKUP_send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long){
     
     return new Promise((resolve,reject)=>{
         axios.post('/clientes/solicitud_cambios_cliente',{

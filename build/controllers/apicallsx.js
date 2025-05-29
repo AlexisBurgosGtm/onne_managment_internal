@@ -415,6 +415,12 @@ let apigen = {
                             </div>
                             
                         </td>
+                        <td>
+                            <button class="btn btn-info btn-circle btn-md hand shadow"
+                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}')">
+                                <i class="fal fa-edit"></i>
+                            </button>
+                        </td>
                     </tr>`    
                     
                     
