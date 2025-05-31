@@ -89,6 +89,12 @@ function getView(){
                                 </div>
                                 <br>
 
+                                <div class="form-group">
+                                    <label class="negrita">Gira</label>
+                                    <select id="cmbGira" class="form-control"></select>
+                                </div>
+                                <br>
+
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -263,6 +269,18 @@ async function addListeners(){
 
     get_combos_mun_deptos('cmbMunicipio','cmbDepartamento');
 
+    get_giras()
+    .then((data)=>{
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `<option value='${r.CODGIRA}'>${r.DESGIRA}</option>`
+        })
+        document.getElementById('cmbGira').innerHTML= str;
+    })
+    .catch(()=>{
+        document.getElementById('cmbGira').innerHTML= `<option value='0'>SN</option>` 
+    })
+
     //await apigen.comboVendedores(GlobalEmpnit,'cmbVendedor');
     
     //inicializa la animación en las tabs
@@ -291,6 +309,7 @@ function fcnGuardarCliente(){
         let txtLatitud = document.getElementById('txtLatitud');
         let txtLongitud = document.getElementById('txtLongitud');
         let codruta = 1;
+        let cmbGira = document.getElementById('cmbGira').value || '0';
 
 
         if(nomclie==''){funciones.AvisoError('Escriba un nombre de cliente');return;}
@@ -312,7 +331,8 @@ function fcnGuardarCliente(){
             telefono:txtTelefono.value,
             visita:cmbVisitaCliente.value,
             lat:txtLatitud.innerText,
-            long:txtLongitud.innerText
+            long:txtLongitud.innerText,
+            codgira:cmbGira
         })
         .then((response) => {
             
@@ -470,6 +490,27 @@ function get_combos_mun_deptos(idContainerMun,idcontainerDep){
   
 };
 
+
+function get_giras(){
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/clientes/listado_giras', {
+            sucursal: GlobalEmpnit
+        })  
+        .then(async(response) => {
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+           reject();
+        });
+
+    })
+};
+
 function get_municipios(){
     return new Promise((resolve,reject)=>{
 
@@ -488,7 +529,7 @@ function get_municipios(){
         });
 
     })
-}
+};
 
 function get_departamentos(){
     return new Promise((resolve,reject)=>{

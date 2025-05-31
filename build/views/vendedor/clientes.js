@@ -375,6 +375,12 @@ function getView(){
                                     <input type="text" id="txtEditTelefono" class="form-control">
                                 </div>
 
+                            
+                                <div class="form-group">
+                                    <label class="negrita">Gira</label>
+                                    <select id="cmbEditGira" class="form-control"></select>
+                                </div>
+
                                 
                                
                                 <div class="row">

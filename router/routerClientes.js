@@ -3,10 +3,28 @@ const express = require('express');
 const router = express.Router();
 
 
+router.post("/listado_giras", async(req,res)=>{
+
+    const{sucursal} = req.body;
+
+    let qry = `SELECT CODIGO AS CODGIRA, DESCRIPCION AS DESGIRA
+                FROM DESCRIPCIONES
+                WHERE EMPNIT='${sucursal}' AND TIPO='GIRAS';
+            `
+    
+
+ 
+    
+     execute.Query(res,qry);
+     
+
+    
+});
+
 
 router.post("/editar_cliente", async(req,res)=>{
 
-    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia} = req.body;
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira} = req.body;
 
     let qry = `UPDATE CLIENTES SET
                         NIT='${nitclie}',
@@ -17,7 +35,8 @@ router.post("/editar_cliente", async(req,res)=>{
                         LATITUDCLIENTE='${lat}',
                         LONGITUDCLIENTE='${long}',
                         TELEFONOCLIENTE='${telefono}',
-                        PROVINCIA='${referencia}'
+                        PROVINCIA='${referencia}',
+                        GIRA=${codgira}
             WHERE CODCLIENTE=${codclie} AND EMPNIT='${sucursal}';
             `
     
