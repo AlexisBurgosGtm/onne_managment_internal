@@ -9,7 +9,7 @@ router.post("/listado", async(req,res)=>{
     let qry = `
        SELECT DOCUMENTOS.DOC_NIT AS NIT, 
                     DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, 
-                    CLIENTES.DIRCLIENTE AS DIRCLIE, 
+                    ISNULL(CLIENTES.DIRCLIENTE,'CIUDAD') AS DIRCLIE, 
                     DOCUMENTOS.FECHA, 
                     DOCUMENTOS.CODDOC, DOCUMENTOS.CORRELATIVO, 
                     DOCUMENTOS.TOTALPRECIO AS IMPORTE, 
@@ -24,6 +24,7 @@ router.post("/listado", async(req,res)=>{
             AND (DOCUMENTOS.CONCRE = 'CRE') AND (DOCUMENTOS.DOC_SALDO > 0.01) 
             AND (DOCUMENTOS.EMPNIT = '${empnit}') AND (DOCUMENTOS.STATUS <> 'A') 
                   AND (DOCUMENTOS.CODVEN = ${codven})
+        ORDER BY DOCUMENTOS.VENCIMIENTO DESC;
     `
     
     

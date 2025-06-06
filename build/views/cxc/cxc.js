@@ -8,11 +8,10 @@ function getView(){
                             ${view.vista_listado()}
                         </div>
                         <div class="tab-pane fade" id="dos" role="tabpanel" aria-labelledby="home-tab">
-                           
-                            
+                           ${view.vista_cobro()}
                         </div>
                         <div class="tab-pane fade" id="tres" role="tabpanel" aria-labelledby="home-tab">
-                            
+                            ${view.vista_abonos()}
                         </div>    
                     </div>
 
@@ -42,6 +41,14 @@ function getView(){
                     <h4 class="negrita text-danger">Facturas por Cobrar</h4>
                     
                     <div class="table-responsive col-12">
+                        
+                        <div class="form-group">
+                            <label class="negrita text-secondary">Escriba para buscar...</label>
+                            <input type="text" class="form-control negrita" id="txtBuscar"
+                            oninput="funciones.FiltrarTabla('tblCxc','txtBuscar')"
+                            placeholder="Escriba para buscar....">
+                        </div>
+
                         <table class="table table-responsive table-hover col-12" id="tblCxc">
                             <thead class="bg-onne text-white">
                                 <tr>
@@ -51,6 +58,7 @@ function getView(){
                                     <td>IMPORTE</td>
                                     <td>ABONOS</td>
                                     <td>SALDO</td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </thead>
@@ -62,9 +70,64 @@ function getView(){
             </div>
             `
         },
-        vista_nuevo:()=>{
+        vista_cobro:()=>{
+            return `
+            <div class="card card-rounded col-12 shadow">
+                <div class="card-body p-4">
 
-        }
+
+
+                </div>
+            </div>
+
+
+            <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
+            onclick="document.getElementById('tab-uno').click()">
+                <i class="fal fa-arrow-left"></i>
+            </button>
+            `
+        },
+        vista_abonos:()=>{
+            return `
+            <div class="card card-rounded col-12 shadow">
+                <div class="card-body p-4">
+
+                    <h3 class="text-onne negrita">Abonos de la Factura</h3>
+                    <h5 class="negrita text-danger" id="lbFactura"></h5>
+                    <h5 class="negrita text-secondary" id="lbFacturaCliente"></h5>
+                    <h3 class="negrita text-danger" id="lbFacturaImporte"></h5>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered h-full col-12">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <td>DOCUMENTO</td>
+                                    <td>NO.RECIBO</td>
+                                    <td>FECHA</td>
+                                    <td>ABONO</td>
+                                    <td>OBS</td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody id="tblDataAbonos">
+                            </tbody>
+                        
+                        </table>
+                    </div>
+
+                
+                </div>
+            </div>
+
+
+
+            <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
+            onclick="document.getElementById('tab-uno').click()">
+                <i class="fal fa-arrow-left"></i>
+            </button>
+            `
+        },
     }
 
     root.innerHTML = view.body();
@@ -144,7 +207,18 @@ function get_tbl_cxc(){
                         <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
                         <td>${funciones.setMoneda(r.ABONOS,'Q')}</td>
                         <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
-                        <td></td>
+                        <td>
+                            <button class="btn btn-circle btn-success btn-md hand shadow"
+                            onclick="get_nuevo_abono('${r.CODDOC}','${r.CORRELATIVO}')">
+                                <i class="fal fa-dollar-sign"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-circle btn-warning btn-md hand shadow"
+                            onclick="get_listado_abonos('${r.CODDOC}','${r.CORRELATIVO}','${r.NOMCLIE}','${funciones.setMoneda(r.IMPORTE,'Q')}')">
+                                <i class="fal fa-list"></i>
+                            </button>
+                        </td>
                     </tr>
             `
 
@@ -158,4 +232,43 @@ function get_tbl_cxc(){
     })
 
 
+};
+
+
+
+
+
+function get_listado_abonos(coddoc,correlativo,nomclie,importe){
+
+    document.getElementById('tab-tres').click();
+
+
+    document.getElementById('lbFactura').innerText = `${coddoc}-${correlativo}`;
+    document.getElementById('lbFacturaCliente').innerText = nomclie;
+    document.getElementById('lbFacturaImporte').innerText = importe;
+
+
+    get_tbl_abonos(coddoc,correlativo);
+
+};
+
+
+function get_tbl_abonos(coddoc,correlativo){
+
+
+    
+};
+
+
+
+
+
+
+function get_nuevo_abono(coddoc,correlativo){
+
+    document.getElementById('tab-dos').click();
+
+
+
+    
 };
