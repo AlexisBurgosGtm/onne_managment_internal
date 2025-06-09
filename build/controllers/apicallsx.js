@@ -365,13 +365,15 @@ let apigen = {
             app:GlobalSistema,
             sucursal: sucursal,
             filtro: filtro,
-            visita:visita
+            visita:visita,
+            codven:GlobalCodUsuario
         })
         .then((response) => {
+
             const data = response.data.recordset;
             
             data.map((rows)=>{                    
-                        strdata = strdata + `
+                    strdata = strdata + `
                     <tr class='card-rounded col-12 border-secondary shadow'>
                         <td>${funciones.limpiarTexto(rows.NEGOCIO)} - ${funciones.limpiarTexto(rows.NOMCLIE)}
                             <br>

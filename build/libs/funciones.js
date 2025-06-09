@@ -388,26 +388,6 @@ let funciones = {
           document.getElementById(idContainer).appendChild(script)
         });
     },
-    loadCss: function(url, idContainer) {
-        return new Promise((resolve, reject) => {
-          var link = document.createElement('link');
-          //script.async = true;
-          link.href = url;
-          link.rel = "stylesheet"
-    
-          link.onload = resolve;
-          link.onerror = reject;
-             
-          document.getElementById(idContainer).appendChild(link)
-        });
-    },
-    fetchData: (url)=>{
-        fetch(url)
-            .then(function(response) {
-                return response.json();
-                                    })
-            .catch();
-    },
     loadView: (url, idContainer)=> {
         return new Promise((resolve, reject) => {
             
@@ -732,19 +712,6 @@ let funciones = {
       texto = texto.replace('@',"");
       texto = texto.replace(/(\r\n|\n|\r)/gm, "");
       return texto;
-    },
-    limpiarTextoX: (texto) =>{
-      texto = texto.replace("'","");
-      texto = texto.replace("&","");
-      texto = texto.replace('"',"");
-      var ignorarMayMin = true;
-      var reemplazarCon = "";
-      var reemplazarQue = '"';
-      reemplazarQue = reemplazarQue.replace(/[\\^$.|?*+()[{]/g, "\\$&"),
-      reemplazarCon = reemplazarCon.replace(/\$(?=[$&`"'\d])/g, "$$$$"),
-      modif = "g" + (ignorarMayMin ? "i" : ""),
-      regex = new RegExp(reemplazarQue, modif);
-      return texto.replace(regex,reemplazarCon);
     },
     quitarCaracteres: ( texto, reemplazarQue, reemplazarCon, ignorarMayMin) =>{
       var reemplazarQue = reemplazarQue.replace(/[\\^$.|?*+()[{]/g, "\\$&"),

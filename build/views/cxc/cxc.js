@@ -256,7 +256,41 @@ function get_listado_abonos(coddoc,correlativo,nomclie,importe){
 function get_tbl_abonos(coddoc,correlativo){
 
 
-    
+    let container = document.getElementById('tblDataAbonos');
+    container.innerHTML = GlobalLoader;
+
+    GF.data_cxc_abonos_factura(coddoc,correlativo)
+    .then((data)=>{
+        let str = '';
+
+        data.recordset.map((r)=>{
+            str += `
+                <tr>
+                    <td>${r.CODDOC}-${r.CORRELATIVO}</td>
+                    <td>${r.NODOCPAGO}</td>
+                    <td>${funciones.convertDateNormal(r.FECHA)}</td>
+                    <td>${funciones.setMoneda(r.TOTALPRECIO,'Q')}</td>
+                    <td>${funciones.limpiarTexto(r.OBS)}</td>
+                    <td>
+                        <button class="btn btn-circle btn-outline-info btn-md hand shadow"
+                        onclick="funciones.AvisoError('Aun no disponible')">
+                            <i class="fal fa-print"></i>
+                        </button>
+                    </td>
+                </tr>
+            `
+        })
+        container.innerHTML = str;
+
+    })
+    .catch((err)=>{
+        console.log(err);
+        container.innerHTML = 'No se cargaron datos...'
+
+    })
+
+
+
 };
 
 

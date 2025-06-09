@@ -1,4 +1,4 @@
-let versionapp = 'mod 06.06.2025:0';
+let versionapp = 'mod 09.06.2025:0';
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 let GlobalTipoProd = 'F'

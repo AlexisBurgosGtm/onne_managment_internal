@@ -120,6 +120,31 @@ let GF = {
                 reject();
             });
         })     
+    },
+    data_cxc_abonos_factura:(coddoc,correlativo)=>{
+        return new Promise((resolve,reject)=>{
+    
+            axios.post(GlobalUrlCalls + '/cxc/abonos_factura',
+                {
+                    sucursal:GlobalEmpnit,
+                    coddoc:coddoc,
+                    correlativo:correlativo
+                })
+            .then((response) => {
+                if(response.status.toString()=='200'){
+                    let data = response.data;
+                    if(Number(data.rowsAffected[0])>0){
+                        resolve(data);             
+                    }else{
+                        reject();
+                    }            
+                }else{
+                    reject();
+                }             
+            }, (error) => {
+                reject();
+            });
+        })     
     }
 
 };
