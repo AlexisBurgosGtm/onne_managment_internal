@@ -49,13 +49,14 @@ let DATA_CRM = {
         })
 
     },
-    insert_evento:(sucursal,codemp,fecha,titulo,descripcion,allday,inicia,termina,prioridad)=>{
+    insert_evento:(sucursal,codemp,codcliente,fecha,titulo,descripcion,allday,inicia,termina,prioridad)=>{
 
         return new Promise((resolve,reject)=>{
 
             axios.post('/crm/insert_evento', {
                 sucursal:sucursal,
                 codemp:codemp,
+                codcliente:codcliente,
                 fecha:fecha,
                 titulo:titulo,
                 descripcion:descripcion,

@@ -73,6 +73,17 @@ function getView(){
                                             <input type="date" class="form-control text-primary negrita" id="txt_evento_fecha">
                                         </div>
 
+                                        <div class="form-group">
+                                            <label class="text-secondary">Cliente</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control col-2" id="txtCodCliente">
+                                                <input type="text" class="form-control col-10" id="txtNomCliente">
+                                                <button class="btn btn-md btn-info hand" id="btnBuscarCliente">
+                                                    <i class="fal fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
                                         <br>
                                         <div class="row">
                                             <div class="col-6">
@@ -167,6 +178,14 @@ function getView(){
                                         <div class="form-group">
                                             <label class=text-secondary">Fecha</label>
                                             <input type="date" class="form-control text-primary negrita" id="txt_evento_fechaD">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-secondary">Cliente</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control col-2" id="txtCodClienteD" disabled>
+                                                <input type="text" class="form-control col-10" id="txtNomClienteD" disabled>
+                                            </div>
                                         </div>
 
                                         <br>
@@ -305,6 +324,7 @@ function addListeners(){
             let titulo = document.getElementById('txt_evento_titulo').value || '';
             let detalles = document.getElementById('txt_evento_detalles').value || '';
             let prioridad = document.getElementById('cmb_evento_prioridad').value;
+            let codcliente = document.getElementById('txtCodCliente').value || '';
 
             let allDay = 0;
 
@@ -315,7 +335,7 @@ function addListeners(){
                         btnGuardarEvento.disabled = true;
                         btnGuardarEvento.innerHTML = `<i class="fal fa-save fa-spin"></i>`;
 
-                        DATA_CRM.insert_evento(GlobalCodSucursal,GlobalCodUsuario,fecha,
+                        DATA_CRM.insert_evento(GlobalCodSucursal,GlobalCodUsuario,codcliente,fecha,
                             funciones.limpiarTexto(titulo),funciones.limpiarTextoCRM(detalles),
                             allDay,hora_inicia,hora_finaliza,prioridad)
                         .then(()=>{
@@ -474,7 +494,9 @@ function init_calendar(){
                                     extendedProps: {
                                         date: r.FECHA.replace('T00:00:00.000Z','').replace('/','-'),
                                         description: r.DESCRIPCION,
-                                        prioridad: r.PRIORIDAD
+                                        prioridad: r.PRIORIDAD,
+                                        codcliente:r.CODCLIENTE,
+                                        nomcliente:r.CLIENTE
                                     },
                                 }
                                 eventos.push(datos)
@@ -523,7 +545,9 @@ function init_calendar(){
                                 document.getElementById('txt_evento_detallesD').value = info.event.extendedProps.description;
                                 document.getElementById('txt_evento_fechaD').value = info.event.extendedProps.date;
                                 document.getElementById('cmb_evento_prioridadD').value = info.event.extendedProps.prioridad;
-                                
+                                document.getElementById('txtCodClienteD').value = info.event.extendedProps.codcliente;
+                                document.getElementById('txtNomClienteD').value = info.event.extendedProps.nomcliente;
+
                                 CRM_Selected_Id = Number(info.event.id);
 
                                 $("#modal_nuevo_detalles_evento").modal('show');
@@ -539,6 +563,8 @@ function init_calendar(){
                                 document.getElementById('txt_evento_titulo').value = '';
                                 document.getElementById('txt_evento_detalles').value = '';
                                 document.getElementById('cmb_evento_prioridad').value = 'NORMAL'; 
+                                document.getElementById('txtCodCliente').value = '';
+                                document.getElementById('txtNomCliente').value = '';
 
                                 
                                 $("#modal_nuevo_evento").modal('show');

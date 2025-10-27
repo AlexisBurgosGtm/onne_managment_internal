@@ -7,10 +7,29 @@ router.post("/eventos_pendientes", async(req,res)=>{
     const{sucursal,codemp} = req.body;
 
     let qry = `
-        SELECT IDEVENTO, EMPNIT,CODEMP,FECHA,TITULO,DESCRIPCION,ALLDAY,HORA_INICIA,HORA_TERMINA,PRIORIDAD,FINALIZADO
-            FROM CRM_EVENTOS
-            WHERE EMPNIT='${sucursal}' AND CODEMP=${codemp} AND FINALIZADO='NO';
-    `
+        SELECT 
+            CRM_EVENTOS.IDEVENTO, 
+            CRM_EVENTOS.EMPNIT, 
+            CRM_EVENTOS.CODEMP, 
+            CRM_EVENTOS.FECHA, 
+            CRM_EVENTOS.TITULO, 
+            CRM_EVENTOS.DESCRIPCION, 
+            CRM_EVENTOS.ALLDAY, 
+            CRM_EVENTOS.HORA_INICIA, 
+            CRM_EVENTOS.HORA_TERMINA, 
+            CRM_EVENTOS.PRIORIDAD, 
+            CRM_EVENTOS.FINALIZADO, 
+            CRM_EVENTOS.CODCLIENTE, 
+            CLIENTES.NOMBRECLIENTE AS CLIENTE, 
+            EMPLEADOS.NOMEMPLEADO AS EMPLEADO
+        FROM CRM_EVENTOS LEFT OUTER JOIN
+            EMPLEADOS ON CRM_EVENTOS.EMPNIT = EMPLEADOS.EMPNIT AND CRM_EVENTOS.CODEMP = EMPLEADOS.CODEMPLEADO LEFT OUTER JOIN
+            CLIENTES ON CRM_EVENTOS.EMPNIT = CLIENTES.EMPNIT AND CRM_EVENTOS.CODCLIENTE = CLIENTES.CODCLIENTE
+        WHERE 
+            CRM_EVENTOS.EMPNIT='${sucursal}' AND 
+            CRM_EVENTOS.CODEMP=${codemp} AND 
+            CRM_EVENTOS.FINALIZADO='NO';
+        `
     
     
      execute.Query(res,qry);
@@ -20,12 +39,13 @@ router.post("/eventos_pendientes", async(req,res)=>{
 
 router.post("/insert_evento", async(req,res)=>{
 
-    const{sucursal,codemp,fecha,titulo,descripcion,allday,inicia,termina,prioridad} = req.body;
+    const{sucursal,codemp,codcliente,fecha,titulo,descripcion,allday,inicia,termina,prioridad} = req.body;
 
     let qry = `
-        INSERT INTO CRM_EVENTOS (EMPNIT,CODEMP,FECHA,TITULO,DESCRIPCION,ALLDAY,HORA_INICIA,HORA_TERMINA,PRIORIDAD,FINALIZADO)
+        INSERT INTO CRM_EVENTOS (EMPNIT,CODEMP,CODCLIENTE,FECHA,TITULO,DESCRIPCION,ALLDAY,HORA_INICIA,HORA_TERMINA,PRIORIDAD,FINALIZADO)
         SELECT '${sucursal}' AS EMPNIT, 
             ${codemp} AS CODEMP,
+            ${codcliente} AS CODCLIENTE,
             '${fecha}' AS FECHA,
             '${titulo}' AS TITULO,
             '${descripcion}' AS DESCRIPCION,

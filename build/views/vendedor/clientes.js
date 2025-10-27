@@ -7,7 +7,7 @@ function getView(){
                     <div class="tab-content py-3">
 
                         <div class="tab-pane fade active show" id="panelInicio" role="tabpanel">
-                            ${view.tab_ajenos()}
+                            ${view.tab_ajenos() + view.modal_nuevo_evento()}
                         </div>
 
                         <div class="tab-pane fade" id="panelNoVisitados" role="tabpanel">
@@ -475,6 +475,110 @@ function getView(){
                 </div>
             </div>
             `
+        },
+        modal_nuevo_evento:()=>{
+            return `
+            <div class="modal fade" 
+                id="modal_nuevo_evento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <label class="modal-title h3" id="">Detalles del nuevo Evento</label>
+                            </div>
+
+                            <div class="modal-body p-2">
+
+                                <div class="card card-rounded col-12 p-2">
+                                    <div class="card-body">
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Fecha</label>
+                                            <input type="date" class="form-control text-primary negrita" id="txt_evento_fecha">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-secondary">Cliente</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control col-2" id="txtCodCliente" disabled>
+                                                <input type="text" class="form-control col-10" id="txtNomCliente" disabled>
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class=text-secondary">Hora Empieza</label>
+                                                    <div class="input-group">
+                                                        <select class="form-control text-info negrita" id="cmb_evento_hora_inicia">
+                                                        </select>
+                                                        <select class="form-control text-info negrita" id="cmb_evento_minuto_inicia"'>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class=text-secondary">Hora Finaliza</label>
+                                                    <div class="input-group">
+                                                        <select class="form-control text-info negrita" id="cmb_evento_hora_finaliza">
+                                                        </select>
+                                                        <select class="form-control text-info negrita" id="cmb_evento_minuto_finaliza">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Titulo del Evento</label>
+                                            <input type="text" class="form-control text-primary negrita" id="txt_evento_titulo">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Detalles del Evento</label>
+                                            <textarea rows="4" class="form-control text-primary negrita" id="txt_evento_detalles">
+                                            </textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Prioriad</label>
+                                            <select class="form-control text-primary negrita" id="cmb_evento_prioridad">
+                                                <option value="NORMAL">NO URGENTE</option>
+                                                <option value="MEDIA">IMPORTANCIA MEDIA</option>
+                                                <option value="ALTA">URGENTE</option>
+                                            </select>
+                                        </div>
+
+
+
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <button class="btn btn-secondary btn-xl btn-circle hand shadow" data-dismiss="modal">
+                                                    <i class="fal fa-arrow-left"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button class="btn btn-onne btn-xl btn-circle hand shadow" id="btnGuardarEvento">
+                                                    <i class="fal fa-save"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    
+                                    
+                                    </div>
+                                </div>    
+
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            `
         }
     }
 
@@ -567,6 +671,24 @@ async function getHistorialCliente(codigo,nit,nombre){
     await apigen.vendedorHistorialCliente(codigo,'tblHistorial');
 
     $('#ModalHistorialCliente').modal('show')
+
+};
+
+function crm_agendar_cliente(codigo,nit,nombre){
+
+    $("#modal_nuevo_evento").modal('show');
+
+    document.getElementById('txt_evento_fecha').value = funciones.getFecha();
+    document.getElementById('txtCodCliente').value = codigo;
+    document.getElementById('txtNomCliente').value = `(${nit}) ${nombre}`
+
+    document.getElementById('cmb_evento_hora_inicia').value = '06';
+    document.getElementById('cmb_evento_hora_finaliza').value = '06';
+    document.getElementById('cmb_evento_minuto_inicia').value = '00';
+    document.getElementById('cmb_evento_minuto_finaliza').value = '00';
+
+    document.getElementById('txt_evento_titulo').value = '';
+    document.getElementById('txt_evento_detalles').value = '';
 
 };
 
@@ -679,7 +801,7 @@ async function addListeners(){
     let btnClientesAjenosBuscar = document.getElementById('btnClientesAjenosBuscar');
     btnClientesAjenosBuscar.addEventListener('click', async ()=>{
         let txtClientesAjenosBuscar = document.getElementById('txtClientesAjenosBuscar');
-        await apigen.clientesAjenosVendedor(GlobalCodSucursal,txtClientesAjenosBuscar.value,cmbVisita.value,'tblClientesAjenos')
+        buscar_cliente(GlobalCodSucursal,txtClientesAjenosBuscar.value,cmbVisita.value,'tblClientesAjenos')
     })
     
 
@@ -777,8 +899,158 @@ async function addListeners(){
 
     funciones.slideAnimationTabs();
     
+
+    // CRM 
+    //------------------
+    document.getElementById('cmb_evento_hora_inicia').innerHTML = funciones.combo_horas();
+    document.getElementById('cmb_evento_hora_finaliza').innerHTML = funciones.combo_horas();
+    document.getElementById('cmb_evento_minuto_inicia').innerHTML = funciones.combo_minutos();
+    document.getElementById('cmb_evento_minuto_finaliza').innerHTML = funciones.combo_minutos();
+
+    let btnGuardarEvento = document.getElementById('btnGuardarEvento');
+    btnGuardarEvento.addEventListener('click',()=>{
+
+            let hi = document.getElementById('cmb_evento_hora_inicia').value;
+            let mi = document.getElementById('cmb_evento_minuto_inicia').value;
+            let hf = document.getElementById('cmb_evento_hora_finaliza').value;
+            let mf = document.getElementById('cmb_evento_minuto_finaliza').value;
+
+            let fecha = funciones.devuelveFecha('txt_evento_fecha');
+            let hora_inicia = `${fecha.replace('/','-')}T${hi}:${mi}:00`;
+            let hora_finaliza = `${fecha.replace('/','-')}T${hf}:${mf}:00`;
+            let titulo = document.getElementById('txt_evento_titulo').value || '';
+            let detalles = document.getElementById('txt_evento_detalles').value || '';
+            let prioridad = document.getElementById('cmb_evento_prioridad').value;
+            let codcliente = document.getElementById('txtCodCliente').value || '';
+
+            let allDay = 0;
+
+            funciones.Confirmacion('¿Está seguro que desea CREAR este evento?')
+            .then((value)=>{
+                if(value==true){
+        
+                        btnGuardarEvento.disabled = true;
+                        btnGuardarEvento.innerHTML = `<i class="fal fa-save fa-spin"></i>`;
+
+                        DATA_CRM.insert_evento(GlobalCodSucursal,GlobalCodUsuario,codcliente,fecha,
+                            funciones.limpiarTexto(titulo),funciones.limpiarTextoCRM(detalles),
+                            allDay,hora_inicia,hora_finaliza,prioridad)
+                        .then(()=>{
+
+                            btnGuardarEvento.disabled = false;
+                            btnGuardarEvento.innerHTML = `<i class="fal fa-save"></i>`;
+                        
+                            funciones.Aviso('Evento creado exitosamente!!');
+
+                            $("#modal_nuevo_evento").modal('hide');
+
+                        })
+                        .catch(()=>{
+                            
+                            funciones.AvisoError('No se pudo crear este Evento');  
+                            btnGuardarEvento.disabled = false;
+                            btnGuardarEvento.innerHTML = `<i class="fal fa-save"></i>`;
+                        
+                        })
+
+                }
+            })
+
+    });
     
     
+};
+
+
+function buscar_cliente(sucursal,filtro,visita,idContenedor){
+    
+        let container = document.getElementById(idContenedor);
+        container.innerHTML = GlobalLoader;
+                
+        let strdata = ''; 
+
+        axios.post('/clientes/listaajenosvendedor', {
+            app:GlobalSistema,
+            sucursal: sucursal,
+            filtro: filtro,
+            visita:visita,
+            codven:GlobalCodUsuario
+        })
+        .then((response) => {
+
+            const data = response.data.recordset;
+            
+            data.map((rows)=>{                    
+                    strdata = strdata + `
+                    <tr class='card-rounded col-12 border-secondary shadow'>
+                        <td>${funciones.limpiarTexto(rows.NEGOCIO)} - ${funciones.limpiarTexto(rows.NOMCLIE)}
+                            <br>
+                            <div class="row">
+                                <div class="col-4">
+                                    <small>Cod: ${rows.CODIGO}</small>    
+                                </div>
+                                <div class="col-4">
+                                    <small class="negrita text-danger">Tel: ${rows.TELEFONO}</small>    
+                                </div>
+                                <div class="col-4">
+                                    <small class="negrita">Visita: ${rows.VISITA}</small> 
+                                    <br>
+                                    <small class="negrita text-danger">Última Venta: ${funciones.convertDateNormal(rows.LASTSALE)}</small>   
+                                </div>
+                            </div>
+                            <small>${funciones.limpiarTexto(rows.DIRCLIE)}, ${rows.DESMUNI}<b></b></small>
+                            <br>
+                            <small class="text-info">Referencia:${funciones.limpiarTexto(rows.REFERENCIA)}</small>
+                            
+                            <div class="row">
+                                
+                                <div class="col-3">
+                                    <button class="btn btn-info btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
+                                        <i class="fal fa-map-marker"></i>&nbsp Mapa
+                                    </button>
+                                </div>
+                                                                        
+                                <div class="col-3">
+                                    <button class="btn btn-secondary btn-sm shadow" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                        <i class="fal fa-list"></i>&nbsp Historial
+                                    </button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-warning btn-sm shadow" onclick="crm_agendar_cliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                        <i class="fal fa-book"></i>&nbsp Agendar
+                                    </button>
+                                </div>
+                                
+                                <div class="col-3">
+                                    <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
+                                        <i class="fal fa-shopping-cart"></i>&nbsp Facturar
+                                    </button>
+                                </div>
+                                
+                            </div>
+                            
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-circle btn-md hand shadow"
+                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}')">
+                                <i class="fal fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>`    
+                    
+                    
+                    
+            })
+            container.innerHTML = strdata;
+            
+
+        }, (error) => {
+            funciones.AvisoError('Error en la solicitud');
+            strdata = '';
+            container.innerHTML = 'No se pudo cargar la lista';
+        });
+        
+        
 };
 
 
@@ -861,31 +1133,3 @@ function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirc
 
 }
 
-function BACKUP_send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long){
-    
-    return new Promise((resolve,reject)=>{
-        axios.post('/clientes/solicitud_cambios_cliente',{
-           sucursal: GlobalCodSucursal,
-           codclie: codclie,
-           nitclie: nitclie,
-           tiponegocio: tiponegocio,
-           negocio: negocio,
-           nomclie: nomclie,
-           dirclie: dirclie,
-           lat: lat,
-           long: long
-        })
-        .then((response) => {
-            console.log(response);
-            const data = response.data;
-            if (data.rowsAffected[0]==0){
-                reject();
-            }else{
-                resolve();
-            }            
-        }, (error) => {
-            reject();
-        });
-    })
-
-}

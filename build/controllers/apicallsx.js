@@ -396,21 +396,26 @@ let apigen = {
                             
                             <div class="row">
                                 
-                                <div class="col-4">
+                                <div class="col-3">
                                     <button class="btn btn-info btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
-                                        <i class="fal fa-map-marker"></i>Ver en mapa
+                                        <i class="fal fa-map-marker"></i>&nbsp Mapa
                                     </button>
                                 </div>
                                                                         
-                                <div class="col-4">
+                                <div class="col-3">
                                     <button class="btn btn-secondary btn-sm shadow" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
-                                        <i class="fal fa-book"></i>Historial
+                                        <i class="fal fa-list"></i>&nbsp Historial
+                                    </button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-warning btn-sm shadow" onclick="crm_agendar_cliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                        <i class="fal fa-book"></i>&nbsp Agendar
                                     </button>
                                 </div>
                                 
-                                <div class="col-4">
+                                <div class="col-3">
                                     <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
-                                        <i class="fal fa-shopping-cart"></i>Nueva factura
+                                        <i class="fal fa-shopping-cart"></i>&nbsp Facturar
                                     </button>
                                 </div>
                                 
