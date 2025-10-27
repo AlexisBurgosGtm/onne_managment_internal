@@ -1,3 +1,10 @@
+try {
+  process.loadEnvFile() //process.loadEnvFile(['./dev.env','./dev2.env'])
+  
+} catch (error) {
+  
+}
+
 var express = require("express");
 var app = express();
 var router = express.Router();
@@ -19,6 +26,7 @@ var routerConfig = require('./router/router_config');
 var router_fel = require('./router/routerFEL');
 var router_reportes = require('./router/router_reportes');
 var router_cxc = require('./router/router_cxc');
+var router_crm = require('./router/router_crm');
 
 var http = require('http').Server(app);
 //var io = require('socket.io')(http);
@@ -127,6 +135,9 @@ app.use('/reportes', router_reportes);
 app.use('/fel', router_fel);
 
 app.use('/cxc', router_cxc);
+
+app.use('/crm', router_crm);
+
 
 
 app.use("/",router);

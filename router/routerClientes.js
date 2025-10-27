@@ -9,7 +9,8 @@ router.post("/listado_giras", async(req,res)=>{
 
     let qry = `SELECT CODIGO AS CODGIRA, DESCRIPCION AS DESGIRA
                 FROM DESCRIPCIONES
-                WHERE EMPNIT='${sucursal}' AND TIPO='GIRAS';
+                WHERE EMPNIT='${sucursal}' AND TIPO='GIRAS'
+                ORDER BY DESCRIPCION;
             `
     
 

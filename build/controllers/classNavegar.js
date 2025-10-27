@@ -67,6 +67,11 @@ let classNavegar = {
                                 CxC
                             </button>
 
+                            <button class="btn btn-sm text-white"  id="btnMenu2VendedorAgenda">
+                                <i class="fal fa-book"></i>
+                                Agenda
+                            </button>
+
                             <button class="btn btn-sm text-white"  id="btnMConfig">
                                 <i class="fal fa-cog"></i>
                                 Config
@@ -118,6 +123,11 @@ let classNavegar = {
                     let btnMenu2VendedorCxc = document.getElementById('btnMenu2VendedorCxc');
                     btnMenu2VendedorCxc.addEventListener('click',()=>{
                         classNavegar.cxc();
+                    });
+
+                    let btnMenu2VendedorAgenda = document.getElementById('btnMenu2VendedorAgenda');
+                    btnMenu2VendedorAgenda.addEventListener('click',()=>{
+                        classNavegar.crm_agenda();
                     });
                  
                     
@@ -365,5 +375,13 @@ let classNavegar = {
         })
                   
              
+    },
+    crm_agenda:()=>{
+        funciones.loadScript('./views/CRM/agenda.js','root')
+        .then(()=>{
+            GlobalSelectedForm ='CRM_AGENDA';
+            initView();
+            //window.history.pushState({"page":2}, "facturacion", GlobalUrl + '/facturacion')
+        })
     },
 }

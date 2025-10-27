@@ -604,6 +604,19 @@ async function addListeners(){
     cmbVisita.value = funciones.getDiaSemana(fa.getDay());
 
 
+    
+    get_giras()
+    .then((data)=>{
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `<option value='${r.CODGIRA}'>${r.DESGIRA}</option>`
+        })
+        document.getElementById('cmbEditGira').innerHTML= str;
+    })
+    .catch(()=>{
+        document.getElementById('cmbEditGira').innerHTML= `<option value='0'>SN</option>` 
+    })
+
 
 
     document.getElementById('btnTabNVAtras').addEventListener('click',()=>{
@@ -730,11 +743,13 @@ async function addListeners(){
             let latitud = document.getElementById('txtEditLatitud').value || 0;
             let longitud = document.getElementById('txtEditLongitud').value || 0;
 
+            let codgira = document.getElementById('cmbEditGira').value;
+
             if (negocio=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
             if (nombre=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
 
 
-            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia)
+            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira)
             .then(()=>{
                 funciones.Aviso('Solicitud enviada exitosamente!!');
                 btnEnviarCambiosCliente.disabled = false;
@@ -766,6 +781,28 @@ async function addListeners(){
     
 };
 
+
+function get_giras(){
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/clientes/listado_giras', {
+            sucursal: GlobalEmpnit
+        })  
+        .then(async(response) => {
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+           reject();
+        });
+
+    })
+};
+
+
 function getListaClientes(nodia){
 
     GlobalSelectedClientesDia = nodia;
@@ -792,7 +829,7 @@ function inicializarVista(){
 
 
 
-function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia){
+function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira){
     
     return new Promise((resolve,reject)=>{
         axios.post('/clientes/editar_cliente',{
@@ -806,7 +843,8 @@ function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirc
            lat: lat,
            long: long,
            telefono:telefono,
-           referencia:referencia
+           referencia:referencia,
+           codgira:codgira
         })
         .then((response) => {
             console.log(response);

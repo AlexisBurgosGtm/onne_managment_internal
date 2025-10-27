@@ -1,5 +1,5 @@
-const staticCacheName = 'OBpre-cache-v09.06-2025';
-const dynamicCacheName = 'OBruntime-cache-v09.06-2025';
+const staticCacheName = 'OBpre-cache-v27.10-2025';
+const dynamicCacheName = 'OBruntime-cache-v27.10-2025';
 
 console.log(staticCacheName);
 
@@ -48,6 +48,10 @@ const precacheAssets = [
     './libs/funciones.js',
     './libs/sweetalert.min.js',
     './libs/toastr.js',
+    './libs/calendar/fullcalendar.bundle.css',
+    './libs/calendar/fullcalendar.bundle.css.map',
+    './libs/calendar/fullcalendar.bundle.js',
+    './libs/calendar/moment.js',
     './models/classTipoDocumentos.js',
     './models/classEmpleados.js',
     './vendor/jquery-easing/jquery.easing.js',

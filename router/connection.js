@@ -1,26 +1,10 @@
-﻿const configX = {
-	user: 'iEx',
-	password: 'iEx',
-	server: 'DESKTOP-3L7R1E4\\SQL22',
-	database: 'ONNE',
-	pool: {	
-		max: 100,	
-		min: 0,	
-		idleTimeoutMillis: 30000
-	},
-	options: {
-    	encrypt: false, // for azure
-    	trustServerCertificate: true // change to true for local dev / self-signed certs
-  }
-};
-
-
+﻿
 
 const config = {
-	user: 'db_a6478c_tridente_admin',
-	password: 'razors1805',
-	server: 'sql8011.site4now.net',
-	database: 'db_a6478c_tridente',
+	user: process.env.DB_USER,
+	password: process.env.DB_PWD,
+	server: process.env.DB_HOST, 
+	database: process.env.DB_DB,
 	pool: {	
 		max: 100,	
 		min: 0,	
