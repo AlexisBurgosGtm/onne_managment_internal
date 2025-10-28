@@ -5,7 +5,7 @@ function getView(){
                 <div class="col-12 p-0 bg-white">
                     <div class="tab-content" id="myTabHomeContent">
                         <div class="tab-pane fade show active" id="uno" role="tabpanel" aria-labelledby="receta-tab">
-                            ${view.vista_calendario() + view.modal_nuevo_evento() + view.modal_detalles_evento()}
+                            ${view.vista_calendario() + view.modal_nuevo_evento() + view.modal_detalles_evento() + view.modal_lista_clientes()}
                         </div>
                         <div class="tab-pane fade" id="dos" role="tabpanel" aria-labelledby="home-tab">
                            
@@ -39,15 +39,11 @@ function getView(){
             return `
             <div class="card card-rounded shadow col-12">
                 <div class="card-body p-2">
-                
-                
-                   
+
+                    <h5 class="text-onne">Agenda de Actividades</h5>
+                    <label class="negrita text-danger" id="lbCargando"></label>
                     <div id="calendar"></div>
-                                <!-- Modal : TODO -->
-                                <!-- Modal end -->
                     
-
-
                 </div>
             </div>            
 
@@ -78,8 +74,8 @@ function getView(){
                                             <div class="input-group">
                                                 <input type="text" class="form-control col-2" id="txtCodCliente">
                                                 <input type="text" class="form-control col-10" id="txtNomCliente">
-                                                <button class="btn btn-md btn-info hand" id="btnBuscarCliente">
-                                                    <i class="fal fa-search"></i>
+                                                <button class="btn btn-md btn-success hand" id="btnBuscarCliente">
+                                                    <i class="fal fa-plus"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -270,23 +266,77 @@ function getView(){
                 </div>
             `
         },
-        vista_listado:()=>{
+        modal_lista_clientes:()=>{
             return `
-            <div class="card card-rounded shadow">
-                <div class="card-body p-2">
-                    <div class="table-responsive col-12">
-                       
+            <div class="modal fade" 
+                id="modal_lista_clientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <label class="modal-title h3" id="">Seleccione un Cliente</label>
+                            </div>
 
+                            <div class="modal-body p-2">
 
+                                <div class="card card-rounded col-12 p-2">
+                                    <div class="card-body">
 
+                                        <div class="form-group">
+                                            <label class=text-secondary">Busqueda de clientes</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control text-info border-info" 
+                                                    id="txt_buscar_cliente"
+                                                    placeholder="Busque por NIT o por nombre de negocio y cliente...">
+                                                <button class="btn btn-md btn-info hand" id="btnBuscarClienteLista">
+                                                    <i class="fal fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-bordered col-12 h-full">
+                                                <thead class="bg-secondary text-white">
+                                                    <tr>
+                                                        <td>VISITA</td>
+                                                        <td>NEGOCIO</td>
+                                                        <td>CLIENTE</td>
+                                                        <td>DIRECCION</td>
+                                                        <td>GIRA</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbl_data_clientes">
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <br>
+                                        <div class="row">
+                                           
+                                            <div class="col-4">
+                                                <button class="btn btn-secondary btn-xl btn-circle hand shadow" data-dismiss="modal">
+                                                    <i class="fal fa-arrow-left"></i>
+                                                </button>
+                                            </div>
+                                             <div class="col-4">
+                                               
+                                            </div>
+                                             <div class="col-4">
+                                                
+                                            </div>
+                                        </div>
+
+                                    
+                                    
+                                    </div>
+                                </div>    
+
+                                
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
             `
-        },
-        vista_nuevo:()=>{
-
         }
     }
 
@@ -327,6 +377,10 @@ function addListeners(){
             let codcliente = document.getElementById('txtCodCliente').value || '';
 
             let allDay = 0;
+
+            if(codcliente==''){funciones.AvisoError('Seleccione un cliente');return};
+            if(titulo==''){funciones.AvisoError('Indique el nombre o titulo del evento');return};
+            
 
             funciones.Confirmacion('¿Está seguro que desea CREAR este evento?')
             .then((value)=>{
@@ -446,6 +500,29 @@ function addListeners(){
         });
 
 
+        document.getElementById('btnBuscarCliente').addEventListener('click',()=>{
+
+            $("#modal_lista_clientes").modal('show');
+
+        });
+
+
+      
+
+        let btnBuscarClienteLista = document.getElementById('btnBuscarClienteLista');
+        btnBuscarClienteLista.addEventListener('click',()=>{
+            buscar_cliente();
+        });
+        
+        document.getElementById('txt_buscar_cliente').addEventListener('keyup',(e)=>{
+            if(e.code=='Enter'){
+                btnBuscarClienteLista.click();    
+            }
+            if(e.code=='NumpadEnter'){
+                btnBuscarClienteLista.click();   
+            }
+        });
+
 };
 
 
@@ -458,6 +535,49 @@ function initView(){
 };
 
 
+function buscar_cliente(){
+
+    let filtro = document.getElementById('txt_buscar_cliente').value || '';
+    if(filtro==''){funciones.showToast('Escriba para buscar...');return;};
+
+    let container = document.getElementById('tbl_data_clientes');
+    container.innerHTML = GlobalLoader;
+
+    DATA_CRM.get_buscar_cliente(GlobalCodSucursal,GlobalCodUsuario,filtro)
+    .then((data)=>{
+
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `
+                <tr class="hand" 
+                    onclick="get_datos_cliente('${r.CODIGO}','${r.CLIENTE}')">
+                        <td>${r.VISITA}</td>
+                        <td>${r.NEGOCIO}<br><small>${r.TIPONEGOCIO}</small></td>
+                        <td>${r.CLIENTE}</td>
+                        <td><small>${r.DIRECCION}</small><br><small>${r.MUNICIPIO}</small></td>
+                        <td>${r.DESGIRA}</td>
+                </tr>
+            `
+        })
+        container.innerHTML = str;
+    })
+    .catch(()=>{
+        container.innerHTML = 'No se cargaron datos...';
+    })
+
+
+};
+function get_datos_cliente(codcliente,cliente){
+
+    document.getElementById('txtCodCliente').value = codcliente;
+    document.getElementById('txtNomCliente').value = cliente;
+
+    $("#modal_lista_clientes").modal('hide');
+
+    document.getElementById('txt_buscar_cliente').value = '';
+    
+    
+};
 
 
 
@@ -467,11 +587,9 @@ function initView(){
 
 function init_calendar(){
 
-            //var todayDate = moment().startOf('day');
-            //var YM = todayDate.format('YYYY-MM');
-            //var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
-            //var TODAY = todayDate.format('YYYY-MM-DD');
-           // var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
+
+                document.getElementById('lbCargando').innerHTML = 'Cargando eventos del calendario... ' + GlobalLoader;
+
 
                 document.getElementById('calendar').innerHTML = '';
            
@@ -580,14 +698,13 @@ function init_calendar(){
 
                         calendar.render();
 
+                        document.getElementById('lbCargando').innerHTML = '';
+
                 })
               
 
 };
 
-function get_eventos(sucursal,){
-
-}
 
 //--- EVENTOS DEL CALENDARIO -----
 //--------------------------------

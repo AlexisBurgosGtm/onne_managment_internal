@@ -925,6 +925,10 @@ async function addListeners(){
 
             let allDay = 0;
 
+            if(codcliente==''){funciones.AvisoError('Seleccione un cliente');return};
+            if(titulo==''){funciones.AvisoError('Indique el nombre o titulo del evento');return};
+            
+
             funciones.Confirmacion('¿Está seguro que desea CREAR este evento?')
             .then((value)=>{
                 if(value==true){

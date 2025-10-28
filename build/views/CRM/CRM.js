@@ -138,5 +138,35 @@ let DATA_CRM = {
             
         })
 
+    },
+    get_buscar_cliente:(sucursal,codemp,filtro)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/select_cliente', {
+                sucursal:sucursal,
+                codemp:codemp,
+                filtro:filtro
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+
     }
 }
