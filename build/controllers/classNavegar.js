@@ -68,8 +68,13 @@ let classNavegar = {
                             </button>
 
                             <button class="btn btn-sm text-white"  id="btnMenu2VendedorAgenda">
-                                <i class="fal fa-book"></i>
+                                <i class="fal fa-calendar"></i>
                                 Agenda
+                            </button>
+
+                            <button class="btn btn-sm text-white"  id="btnMenu2VendedorVisitas">
+                                <i class="fal fa-book"></i>
+                                Visitas
                             </button>
 
                             <button class="btn btn-sm text-white"  id="btnMConfig">
@@ -129,6 +134,13 @@ let classNavegar = {
                     btnMenu2VendedorAgenda.addEventListener('click',()=>{
                         classNavegar.crm_agenda();
                     });
+
+                    
+                    let btnMenu2VendedorVisitas = document.getElementById('btnMenu2VendedorVisitas');
+                    btnMenu2VendedorVisitas.addEventListener('click',()=>{
+                        classNavegar.crm_visitas();
+                    });
+
                  
                     
                     let btnMenu2Censo = document.getElementById('btnMenu2Censo');
@@ -380,6 +392,14 @@ let classNavegar = {
         funciones.loadScript('./views/CRM/agenda.js','root')
         .then(()=>{
             GlobalSelectedForm ='CRM_AGENDA';
+            initView();
+            //window.history.pushState({"page":2}, "facturacion", GlobalUrl + '/facturacion')
+        })
+    },
+    crm_visitas:()=>{
+        funciones.loadScript('./views/CRM/visitas.js','root')
+        .then(()=>{
+            GlobalSelectedForm ='CRM_VISITAS';
             initView();
             //window.history.pushState({"page":2}, "facturacion", GlobalUrl + '/facturacion')
         })

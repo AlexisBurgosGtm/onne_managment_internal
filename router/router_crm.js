@@ -140,6 +140,117 @@ router.post("/select_cliente", async(req,res)=>{
 });
 
 
+// VISITAS A CLIENTES
+
+router.post("/select_visitas", async(req,res)=>{
+
+    const{sucursal,codemp,fi,ff} = req.body;
+
+    let qry = '';
+
+    if(codemp.toString()=='TODOS'){
+        qry = `
+            SELECT 
+                CRM_VISITAS.ID,
+                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.CODEMP,
+                EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
+                CRM_VISITAS.CODCLIENTE, 
+                CRM_VISITAS.MOTIVO, 
+                CRM_VISITAS.NOTAS, 
+                CRM_VISITAS.ACCIONES,
+                ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO, 
+                CLIENTES.NOMBRECLIENTE AS CLIENTE, 
+                CLIENTES.DIRCLIENTE, 
+                MUNICIPIOS.DESMUNICIPIO AS MUNICIPIO, 
+                DEPARTAMENTOS.DESDEPARTAMENTO AS DEPARTAMENTO, 
+                DESCRIPCIONES.DESCRIPCION AS GIRA
+            FROM  DESCRIPCIONES RIGHT OUTER JOIN
+                CLIENTES ON DESCRIPCIONES.CODIGO = CLIENTES.GIRA LEFT OUTER JOIN
+                DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO RIGHT OUTER JOIN
+                CRM_VISITAS LEFT OUTER JOIN
+                EMPLEADOS ON CRM_VISITAS.EMPNIT = EMPLEADOS.EMPNIT AND 
+                CRM_VISITAS.CODEMP = EMPLEADOS.CODEMPLEADO ON CLIENTES.EMPNIT = CRM_VISITAS.EMPNIT AND 
+                CLIENTES.CODCLIENTE = CRM_VISITAS.CODCLIENTE
+            WHERE 
+                (CRM_VISITAS.EMPNIT='${sucursal}') AND 
+                (CRM_VISITAS.FECHA BETWEEN '${fi}' AND '${ff}');
+            `
+    }else{
+        qry = `
+            SELECT 
+                CRM_VISITAS.ID,
+                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.CODEMP,
+                EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
+                CRM_VISITAS.CODCLIENTE, 
+                CRM_VISITAS.MOTIVO, 
+                CRM_VISITAS.NOTAS, 
+                CRM_VISITAS.ACCIONES,
+                ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO,  
+                CLIENTES.NOMBRECLIENTE AS CLIENTE, 
+                CLIENTES.DIRCLIENTE, 
+                MUNICIPIOS.DESMUNICIPIO AS MUNICIPIO, 
+                DEPARTAMENTOS.DESDEPARTAMENTO AS DEPARTAMENTO, 
+                DESCRIPCIONES.DESCRIPCION AS GIRA
+            FROM  DESCRIPCIONES RIGHT OUTER JOIN
+                CLIENTES ON DESCRIPCIONES.CODIGO = CLIENTES.GIRA LEFT OUTER JOIN
+                DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO RIGHT OUTER JOIN
+                CRM_VISITAS LEFT OUTER JOIN
+                EMPLEADOS ON CRM_VISITAS.EMPNIT = EMPLEADOS.EMPNIT AND 
+                CRM_VISITAS.CODEMP = EMPLEADOS.CODEMPLEADO ON CLIENTES.EMPNIT = CRM_VISITAS.EMPNIT AND 
+                CLIENTES.CODCLIENTE = CRM_VISITAS.CODCLIENTE
+            WHERE 
+                (CRM_VISITAS.EMPNIT='${sucursal}') AND 
+                (CRM_VISITAS.FECHA BETWEEN '${fi}' AND '${ff}') AND
+                (CRM_VISITAS.CODEMP=${codemp});
+            `
+
+    }
+
+    
+    
+     execute.Query(res,qry);
+     
+});
+router.post("/insert_visita", async(req,res)=>{
+
+    const{sucursal,fecha,codemp,codcliente,motivo,notas,acciones} = req.body;
+
+    let qry = `
+        INSERT INTO CRM_VISITAS 
+            (EMPNIT,FECHA,MES,ANIO,CODEMP,CODCLIENTE,MOTIVO,NOTAS,ACCIONES)
+        SELECT '${sucursal}' AS EMPNIT, 
+                '${fecha}' AS FECHA, MONTH('${fecha}') AS MES, 
+                YEAR('${fecha}') AS ANIO, 
+                ${codemp} AS CODEMP, ${codcliente} AS CODCLIENTE, 
+                '${motivo}' AS MOTIVO, '${notas}' AS NOTAS, '${acciones}' AS ACCIONES;
+        `
+
+        console.log(qry);
+
+    
+     execute.Query(res,qry);
+     
+});
+router.post("/delete_visita", async(req,res)=>{
+
+    const{idvisita} = req.body;
+
+    let qry = `
+        DELETE FROM CRM_VISITAS WHERE ID=${idvisita};
+        `
+    
+        console.log(qry)
+
+     execute.Query(res,qry);
+     
+});
+
+
+
 
 module.exports = router;
 

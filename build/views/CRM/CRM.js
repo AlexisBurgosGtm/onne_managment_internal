@@ -168,5 +168,95 @@ let DATA_CRM = {
         })
 
 
-    }
+    },
+    get_visitas:(sucursal,codemp,fi,ff)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/select_visitas', {
+                sucursal:sucursal,
+                codemp:codemp,
+                fi:fi,
+                ff:ff
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+    },
+    insert_visita:(sucursal,codemp,codcliente,fecha,motivo,notas,acciones)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/insert_visita', {
+                sucursal:sucursal,
+                codemp:codemp,
+                codcliente:codcliente,
+                fecha:fecha,
+                motivo:motivo,
+                notas:notas,
+                acciones:acciones
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+    },
+    delete_visita:(idvisita)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/delete_visita', {
+                idvisita:idvisita
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+    },
 }

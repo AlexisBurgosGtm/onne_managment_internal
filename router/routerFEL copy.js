@@ -6,20 +6,20 @@ var axios = require('axios');
 
 
 let FEL = {
-    IVA: process.env.FEL_IVA,
-    CodigoEstablecimiento:process.env.FEL_CodigoEstablecimiento,
-    NITEmisor:process.env.FEL_NITEmisor,
-    NombreComercial:process.env.FEL_NombreComercial,
-    NombreEmisor:process.env.FEL_NombreEmisor,
-    Direccion:process.env.FEL_Direccion,
-    CodigoPostal:process.env.FEL_CodigoPostal,
-    Municipio:process.env.FEL_Municipio,
-    Departamento:process.env.FEL_Departamento,
-    ACCESO_REQ_NOMBRE:process.env.FEL_ACCESO_REQ_NOMBRE,
-    ACCESO_REQ_CLAVE:process.env.FEL_ACCESO_REQ_CLAV,
-    ACCESO_FIRMA_USUARIO:process.env.FEL_ACCESO_FIRMA_USUARIO,
-    ACCESO_FIRMA_CLAVE:process.env.FEL_ACCESO_FIRMA_CLAVE,
-    URL_REPORT_INFILE: process.env.FEL_URL_REPORT_INFILE,
+    IVA: 1.12,
+    CodigoEstablecimiento:"3",
+    NITEmisor:"109225961",
+    NombreComercial:"FARMACIA BIENESTAR",
+    NombreEmisor:"TRIDENTE SIN FRONTERAS, SOCIEDAD ANONIMA",
+    Direccion:"AVENIDA PNC ZONA 0",
+    CodigoPostal:"14018",
+    Municipio:"CANILLA",
+    Departamento:"QUICHE",
+    ACCESO_REQ_NOMBRE:"109225961PRO",
+    ACCESO_REQ_CLAVE:"4228A707E8C511FD2BC1BE789AFE9D44",
+    ACCESO_FIRMA_USUARIO:"109225961PRO",
+    ACCESO_FIRMA_CLAVE:"9d56208067b2eb68802f301647dd644a",
+    URL_REPORT_INFILE: "https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid=",
     CONFIG_FEL_HABILITADO: 'SI'
 };
 

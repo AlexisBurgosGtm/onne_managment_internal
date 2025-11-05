@@ -7,7 +7,7 @@ function getView(){
                     <div class="tab-content py-3">
 
                         <div class="tab-pane fade active show" id="panelInicio" role="tabpanel">
-                            ${view.tab_ajenos() + view.modal_nuevo_evento()}
+                            ${view.tab_ajenos() + view.modal_nuevo_evento() + view.modal_nueva_visita()}
                         </div>
 
                         <div class="tab-pane fade" id="panelNoVisitados" role="tabpanel">
@@ -579,144 +579,94 @@ function getView(){
                     </div>
                 </div>
             `
-        }
+        },
+        modal_nueva_visita:()=>{
+            return `
+            <div class="modal fade" 
+                id="modal_nueva_visita" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-onne text-white">
+                                <label class="modal-title h3" id="">Registrar visita</label>
+                            </div>
+
+                            <div class="modal-body p-2">
+
+                                <div class="card card-rounded col-12 p-2">
+                                    <div class="card-body">
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Fecha</label>
+                                            <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-secondary">Cliente</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control col-2" id="txtCodClienteV" disabled>
+                                                <input type="text" class="form-control col-10" id="txtNomClienteV" disabled>
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <div class="form-group">
+                                            <label class=text-secondary">Motivo</label>
+                                            <select class="form-control text-primary negrita" id="cmb_visita_motivo">
+                                                <option value="VISITA RUTINA">VISITA RUTINA</option>
+                                                <option value="RE-VISITA">RE-VISITA</option>
+                                                <option value="EXTRAORDINARIA">EXTRAORDINARIA</option>
+                                            </select>
+                                        </div>
+                                        
+
+                                        <div class="form-group">
+                                            <label class=text-secondary">Anotaciones</label>
+                                            <textarea rows="3" class="form-control border-info" id="txt_visita_obs"></textarea>
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label class=text-secondary">Plan de Acción</label>
+                                            <textarea rows="3" class="form-control border-info" id="txt_visita_acciones"></textarea>
+                                        </div>
+                                        
+                                        
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <button class="btn btn-secondary btn-xl btn-circle hand shadow" data-dismiss="modal">
+                                                    <i class="fal fa-arrow-left"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button class="btn btn-onne btn-xl btn-circle hand shadow" id="btnGuardarVisita">
+                                                    <i class="fal fa-save"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    
+                                    
+                                    </div>
+                                </div>    
+
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            `
+        },
     }
 
     root.innerHTML = view.body() + view.modalHistorialCliente() + view.modalCambiarDatosCliente() +  view.modalGps();
     rootMenuLateral.innerHTML = view.modalMenuCliente();
 };
 
-function Lmap(lat,long){
-                      
-          var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          osm = L.tileLayer(osmUrl, {center: [lat, long],maxZoom: 20, attribution: osmAttrib});    
-          map = L.map('mapcontainer').setView([lat, long], 18).addLayer(osm);
-
-          L.marker([lat, long], {draggable:'true'})
-            .addTo(map)
-            .bindPopup(`Marque la nueva posición GPS del cliente`, {closeOnClick: false, autoClose: false})
-            .openPopup()
-            .on("dragend",function(e) {
-                    this.openPopup();
-                    var position = e.target._latlng;
-               
-                    GlobalSelectedLat = position.lat.toString();
-                    GlobalSelectedLong = position.lng.toString();                  
-            });
-           
-            return map;
-
-};
-
-function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
-    
-    
-    console.log('getMenuCliente')
-    console.log(codigo)
-    console.log(nombre)
-    console.log(direccion)
-    console.log(nit)
-    
-    //map.remove()
-    //map = Lmap(lat,long,nombre,telefono);
-
-    document.getElementById('lbNombreCliente').innerHTML = nombre;
-    document.getElementById('txtCodClie').value = codigo;
-    document.getElementById('txtNitClie').value = nit;
-    document.getElementById('txtDirClie').value = direccion;
-    document.getElementById('txtTelClie').value = telefono;
-    
-    GlobalSelectedCodCliente = codigo;
-    GlobalSelectedNomCliente = nombre;
-    GlobalSelectedDirCliente = direccion;
-    
-
-    classNavegar.ventas(GlobalSelectedCodCliente,GlobalSelectedNomCliente,GlobalSelectedDirCliente,nit);
-
-    //showMenuLateral('Opciones del Cliente');
-
-};
-
-
-
-function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia){
-    
-  
-
-    document.getElementById('txtEditNit').value = nit;
-    document.getElementById('txtEditNombre').value = nombre;
-    document.getElementById('txtEditDireccion').value = direccion; 
-    document.getElementById('txtEditTelefono').value = telefono;
-    document.getElementById('txtEditReferencia').value = referencia; 
-    
-    document.getElementById('txtEditLatitud').value = lat;
-    document.getElementById('txtEditLongitud').value = long;
-    document.getElementById('cmbEditTipoNegocio').value = tiponegocio;
-    document.getElementById('txtEditNegocio').value = negocio;
-
-    GlobalSelectedCodCliente = codigo;
-    GlobalSelectedNomCliente = nombre;
-    GlobalSelectedDirCliente = direccion;
-    
-
-    $("#ModalCambiarDatosCliente").modal('show');
-
-
-
-};
-
-async function getHistorialCliente(codigo,nit,nombre){
-    
-    await apigen.vendedorHistorialCliente(codigo,'tblHistorial');
-
-    $('#ModalHistorialCliente').modal('show')
-
-};
-
-function crm_agendar_cliente(codigo,nit,nombre){
-
-    $("#modal_nuevo_evento").modal('show');
-
-    document.getElementById('txt_evento_fecha').value = funciones.getFecha();
-    document.getElementById('txtCodCliente').value = codigo;
-    document.getElementById('txtNomCliente').value = `(${nit}) ${nombre}`
-
-    document.getElementById('cmb_evento_hora_inicia').value = '06';
-    document.getElementById('cmb_evento_hora_finaliza').value = '06';
-    document.getElementById('cmb_evento_minuto_inicia').value = '00';
-    document.getElementById('cmb_evento_minuto_finaliza').value = '00';
-
-    document.getElementById('txt_evento_titulo').value = '';
-    document.getElementById('txt_evento_detalles').value = '';
-
-};
-
-async function setRecordatorioVisita(codigo, nit, nombre, direccion){
-    
-    await funciones.hablar(`¿Quieres establecer el recordatorio de visita a ${nombre}`);
-    
-    let recordatorio = 'Retomar visita';
-
-    funciones.Confirmacion(`¿Quieres establecer el recordatorio de visita a ${nombre}`)
-    .then((value)=>{
-        if (value==true){
-
-            apigen.clientesSetReminder(codigo,nit,nombre,direccion,recordatorio,0,0,funciones.getFecha())
-            .then(()=>{
-                funciones.Aviso('Recordatorio establecido exitosamente');
-            })
-            .catch(()=>{
-                funciones.AvisoError('No se pudo establecer el recordatorio');
-            })
-            //funciones.setReminder(`Visitar a ${nombre}, ubicado en ${direccion}`, 60);
-            
-        }
-    })
-    
-};
-
 async function addListeners(){
+
+
+    funciones.slideAnimationTabs();
 
 
     let cmbVisita = document.getElementById('cmbVisita');
@@ -897,7 +847,7 @@ async function addListeners(){
 
    
 
-    funciones.slideAnimationTabs();
+  
     
 
     // CRM 
@@ -961,9 +911,182 @@ async function addListeners(){
             })
 
     });
+
+    let btnGuardarVisita = document.getElementById('btnGuardarVisita');
+    btnGuardarVisita.addEventListener('click',()=>{
+
+
+            let codcliente = document.getElementById('txtCodClienteV').value || '';
+            let motivo = document.getElementById('cmb_visita_motivo').value;
+            let fecha = funciones.devuelveFecha('txt_visita_fecha');
+            let obs = funciones.limpiarTextoCRM(document.getElementById('txt_visita_obs').value) || '';
+            let acciones = funciones.limpiarTextoCRM(document.getElementById('txt_visita_acciones').value) || '';
+           
+            if(codcliente==''){funciones.AvisoError('Seleccione un cliente');return};
+            
+
+            funciones.Confirmacion('¿Está seguro que desea registrar esta visita?')
+            .then((value)=>{
+                if(value==true){
+
+
+                    btnGuardarVisita.disabled = true;
+                    btnGuardarVisita.innerHTML = `<i class="fal fa-save fa-spin"></i>`;
+
+                    DATA_CRM.insert_visita(GlobalCodSucursal,GlobalCodUsuario,codcliente,fecha,motivo,obs,acciones)
+                    .then(()=>{
+
+                        funciones.Aviso('Visita registrada exitosamente!!');
+
+                        btnGuardarVisita.disabled = false;
+                        btnGuardarVisita.innerHTML = `<i class="fal fa-save"></i>`;
+
+                        $("#modal_nueva_visita").modal('hide');
+
+                        document.getElementById('txt_visita_obs').value = '';
+                        document.getElementById('txt_visita_acciones').value = '';
+                        document.getElementById('cmb_visita_motivo').value = 'VISITA RUTINA';
+
+
+                    })
+                    .catch(()=>{
+
+                        funciones.AvisoError('No se pudo registrar la visita');
+
+                        btnGuardarVisita.disabled = false;
+                        btnGuardarVisita.innerHTML = `<i class="fal fa-save"></i>`;
+
+                    })
+
+
+                    
+                    
+
+
+                }
+            })
+      
+
+    });
     
     
 };
+
+function Lmap(lat,long){
+                      
+          var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          osm = L.tileLayer(osmUrl, {center: [lat, long],maxZoom: 20, attribution: osmAttrib});    
+          map = L.map('mapcontainer').setView([lat, long], 18).addLayer(osm);
+
+          L.marker([lat, long], {draggable:'true'})
+            .addTo(map)
+            .bindPopup(`Marque la nueva posición GPS del cliente`, {closeOnClick: false, autoClose: false})
+            .openPopup()
+            .on("dragend",function(e) {
+                    this.openPopup();
+                    var position = e.target._latlng;
+               
+                    GlobalSelectedLat = position.lat.toString();
+                    GlobalSelectedLong = position.lng.toString();                  
+            });
+           
+            return map;
+
+};
+
+function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
+    
+    
+    console.log('getMenuCliente')
+    console.log(codigo)
+    console.log(nombre)
+    console.log(direccion)
+    console.log(nit)
+    
+    //map.remove()
+    //map = Lmap(lat,long,nombre,telefono);
+
+    document.getElementById('lbNombreCliente').innerHTML = nombre;
+    document.getElementById('txtCodClie').value = codigo;
+    document.getElementById('txtNitClie').value = nit;
+    document.getElementById('txtDirClie').value = direccion;
+    document.getElementById('txtTelClie').value = telefono;
+    
+    GlobalSelectedCodCliente = codigo;
+    GlobalSelectedNomCliente = nombre;
+    GlobalSelectedDirCliente = direccion;
+    
+
+    classNavegar.ventas(GlobalSelectedCodCliente,GlobalSelectedNomCliente,GlobalSelectedDirCliente,nit);
+
+    //showMenuLateral('Opciones del Cliente');
+
+};
+
+
+
+function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia){
+    
+  
+
+    document.getElementById('txtEditNit').value = nit;
+    document.getElementById('txtEditNombre').value = nombre;
+    document.getElementById('txtEditDireccion').value = direccion; 
+    document.getElementById('txtEditTelefono').value = telefono;
+    document.getElementById('txtEditReferencia').value = referencia; 
+    
+    document.getElementById('txtEditLatitud').value = lat;
+    document.getElementById('txtEditLongitud').value = long;
+    document.getElementById('cmbEditTipoNegocio').value = tiponegocio;
+    document.getElementById('txtEditNegocio').value = negocio;
+
+    GlobalSelectedCodCliente = codigo;
+    GlobalSelectedNomCliente = nombre;
+    GlobalSelectedDirCliente = direccion;
+    
+
+    $("#ModalCambiarDatosCliente").modal('show');
+
+
+
+};
+
+async function getHistorialCliente(codigo,nit,nombre){
+    
+    await apigen.vendedorHistorialCliente(codigo,'tblHistorial');
+
+    $('#ModalHistorialCliente').modal('show')
+
+};
+
+
+
+async function setRecordatorioVisita(codigo, nit, nombre, direccion){
+    
+    await funciones.hablar(`¿Quieres establecer el recordatorio de visita a ${nombre}`);
+    
+    let recordatorio = 'Retomar visita';
+
+    funciones.Confirmacion(`¿Quieres establecer el recordatorio de visita a ${nombre}`)
+    .then((value)=>{
+        if (value==true){
+
+            apigen.clientesSetReminder(codigo,nit,nombre,direccion,recordatorio,0,0,funciones.getFecha())
+            .then(()=>{
+                funciones.Aviso('Recordatorio establecido exitosamente');
+            })
+            .catch(()=>{
+                funciones.AvisoError('No se pudo establecer el recordatorio');
+            })
+            //funciones.setReminder(`Visitar a ${nombre}, ubicado en ${direccion}`, 60);
+            
+        }
+    })
+    
+};
+
+
 
 
 function buscar_cliente(sucursal,filtro,visita,idContenedor){
@@ -1008,28 +1131,49 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
                             
                             <div class="row">
                                 
-                                <div class="col-3">
-                                    <button class="btn btn-info btn-sm shadow" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
+                                <div class="col-4">
+                                    <button class="btn btn-info btn-sm shadow col-12" onclick="funciones.gotoGoogleMaps('${rows.LAT}','${rows.LONG}');">
                                         <i class="fal fa-map-marker"></i>&nbsp Mapa
                                     </button>
                                 </div>
                                                                         
-                                <div class="col-3">
-                                    <button class="btn btn-secondary btn-sm shadow" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                <div class="col-4">
+                                    <button class="btn btn-secondary btn-sm shadow col-12" onclick="getHistorialCliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
                                         <i class="fal fa-list"></i>&nbsp Historial
                                     </button>
                                 </div>
-                                <div class="col-3">
-                                    <button class="btn btn-warning btn-sm shadow" onclick="crm_agendar_cliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
-                                        <i class="fal fa-book"></i>&nbsp Agendar
-                                    </button>
-                                </div>
+                           
                                 
-                                <div class="col-3">
-                                    <button class="btn btn-success btn-sm shadow" onclick="getMenuCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
+                                <div class="col-4">
+                                    <button class="btn btn-success btn-sm shadow col-12" onclick="getMenuCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}');">
                                         <i class="fal fa-shopping-cart"></i>&nbsp Facturar
                                     </button>
                                 </div>
+                                
+                            </div>
+                            
+                            <hr>
+                            <div class="row">
+                                
+                                <div class="col-4">
+                                    <button class="btn btn-info btn-sm shadow col-12 hidden" 
+                                        onclick="">
+                                        <i class="fal fa-map-marker"></i>&nbsp 
+                                    </button>
+                                </div>          
+                                <div class="col-4">
+                                    <button class="btn btn-outline-secondary btn-sm shadow col-12" 
+                                        onclick="crm_agendar_cliente('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}');">
+                                        <i class="fal fa-book"></i>&nbsp Agendar
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary btn-sm shadow col-12" 
+                                        onclick="crm_registrar_visita('${rows.CODIGO}','${rows.NIT}','${rows.NOMCLIE}')">
+                                        <i class="fal fa-tag"></i>&nbsp Visita
+                                    </button>
+                                </div>
+                               
                                 
                             </div>
                             
@@ -1135,5 +1279,38 @@ function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirc
         });
     })
 
-}
+};
 
+
+
+
+function crm_agendar_cliente(codigo,nit,nombre){
+
+    $("#modal_nuevo_evento").modal('show');
+
+    document.getElementById('txt_evento_fecha').value = funciones.getFecha();
+    document.getElementById('txtCodCliente').value = codigo;
+    document.getElementById('txtNomCliente').value = `(${nit}) ${nombre}`
+
+    document.getElementById('cmb_evento_hora_inicia').value = '06';
+    document.getElementById('cmb_evento_hora_finaliza').value = '06';
+    document.getElementById('cmb_evento_minuto_inicia').value = '00';
+    document.getElementById('cmb_evento_minuto_finaliza').value = '00';
+
+    document.getElementById('txt_evento_titulo').value = '';
+    document.getElementById('txt_evento_detalles').value = '';
+
+};
+
+function crm_registrar_visita(codigo,nit,nombre){
+
+    $("#modal_nueva_visita").modal('show');
+
+    document.getElementById('txt_visita_fecha').value = funciones.getFecha();
+    document.getElementById('txtCodClienteV').value = codigo;
+    document.getElementById('txtNomClienteV').value = `(${nit}) ${nombre}`
+
+  
+
+
+};
