@@ -3,14 +3,14 @@ function getView(){
     let view = {
         body:()=>{
             return `
+                ${view.vista_parametros()}
                 <div class="col-12 p-0 bg-white">
                     <div class="tab-content" id="myTabHomeContent">
                         <div class="tab-pane fade show active" id="uno" role="tabpanel" aria-labelledby="receta-tab">
-                            ${view.vista_listado() + view.modal_detalles()}
+                            ${view.vista_listado()}
                         </div>
                         <div class="tab-pane fade" id="dos" role="tabpanel" aria-labelledby="home-tab">
-                           
-                            
+                           ${view.vista_mapa_recorrido()}
                         </div>
                         <div class="tab-pane fade" id="tres" role="tabpanel" aria-labelledby="home-tab">
                             
@@ -32,7 +32,31 @@ function getView(){
                         </li>         
                     </ul>
                 </div>
+
+                ${view.modal_detalles()}
+                
+                <button class="btn btn-bottom-lr btn-xl btn-circle hand shadow btn-info" id="btnListado">
+                    <i class="fal fa-list"></i>
+                </button>
+
+                <button class="btn btn-bottom-r btn-xl btn-circle hand shadow btn-primary" id="btnMapa">
+                    <i class="fal fa-map"></i>
+                </button>
                
+            `
+        },
+        vista_parametros:()=>{
+            return `
+            
+                    <div class="form-group p-4">
+                        <label>Seleccione fecha inicial y final</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="txtFechaInicial">
+                                <button class="hidden btn btn-md"></button>
+                            <input type="date" class="form-control" id="txtFechaFinal">
+                        </div>
+                    </div>
+                
             `
         },
         vista_listado:()=>{
@@ -42,14 +66,7 @@ function getView(){
 
                     <h3 class="text-onne negrita">Archivo de Visitas</h3>
                 
-                    <div class="form-group">
-                        <label>Seleccione fecha inicial y final</label>
-                        <div class="input-group">
-                            <input type="date" class="form-control" id="txtFechaInicial">
-                                <button class="hidden btn btn-md"></button>
-                            <input type="date" class="form-control" id="txtFechaFinal">
-                        </div>
-                    </div>
+                  
 
                     <div class="table-responsive col-12">
                         <table class="table table-responsive col-12 h-full">
@@ -139,6 +156,17 @@ function getView(){
                     </div>
                 </div>
             `
+        },
+        vista_mapa_recorrido:()=>{
+            return `
+            <div class="card card-rounded col-12">
+                <div class="card-body p-2">
+
+                    <div class="mapcontainer4" id="mapcontainer"></div>
+
+                </div>
+            </div>
+            `
         }
     }
 
@@ -151,19 +179,36 @@ function addListeners(){
 
     funciones.slideAnimationTabs();
 
+    CRM_Selected_tab = 'LISTADO';
 
     document.getElementById('txtFechaInicial').value = funciones.getFecha();
     document.getElementById('txtFechaFinal').value = funciones.getFecha();
 
-    get_listado_eventos();
+    get_grid();
     
 
     document.getElementById('txtFechaInicial').addEventListener('change',()=>{
-         get_listado_eventos();
+
+        get_grid();
+
     });
     document.getElementById('txtFechaFinal').addEventListener('change',()=>{
          get_listado_eventos();
+
     });
+
+
+
+    document.getElementById('btnListado').addEventListener('click',()=>{
+        document.getElementById('tab-uno').click();
+        CRM_Selected_tab = 'LISTADO';
+    });
+      document.getElementById('btnMapa').addEventListener('click',()=>{
+        document.getElementById('tab-dos').click();
+        CRM_Selected_tab = 'MAPA';
+    });
+
+
 
 };
 
@@ -174,6 +219,15 @@ function initView(){
 
 };
 
+function get_grid(){
+    
+    if(CRM_Selected_tab='LISTADO'){
+        get_listado_eventos();
+    };
+    if(CRM_Selected_tab='MAPA'){
+        get_mapa_visitas();
+    };
+}
 
 function get_listado_eventos(){
 
@@ -282,4 +336,99 @@ function get_detalles_evento(fecha,cliente,motivo,notas,acciones){
     document.getElementById('txt_visita_acciones').value = acciones;
 
 
+};
+
+
+
+function Lmap(lat,long){
+                      
+          var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          osm = L.tileLayer(osmUrl, {center: [lat, long],maxZoom: 20, attribution: osmAttrib});    
+          map = L.map('mapcontainer').setView([lat, long], 18).addLayer(osm);
+
+          L.marker([lat, long], {draggable:'true'})
+            .addTo(map)
+            .bindPopup(`Usted esta aqui`, {closeOnClick: false, autoClose: false})
+            .openPopup()
+            .on("dragend",function(e) {
+                    //this.openPopup();
+                    //var position = e.target._latlng;
+                    //GlobalSelectedLat = position.lat.toString();
+                    //GlobalSelectedLong = position.lng.toString();                  
+            });
+           
+            return map;
+
+};
+
+
+function get_mapa_visitas(){
+
+
+        let container = document.getElementById('mapcontainer');
+        container.innerHTML = '';
+
+        let fi = funciones.devuelveFecha('txtFechaInicial');
+        let ff = funciones.devuelveFecha('txtFechaFinal');
+        
+        var map;
+      
+        let contador = 0;
+        
+        DATA_CRM.get_visitas(GlobalCodSucursal,GlobalCodUsuario,fi,ff)
+        .then((data)=>{
+
+            data.recordset.map((r)=>{
+                
+                    contador += 1;
+                    if(Number(contador)==1){
+                        
+                            map = Lmap(r.LATITUD, r.LONGITUD);
+
+                            L.marker([r.LATITUD, r.LONGITUD])
+                            .addTo(map)
+                            .bindPopup(`${r.CLIENTE}`, {closeOnClick: true, autoClose: true})   
+                            .on('click', function(e){
+                                //console.log(e.sourceTarget._leaflet_id);
+                                get_detalles_evento(r.FECHA.replace('T00:00:00.000Z',''),r.CLIENTE,r.MOTIVO,r.NOTAS,r.ACCIONES)
+                            })
+                    }else{
+                            L.marker([r.LATITUD, r.LONGITUD])
+                            .addTo(map)
+                            .bindPopup(`${r.CLIENTE}`, {closeOnClick: true, autoClose: true})   
+                            .on('click', function(e){
+                                //console.log(e.sourceTarget._leaflet_id);
+                                get_detalles_evento(r.FECHA.replace('T00:00:00.000Z',''),r.CLIENTE,r.MOTIVO,r.NOTAS,r.ACCIONES)
+                            })
+                    }
+
+                  
+            })
+            //container.innerHTML = str;
+
+            //RE-AJUSTA EL MAPA A LA PANTALLA
+            setTimeout(function(){ try { map.invalidateSize(); } catch (error) {} }, 500);
+
+        })
+        .catch(()=>{
+
+            container.innerHTML = 'No se cargaron datos...';
+
+        })
+
+            
+};
+
+function showUbicacion(){
+    return new Promise((resolve,reject)=>{
+        try {
+            navigator.geolocation.getCurrentPosition(function (location) {
+                console.log(location);
+                resolve(location);
+            })
+        } catch (error) {
+            reject();
+        }
+    })
 };

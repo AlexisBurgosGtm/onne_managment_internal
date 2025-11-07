@@ -199,7 +199,7 @@ let DATA_CRM = {
         })
 
     },
-    insert_visita:(sucursal,codemp,codcliente,fecha,motivo,notas,acciones)=>{
+    insert_visita:(sucursal,codemp,codcliente,fecha,motivo,notas,acciones,latitud,longitud)=>{
 
         return new Promise((resolve,reject)=>{
 
@@ -210,7 +210,9 @@ let DATA_CRM = {
                 fecha:fecha,
                 motivo:motivo,
                 notas:notas,
-                acciones:acciones
+                acciones:acciones,
+                latitud:latitud,
+                longitud:longitud
             })  
             .then(async(response) => {
                

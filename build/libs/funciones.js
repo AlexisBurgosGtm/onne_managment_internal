@@ -559,6 +559,7 @@ let funciones = {
       
     },
     ObtenerUbicacion: async(idlat,idlong)=>{
+
         let lat = document.getElementById(idlat);
         let long = document.getElementById(idlong);
         
@@ -568,7 +569,9 @@ let funciones = {
                 long.innerText = location.coords.longitude.toString();
             })
         } catch (error) {
-            funciones.AvisoError(error.toString());
+            
+                lat.innerText = '0';
+                long.innerText ='0';
         }
     },
     ComboSemana :(letnum)=>{

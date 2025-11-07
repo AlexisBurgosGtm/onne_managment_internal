@@ -36,7 +36,9 @@ CREATE TABLE [dbo].[CRM_VISITAS](
 	[CODCLIENTE] [int] NULL,
 	[MOTIVO] [varchar](100) NULL,
 	[NOTAS] [varchar](max) NULL,
-	[ACCIONES] [varchar](max) NULL
+	[ACCIONES] [varchar](max) NULL,
+	[LATITUD] [varchar](100) NULL,
+	[LONGITUD] [varchar](100) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 

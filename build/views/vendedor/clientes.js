@@ -492,7 +492,7 @@ function getView(){
                                     <div class="card-body">
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Fecha</label>
+                                            <label class="text-secondary">Fecha</label>
                                             <input type="date" class="form-control text-primary negrita" id="txt_evento_fecha">
                                         </div>
 
@@ -508,7 +508,7 @@ function getView(){
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class=text-secondary">Hora Empieza</label>
+                                                    <label class="text-secondary">Hora Empieza</label>
                                                     <div class="input-group">
                                                         <select class="form-control text-info negrita" id="cmb_evento_hora_inicia">
                                                         </select>
@@ -519,7 +519,7 @@ function getView(){
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class=text-secondary">Hora Finaliza</label>
+                                                    <label class="text-secondary">Hora Finaliza</label>
                                                     <div class="input-group">
                                                         <select class="form-control text-info negrita" id="cmb_evento_hora_finaliza">
                                                         </select>
@@ -532,18 +532,18 @@ function getView(){
                                         <br>
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Titulo del Evento</label>
+                                            <label class="text-secondary">Titulo del Evento</label>
                                             <input type="text" class="form-control text-primary negrita" id="txt_evento_titulo">
                                         </div>
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Detalles del Evento</label>
+                                            <label class="text-secondary">Detalles del Evento</label>
                                             <textarea rows="4" class="form-control text-primary negrita" id="txt_evento_detalles">
                                             </textarea>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Prioriad</label>
+                                            <label class="text-secondary">Prioriad</label>
                                             <select class="form-control text-primary negrita" id="cmb_evento_prioridad">
                                                 <option value="NORMAL">NO URGENTE</option>
                                                 <option value="MEDIA">IMPORTANCIA MEDIA</option>
@@ -596,7 +596,7 @@ function getView(){
                                     <div class="card-body">
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Fecha</label>
+                                            <label class="text-secondary">Fecha</label>
                                             <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha">
                                         </div>
 
@@ -610,7 +610,7 @@ function getView(){
 
                                         <br>
                                         <div class="form-group">
-                                            <label class=text-secondary">Motivo</label>
+                                            <label class="text-secondary">Motivo</label>
                                             <select class="form-control text-primary negrita" id="cmb_visita_motivo">
                                                 <option value="VISITA RUTINA">VISITA RUTINA</option>
                                                 <option value="RE-VISITA">RE-VISITA</option>
@@ -620,13 +620,19 @@ function getView(){
                                         
 
                                         <div class="form-group">
-                                            <label class=text-secondary">Anotaciones</label>
+                                            <label class="text-secondary">Anotaciones</label>
                                             <textarea rows="3" class="form-control border-info" id="txt_visita_obs"></textarea>
                                         </div>
 
                                          <div class="form-group">
-                                            <label class=text-secondary">Plan de Acción</label>
+                                            <label class="text-secondary">Plan de Acción</label>
                                             <textarea rows="3" class="form-control border-info" id="txt_visita_acciones"></textarea>
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label class="text-info negrita" id="lbVisitaLatitud">0</label>
+                                            <br>
+                                            <label class="text-info negrita" id="lbVisitaLongitud">0</label>
                                         </div>
                                         
                                         
@@ -921,9 +927,13 @@ async function addListeners(){
             let fecha = funciones.devuelveFecha('txt_visita_fecha');
             let obs = funciones.limpiarTextoCRM(document.getElementById('txt_visita_obs').value) || '';
             let acciones = funciones.limpiarTextoCRM(document.getElementById('txt_visita_acciones').value) || '';
+
+            let latitud = document.getElementById('lbVisitaLatitud').innerText;
+            let longitud = document.getElementById('lbVisitaLongitud').innerText;
            
             if(codcliente==''){funciones.AvisoError('Seleccione un cliente');return};
-            
+
+            if(latitud=='0'){funciones.AvisoError('No se pudo obtener tu ubicacion actual, no puedes agregar una visita.');return;}
 
             funciones.Confirmacion('¿Está seguro que desea registrar esta visita?')
             .then((value)=>{
@@ -933,7 +943,7 @@ async function addListeners(){
                     btnGuardarVisita.disabled = true;
                     btnGuardarVisita.innerHTML = `<i class="fal fa-save fa-spin"></i>`;
 
-                    DATA_CRM.insert_visita(GlobalCodSucursal,GlobalCodUsuario,codcliente,fecha,motivo,obs,acciones)
+                    DATA_CRM.insert_visita(GlobalCodSucursal,GlobalCodUsuario,codcliente,fecha,motivo,obs,acciones,latitud,longitud)
                     .then(()=>{
 
                         funciones.Aviso('Visita registrada exitosamente!!');
@@ -1304,13 +1314,16 @@ function crm_agendar_cliente(codigo,nit,nombre){
 
 function crm_registrar_visita(codigo,nit,nombre){
 
-    $("#modal_nueva_visita").modal('show');
+        $("#modal_nueva_visita").modal('show');
 
-    document.getElementById('txt_visita_fecha').value = funciones.getFecha();
-    document.getElementById('txtCodClienteV').value = codigo;
-    document.getElementById('txtNomClienteV').value = `(${nit}) ${nombre}`
+        document.getElementById('txt_visita_fecha').value = funciones.getFecha();
+        document.getElementById('txtCodClienteV').value = codigo;
+        document.getElementById('txtNomClienteV').value = `(${nit}) ${nombre}`
 
-  
+    
+        document.getElementById('lbVisitaLatitud').innerText = '0';
+        document.getElementById('lbVisitaLongitud').innerText = '0';
 
+        funciones.ObtenerUbicacion('lbVisitaLatitud','lbVisitaLongitud');
 
 };

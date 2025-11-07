@@ -164,7 +164,9 @@ router.post("/select_visitas", async(req,res)=>{
                 CLIENTES.DIRCLIENTE, 
                 MUNICIPIOS.DESMUNICIPIO AS MUNICIPIO, 
                 DEPARTAMENTOS.DESDEPARTAMENTO AS DEPARTAMENTO, 
-                DESCRIPCIONES.DESCRIPCION AS GIRA
+                DESCRIPCIONES.DESCRIPCION AS GIRA,
+                ISNULL(CRM_VISITAS.LATITUD,'0') AS LATITUD,
+                ISNULL(CRM_VISITAS.LONGITUD,'0') AS LONGITUD
             FROM  DESCRIPCIONES RIGHT OUTER JOIN
                 CLIENTES ON DESCRIPCIONES.CODIGO = CLIENTES.GIRA LEFT OUTER JOIN
                 DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
@@ -193,7 +195,9 @@ router.post("/select_visitas", async(req,res)=>{
                 CLIENTES.DIRCLIENTE, 
                 MUNICIPIOS.DESMUNICIPIO AS MUNICIPIO, 
                 DEPARTAMENTOS.DESDEPARTAMENTO AS DEPARTAMENTO, 
-                DESCRIPCIONES.DESCRIPCION AS GIRA
+                DESCRIPCIONES.DESCRIPCION AS GIRA,
+                ISNULL(CRM_VISITAS.LATITUD,'0') AS LATITUD,
+                ISNULL(CRM_VISITAS.LONGITUD,'0') AS LONGITUD
             FROM  DESCRIPCIONES RIGHT OUTER JOIN
                 CLIENTES ON DESCRIPCIONES.CODIGO = CLIENTES.GIRA LEFT OUTER JOIN
                 DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
@@ -217,20 +221,20 @@ router.post("/select_visitas", async(req,res)=>{
 });
 router.post("/insert_visita", async(req,res)=>{
 
-    const{sucursal,fecha,codemp,codcliente,motivo,notas,acciones} = req.body;
+    const{sucursal,fecha,codemp,codcliente,motivo,notas,acciones,latitud,longitud} = req.body;
 
     let qry = `
         INSERT INTO CRM_VISITAS 
-            (EMPNIT,FECHA,MES,ANIO,CODEMP,CODCLIENTE,MOTIVO,NOTAS,ACCIONES)
+            (EMPNIT,FECHA,MES,ANIO,CODEMP,CODCLIENTE,MOTIVO,NOTAS,ACCIONES,LATITUD,LONGITUD)
         SELECT '${sucursal}' AS EMPNIT, 
                 '${fecha}' AS FECHA, MONTH('${fecha}') AS MES, 
                 YEAR('${fecha}') AS ANIO, 
                 ${codemp} AS CODEMP, ${codcliente} AS CODCLIENTE, 
-                '${motivo}' AS MOTIVO, '${notas}' AS NOTAS, '${acciones}' AS ACCIONES;
-        `
+                '${motivo}' AS MOTIVO, '${notas}' AS NOTAS, '${acciones}' AS ACCIONES,
+                '${latitud}' AS LATITUD, '${longitud}' AS LONGITUD;
+                `
 
-        console.log(qry);
-
+   
     
      execute.Query(res,qry);
      
@@ -243,7 +247,7 @@ router.post("/delete_visita", async(req,res)=>{
         DELETE FROM CRM_VISITAS WHERE ID=${idvisita};
         `
     
-        console.log(qry)
+  
 
      execute.Query(res,qry);
      

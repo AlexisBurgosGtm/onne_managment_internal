@@ -1,4 +1,6 @@
-let versionapp = 'mod 05.11.2025:0';
+let versionapp = 'mod 06.11.2025:0';
+
+
 let GlobalServerUrl = '';
 let GlobalUrlServicePedidos = '';
 let GlobalTipoProd = 'F'
@@ -17,6 +19,7 @@ const hideMenuLateral =()=>{ $("#modalMenu").modal('hide'); lbMenuTitulo.innerTe
 
 
 let CRM_Selected_Id = 0;
+let CRM_Selected_tab = '';
 
 
 let GlobalSelectedClientesDia ='SN';
