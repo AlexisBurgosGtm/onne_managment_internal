@@ -1,4 +1,4 @@
-let versionapp = 'mod 06.11.2025:0';
+let versionapp = 'mod 20.11.2025:0';
 
 
 let GlobalServerUrl = '';
@@ -78,6 +78,8 @@ let GlobalSelectedStatus=0;
 let GlobalSelectedSt = 'O';
 let GlobalSelectedCoddoc = '';
 let GlobalSelectedCorrelativo = '';
+
+let selected_tab = '';
 
 let GlobalSelectedApp = '';
 

@@ -104,7 +104,7 @@ function getView(){
 
                                         <div class="form-group">
                                             <label class=text-secondary">Fecha</label>
-                                            <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha">
+                                            <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha" disabled>
                                         </div>
 
                                         <div class="form-group">
@@ -347,7 +347,8 @@ function Lmap(lat,long){
           osm = L.tileLayer(osmUrl, {center: [lat, long],maxZoom: 20, attribution: osmAttrib});    
           map = L.map('mapcontainer').setView([lat, long], 18).addLayer(osm);
 
-          L.marker([lat, long], {draggable:'true'})
+          /*
+          L.marker([lat, long], {draggable:'false'})
             .addTo(map)
             .bindPopup(`Usted esta aqui`, {closeOnClick: false, autoClose: false})
             .openPopup()
@@ -357,6 +358,7 @@ function Lmap(lat,long){
                     //GlobalSelectedLat = position.lat.toString();
                     //GlobalSelectedLong = position.lng.toString();                  
             });
+            */
            
             return map;
 
@@ -372,12 +374,14 @@ function get_mapa_visitas(){
         let fi = funciones.devuelveFecha('txtFechaInicial');
         let ff = funciones.devuelveFecha('txtFechaFinal');
         
-        var map;
+    
       
         let contador = 0;
         
         DATA_CRM.get_visitas(GlobalCodSucursal,GlobalCodUsuario,fi,ff)
         .then((data)=>{
+
+            var map;
 
             data.recordset.map((r)=>{
                 

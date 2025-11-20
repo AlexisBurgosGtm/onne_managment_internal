@@ -18,9 +18,6 @@ let FCRM = {
         return color;
 
     },
-    insert_evento:(sucursal,datos)=>{
-        
-    }
 };
 
 let DATA_CRM = {
@@ -178,6 +175,35 @@ let DATA_CRM = {
                 codemp:codemp,
                 fi:fi,
                 ff:ff
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+    },
+    get_visitas_mes:(sucursal,mes,anio)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/select_visitas_mes', {
+                sucursal:sucursal,
+                mes:mes,
+                anio:anio
             })  
             .then(async(response) => {
                

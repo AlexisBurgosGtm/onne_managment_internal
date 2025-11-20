@@ -1,4 +1,7 @@
 
+<progress class="form-control" value="${logrado}" max="100"></progress><b class="text-success">${logrado.toFixed(2)}%</b>
+
+
 function getView(){
     let view = {
         body:()=>{

@@ -252,6 +252,50 @@ router.post("/delete_visita", async(req,res)=>{
      execute.Query(res,qry);
      
 });
+router.post("/select_visitas_mes", async(req,res)=>{
+
+    const{sucursal,mes,anio} = req.body;
+
+    let qry = '';
+
+
+        qry = `
+            SELECT 
+                CRM_VISITAS.ID,
+                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.CODEMP,
+                EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
+                CRM_VISITAS.CODCLIENTE, 
+                CRM_VISITAS.MOTIVO, 
+                CRM_VISITAS.NOTAS, 
+                CRM_VISITAS.ACCIONES,
+                ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO, 
+                CLIENTES.NOMBRECLIENTE AS CLIENTE, 
+                CLIENTES.DIRCLIENTE, 
+                MUNICIPIOS.DESMUNICIPIO AS MUNICIPIO, 
+                DEPARTAMENTOS.DESDEPARTAMENTO AS DEPARTAMENTO, 
+                DESCRIPCIONES.DESCRIPCION AS GIRA,
+                ISNULL(CRM_VISITAS.LATITUD,'0') AS LATITUD,
+                ISNULL(CRM_VISITAS.LONGITUD,'0') AS LONGITUD,
+                CLIENTES.LATITUDCLIENTE AS LATITUDCLIE, 
+                CLIENTES.LONGITUDCLIENTE AS LONGITUDCLIE
+            FROM  DESCRIPCIONES RIGHT OUTER JOIN
+                CLIENTES ON DESCRIPCIONES.CODIGO = CLIENTES.GIRA LEFT OUTER JOIN
+                DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO RIGHT OUTER JOIN
+                CRM_VISITAS LEFT OUTER JOIN
+                EMPLEADOS ON CRM_VISITAS.EMPNIT = EMPLEADOS.EMPNIT AND 
+                CRM_VISITAS.CODEMP = EMPLEADOS.CODEMPLEADO ON CLIENTES.EMPNIT = CRM_VISITAS.EMPNIT AND 
+                CLIENTES.CODCLIENTE = CRM_VISITAS.CODCLIENTE
+            WHERE 
+                (CRM_VISITAS.EMPNIT='${sucursal}') AND 
+                (CRM_VISITAS.MES=${mes}) AND (CRM_VISITAS.ANIO=${anio});
+            `
+    
+    
+     execute.Query(res,qry);
+     
+});
 
 
 

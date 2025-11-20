@@ -597,7 +597,7 @@ function getView(){
 
                                         <div class="form-group">
                                             <label class="text-secondary">Fecha</label>
-                                            <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha">
+                                            <input type="date" class="form-control text-primary negrita" id="txt_visita_fecha" disabled>
                                         </div>
 
                                         <div class="form-group">
