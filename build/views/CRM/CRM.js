@@ -225,6 +225,35 @@ let DATA_CRM = {
         })
 
     },
+    get_visitas_mes_fechas:(sucursal,mes,anio)=>{
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/crm/select_visitas_mes_fechas', {
+                sucursal:sucursal,
+                mes:mes,
+                anio:anio
+            })  
+            .then(async(response) => {
+               
+                const data = response.data;
+                if(response=='error'){
+                    reject()
+                }else{
+                    if(Number(data.rowsAffected[0])>0){
+                          resolve(data);       
+                    }else{
+                        reject();
+                    }
+                }   
+            }, (error) => {
+               reject();
+            });
+    
+            
+        })
+
+    },
     insert_visita:(sucursal,codemp,codcliente,fecha,motivo,notas,acciones,latitud,longitud)=>{
 
         return new Promise((resolve,reject)=>{

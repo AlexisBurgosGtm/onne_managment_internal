@@ -24,7 +24,7 @@ function getView(){
                                     ${view.vista_card_compras()}
                                 </div>
                                 <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                                    ${view.vista_card_visitas()}
+                                    ${view.vista_card_crm()}
                                 </div>
                             </div>
 
@@ -48,12 +48,25 @@ function getView(){
                             ${view.vista_lista_inventarios()}
                         </div>
                         <div class="tab-pane fade" id="cuatro" role="tabpanel" aria-labelledby="home-tab">
-                            ${view.vista_lista_visitas()}
+                            <div class="row">
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                    ${view.vista_chart_visitas()}
+                                    <br><br>
+                                    ${view.vista_chart_visitas_vendedor()}
+                                </div>
+                                <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9">
+                                    ${view.vista_lista_crm_visitas()}
+                                </div>
+                            </div>
+                            ${ view.modal_crm_mapa_visita()}
                         </div>
                         <div class="tab-pane fade" id="cinco" role="tabpanel" aria-labelledby="home-tab">
                              ${view.vista_lista_fechas()}
                         </div>
                         <div class="tab-pane fade" id="seis" role="tabpanel" aria-labelledby="home-tab">
+                            
+                        </div> 
+                        <div class="tab-pane fade" id="siete" role="tabpanel" aria-labelledby="home-tab">
                             
                         </div>    
                     </div>
@@ -79,10 +92,14 @@ function getView(){
                             <a class="nav-link negrita text-danger" id="tab-cinco" data-toggle="tab" href="#cinco" role="tab" aria-controls="home" aria-selected="true">
                                 <i class="fal fa-comments"></i></a>
                         </li> 
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link negrita text-danger" id="tab-seis" data-toggle="tab" href="#seis" role="tab" aria-controls="home" aria-selected="true">
                                 <i class="fal fa-comments"></i></a>
-                        </li>         
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link negrita text-danger" id="tab-siete" data-toggle="tab" href="#siete" role="tab" aria-controls="home" aria-selected="true">
+                                <i class="fal fa-comments"></i></a>
+                        </li>          
                     </ul>
                 </div>
 
@@ -115,9 +132,17 @@ function getView(){
         },
         vista_card_ventas:()=>{
             return `
-            <div class="card card-rounded shadow hand col-12 border-primary" id="btnMenVentas">
+            <div class="card card-rounded shadow hand col-12 border-primary text-primary" id="btnMenVentas">
                 <div class="card-body">
-                    <h5 class="text-onne negrita">VENTAS</h5>
+                    
+                    <div class="row">
+                        <div class="col-3">
+                            <i class="fal fa-shopping-cart negrita" style="font-size:160%"></i>
+                        </div>
+                        <div class="col-9">
+                            <h5 class="negrita">VENTAS</h5>
+                        </div>
+                    </div>
                     
                 </div>
             </div>
@@ -125,20 +150,36 @@ function getView(){
         },
         vista_card_compras:()=>{
             return `
-            <div class="card card-rounded shadow hand col-12 border-info" id="btnMenCompras">
+            <div class="card card-rounded shadow hand col-12 border-info text-info" id="btnMenCompras">
                 <div class="card-body">
-                    <h5 class="text-info negrita">COMPRAS</h5>
+                    
+                    <div class="row">
+                        <div class="col-3">
+                            <i class="fal fa-box negrita" style="font-size:160%"></i>
+                        </div>
+                        <div class="col-9">
+                            <h5 class="negrita">COMPRAS</h5>
+                        </div>
+                    </div>
 
                 </div>
             </div>
             `
         },
-        vista_card_visitas:()=>{
+        vista_card_crm:()=>{
             return `
-            <div class="card card-rounded shadow hand col-12 border-secondary" 
+            <div class="card card-rounded shadow hand col-12 border-secondary text-secondary" 
                 id="btnMenVisitas">
                 <div class="card-body">
-                    <h5 class="text-secondary negrita">REGISTRO VISITAS</h5>
+                    
+                    <div class="row">
+                        <div class="col-3">
+                            <i class="fal fa-map negrita" style="font-size:160%"></i>
+                        </div>
+                        <div class="col-9">
+                            <h5 class="negrita">CRM</h5>
+                        </div>
+                    </div>
                                        
                 </div>
             </div>
@@ -232,28 +273,79 @@ function getView(){
 
             `
         },
-        vista_lista_visitas:()=>{
+        vista_lista_crm_visitas:()=>{
             return `
-         
-            <br>
-            <div class="table-responsive col-12">
-                <table class="table h-full btn-bordered col-12" id="tblVisitas">
-                    <thead class="bg-onne text-white negrita">
-                        <tr>
-                            <td>FECHA</td>
-                            <td>EMPLEADO</td>
-                            <td>TIPO</td>
-                            <td>CLIENTE</td>
-                            <td>MOTIVO / NOTAS</td>
-                            <td>UBICACION</td>
-                        </tr>
-                    </thead>
-                    <tbody id="tblDataVisitas">
-                    </tbody>
-                </table>
+            <div class="card card-rounded col-12">
+                <div class="card-body p-2">
+            
+                    <div class="table-responsive col-12">
+                        <table class="table h-full btn-bordered col-12" id="tblVisitas">
+                            <thead class="bg-onne text-white negrita">
+                                <tr>
+                                    <td>FECHA</td>
+                                    <td>EMPLEADO</td>
+                                    <td>TIPO</td>
+                                    <td>CLIENTE</td>
+                                    <td>MOTIVO / NOTAS</td>
+                                    <td>UBICACION</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tblDataVisitas">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
             </div>
+            `
+        },
+        modal_crm_mapa_visita:()=>{
+            return `
+            <div class="modal fade" 
+                id="modal_mapa_visita" 
+                tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <label class="modal-title h5" id="">Ubicacion de la visita/cliente</label>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card card-rounded col-12">
+                                <div class="card-body p-2">
 
-        
+                                    <label class="negrita text-danger" id="lbClienteVisita"></label>
+                                    <br>
+                                    <div id="container_map"></div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                                
+                    </div>
+                </div>
+            </div>
+            `
+        },
+        vista_chart_visitas:()=>{
+            return `
+            <div class="card card-rounded col-12">
+                <div class="card-body p-4" id="container_chart_visitas">
+                 
+                   
+                    
+                </div>
+            </div>
+            `
+        },
+         vista_chart_visitas_vendedor:()=>{
+            return `
+            <div class="card card-rounded col-12">
+                <div class="card-body p-4" id="container_chart_visitas_vendedor">
+                 
+                   
+                    
+                </div>
+            </div>
             `
         },
         vista_chart_ventas:()=>{
@@ -277,8 +369,7 @@ function getView(){
                 </div>
             </div>
             `
-        },
-       
+        },  
     }
 
 
@@ -394,6 +485,7 @@ function get_reports(){
             break;
         case 'visitas':
             rpt_visitas_mes();
+            chart_visitas_fechas();
 
             break;
     
@@ -638,10 +730,43 @@ function rpt_visitas_mes(){
 
 };
 
+
+function Lmap(lat,long,latclie,longclie){
+                      
+          var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          osm = L.tileLayer(osmUrl, {center: [lat, long],maxZoom: 20, attribution: osmAttrib});    
+          map = L.map('mapcontainer').setView([lat, long], 12).addLayer(osm);
+
+          L.marker([lat, long], {draggable:'false'})
+            .addTo(map)
+            .bindPopup(`Visitado`, {closeOnClick: false, autoClose: false})
+            .openPopup()
+         
+         L.marker([latclie, longclie], {draggable:'false'})
+            .addTo(map)
+            .bindPopup(`Censado`, {closeOnClick: false, autoClose: false})
+            .openPopup()
+           
+            return map;
+
+};
 function get_mapa_visita(cliente,visita_lat,visita_long,cliente_lat,cliente_long){
 
+        $("#modal_mapa_visita").modal('show');
 
+        document.getElementById('lbClienteVisita').innerText = cliente;
 
+        let container = document.getElementById('container_map');
+        container.innerHTML = GlobalLoader;                 
+        let tbl = `<div class="mapcontainer4" id="mapcontainer"></div>`;        
+        container.innerHTML = tbl;
+        
+        var map;
+        map = Lmap(Number(visita_lat), Number(visita_long),Number(cliente_lat),Number(cliente_long));
+        
+        setTimeout(function(){try { map.invalidateSize(); } catch (error) { }}, 500);            
+                
 };
 
 
@@ -760,6 +885,51 @@ function vista_chart_devoluciones(){
                     borderColor: 'rgba(210, 20, 20, 1)',
                     data: data.map(row => row.importe)
                 }
+            ]
+        }
+        }
+    );
+
+    })
+    .catch(()=>{
+
+    })
+    
+  
+
+};
+
+
+//chart visitas fechas
+function chart_visitas_fechas(){
+
+
+    document.getElementById('container_chart_visitas').innerHTML = '';
+    document.getElementById('container_chart_visitas').innerHTML = ` <canvas id="container_chart_visitas_fechas" height="200px" width="500px"></canvas>`
+
+      let anio = document.getElementById('cmbAnio').value;
+        let mes = document.getElementById('cmbMes').value;
+
+    DATA_CRM.get_visitas_mes_fechas(GlobalEmpnit,mes,anio)
+    .then((datos)=>{
+
+        let data = [];
+
+        datos.recordset.map((r)=>{
+            data.push({fecha:funciones.convertDateNormal(r.FECHA),visitas:Number(r.CONTEO)})
+        })
+
+        new Chart(
+        document.getElementById('container_chart_visitas_fechas'),
+        {
+        type: 'line',
+        data: {
+            labels: data.map(row => row.fecha),
+            datasets: [
+            {
+                label: 'Visitas por Fechas',
+                data: data.map(row => row.visitas)
+            }
             ]
         }
         }

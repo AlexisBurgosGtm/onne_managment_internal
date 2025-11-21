@@ -296,6 +296,27 @@ router.post("/select_visitas_mes", async(req,res)=>{
      execute.Query(res,qry);
      
 });
+router.post("/select_visitas_mes_fechas", async(req,res)=>{
+
+    const{sucursal,mes,anio} = req.body;
+
+    let qry = '';
+
+
+        qry = `
+            SELECT FECHA, COUNT(ID) AS CONTEO
+                FROM CRM_VISITAS
+                WHERE  
+                    (MES = ${mes}) AND 
+                    (ANIO = ${anio}) AND 
+                    (EMPNIT = '${sucursal}')
+                GROUP BY FECHA   
+        `
+    
+    
+     execute.Query(res,qry);
+     
+});
 
 
 
