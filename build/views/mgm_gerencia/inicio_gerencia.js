@@ -32,36 +32,53 @@ function getView(){
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     ${view.vista_chart_ventas()}
+                                    <br><br>
+                                    ${view.vista_chart_devoluciones()}
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    ${view.vista_chart_devoluciones()}
+                                    ${view.vista_chart_ventas_productos()}
                                 </div>
                             </div>
                             
 
+
                         </div>
                         
                         <div class="tab-pane fade" id="dos" role="tabpanel" aria-labelledby="home-tab">
-                            ${view.vista_lista_fechas_compras()}
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    ${view.vista_lista_fechas_compras()}
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    ${view.vista_lista_productos_compras()}
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="tres" role="tabpanel" aria-labelledby="home-tab">
                             ${view.vista_lista_inventarios()}
                         </div>
                         <div class="tab-pane fade" id="cuatro" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
-                                <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                     ${view.vista_chart_visitas()}
                                     <br><br>
                                     ${view.vista_chart_visitas_vendedor()}
                                 </div>
-                                <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9">
+                                <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
                                     ${view.vista_lista_crm_visitas()}
                                 </div>
                             </div>
                             ${ view.modal_crm_mapa_visita()}
                         </div>
                         <div class="tab-pane fade" id="cinco" role="tabpanel" aria-labelledby="home-tab">
-                             ${view.vista_lista_fechas()}
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    ${view.vista_lista_fechas()}
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    ${view.vista_lista_productos()}
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="seis" role="tabpanel" aria-labelledby="home-tab">
                             
@@ -214,6 +231,31 @@ function getView(){
            
             `
         },
+        vista_lista_productos:()=>{
+            return `
+            <br>
+            <div class="table-responsive col-12">
+                <table class="table h-full col-12" id="tblFechas">
+                    <thead class="bg-onne text-white negrita">
+                        <tr>
+                            <td>PRODUCTO</td>
+                            <td>UNIDADES</td>
+                            <td>TOTALCOSTO</td>
+                            <td>TOTAL VENTA</td>
+                            <td>%</small></td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblDataProductos">
+                    </tbody>
+                    <tfoot class="bg-onne text-warning negrita">
+                       
+                    </tfoot>
+                </table>
+            </div>
+
+           
+            `
+        },
         vista_lista_fechas_compras:()=>{
             return `
             <br>
@@ -238,6 +280,27 @@ function getView(){
             
         
             
+            `
+        },
+        vista_lista_productos_compras:()=>{
+            return `
+            <br>
+            <div class="table-responsive col-12">
+                <table class="table h-full col-12" id="">
+                    <thead class="bg-info text-white negrita">
+                        <tr>
+                            <td>PRODUCTO</td>
+                            <td>UNIDADES</td>
+                            <td>TOTALCOSTO</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblDataProductosCompras">
+                    </tbody>
+                    
+                </table>
+            </div>
+
+           
             `
         },
         vista_lista_inventarios:()=>{
@@ -337,10 +400,10 @@ function getView(){
             </div>
             `
         },
-         vista_chart_visitas_vendedor:()=>{
+        vista_chart_visitas_vendedor:()=>{
             return `
             <div class="card card-rounded col-12">
-                <div class="card-body p-4" id="container_chart_visitas_vendedor">
+                <div class="card-body p-4" id="container_chart_vendedor">
                  
                    
                     
@@ -352,6 +415,17 @@ function getView(){
             return `
             <div class="card card-rounded col-12">
                 <div class="card-body p-4" id="container_chart_v">
+                 
+                   
+                    
+                </div>
+            </div>
+            `
+        },
+        vista_chart_ventas_productos:()=>{
+            return `
+            <div class="card card-rounded col-12">
+                <div class="card-body p-4" id="container_chart_vp">
                  
                    
                     
@@ -469,15 +543,19 @@ function get_reports(){
     switch (selected_tab) {
         case 'inicio':
             chart_ventas();
-            vista_chart_devoluciones();
+            chart_devoluciones();
+            chart_ventas_productos()
 
             break;
         case 'ventas':
             get_rpt_fechas();
+            get_rpt_productos();
+            
 
             break;
         case 'compras':
             get_rpt_fechas_compras();
+            get_rpt_productos_compras();
 
             break;
         case 'inventario':
@@ -486,6 +564,7 @@ function get_reports(){
         case 'visitas':
             rpt_visitas_mes();
             chart_visitas_fechas();
+            chart_visitas_vendedor();
 
             break;
     
@@ -556,6 +635,42 @@ function get_rpt_fechas(){
 
 
 };
+function get_rpt_productos(){
+    
+    let anio = document.getElementById('cmbAnio').value;
+    let mes = document.getElementById('cmbMes').value;
+    let container = document.getElementById('tblDataProductos')
+    container.innerHTML = GlobalLoader;
+
+    let data = {sucursal:GlobalEmpnit,
+                anio:anio,
+                mes:mes}
+
+    GF.get_data_qry('/reportes/rpt_ventas_productos',data)
+    .then((datos)=>{
+        let str = '';
+        datos.recordset.map((r)=>{
+            
+            let margen = funciones.setMoneda(((Number(r.VENTA)-Number(r.COSTO))/Number(r.VENTA))*100,'')
+            str += `
+            <tr>
+                <td>${r.DESPROD}</td>
+                <td>${r.UNIDADES}</td>
+                <td>${funciones.setMoneda(r.COSTO,'Q')}</td>
+                <td>${funciones.setMoneda(r.VENTA,'Q')}</td>
+                <td>${funciones.setMoneda(Number(r.VENTA)-Number(r.COSTO),'Q')} <small class="text-danger">(${margen})%</small></td>
+            </tr>
+            `
+        })
+        container.innerHTML = str;
+    })
+    .catch((error)=>{
+        container.innerHTML = 'No hay datos para mostrar...';
+    })
+
+
+};
+
 
 function get_rpt_fechas_compras(){
     
@@ -603,19 +718,18 @@ function get_rpt_fechas_compras(){
 
 
 };
-
-function get_rpt_productos(){
+function get_rpt_productos_compras(){
     
     let anio = document.getElementById('cmbAnio').value;
     let mes = document.getElementById('cmbMes').value;
-    let container = document.getElementById('tblDataProductos')
+    let container = document.getElementById('tblDataProductosCompras')
     container.innerHTML = GlobalLoader;
 
     let data = {sucursal:GlobalEmpnit,
                 anio:anio,
                 mes:mes}
 
-    GF.get_data_qry('/reportes/rpt_ventas_productos',data)
+    GF.get_data_qry('/reportes/rpt_ventas_productos_compras',data)
     .then((datos)=>{
         let str = '';
         datos.recordset.map((r)=>{
@@ -626,8 +740,6 @@ function get_rpt_productos(){
                 <td>${r.DESPROD}</td>
                 <td>${r.UNIDADES}</td>
                 <td>${funciones.setMoneda(r.COSTO,'Q')}</td>
-                <td>${funciones.setMoneda(r.VENTA,'Q')}</td>
-                <td>${funciones.setMoneda(Number(r.VENTA)-Number(r.COSTO),'Q')} <small class="text-danger">(${margen})%</small></td>
             </tr>
             `
         })
@@ -639,6 +751,8 @@ function get_rpt_productos(){
 
 
 };
+
+
 
 
 function get_rpt_inventarios(filtro){
@@ -857,7 +971,7 @@ function get_data_devoluciones(){
 
         
 }
-function vista_chart_devoluciones(){
+function chart_devoluciones(){
 
 
     document.getElementById('container_chart_d').innerHTML = '';
@@ -899,6 +1013,74 @@ function vista_chart_devoluciones(){
 
 };
 
+function get_data_ventas_productos(){
+
+    return new Promise((resolve,reject)=>{
+
+        let anio = document.getElementById('cmbAnio').value;
+        let mes = document.getElementById('cmbMes').value;
+
+        let data = {sucursal:GlobalEmpnit,
+                anio:anio,
+                mes:mes}
+
+        GF.get_data_qry('/reportes/rpt_ventas_productos',data)
+        .then((datos)=>{
+            resolve(datos);
+        })
+        .catch(()=>{
+            reject();
+        })
+
+    })
+
+        
+};
+function chart_ventas_productos(){
+
+
+    document.getElementById('container_chart_vp').innerHTML = '';
+    document.getElementById('container_chart_vp').innerHTML = ` <canvas id="container_chart_ventas_productos" height="200px" width="500px"></canvas>`
+
+
+    get_data_ventas_productos()
+    .then((datos)=>{
+
+        let data = [];
+
+        datos.recordset.map((r)=>{
+            data.push({producto:r.DESPROD,importe:Number(r.VENTA)})
+        })
+
+        new Chart(
+        document.getElementById('container_chart_ventas_productos'),
+        {
+            type: 'bar',
+            data: {
+                labels: data.map(row => row.producto),
+                datasets: [
+                {
+                    label: 'Ventas por Producto',
+                    data: data.map(row => row.importe),
+                    borderColor: 'rgba(128, 8, 112, 1)',
+                    backgroundColor: 'rgba(181, 40, 162, 1)',
+                }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+            }
+        }
+    );
+
+    })
+    .catch(()=>{
+
+    })
+    
+  
+
+};
 
 //chart visitas fechas
 function chart_visitas_fechas(){
@@ -928,6 +1110,8 @@ function chart_visitas_fechas(){
             datasets: [
             {
                 label: 'Visitas por Fechas',
+                borderColor: 'rgba(128, 8, 112, 1)',
+                backgroundColor: 'rgba(181, 40, 162, 1)',
                 data: data.map(row => row.visitas)
             }
             ]
@@ -943,3 +1127,54 @@ function chart_visitas_fechas(){
   
 
 };
+//chart visitas vendedor
+function chart_visitas_vendedor(){
+
+
+    document.getElementById('container_chart_vendedor').innerHTML = '';
+    document.getElementById('container_chart_vendedor').innerHTML = ` <canvas id="container_chart_visitas_vendedor" height="200px" width="500px"></canvas>`
+
+    let anio = document.getElementById('cmbAnio').value;
+    let mes = document.getElementById('cmbMes').value;
+
+    DATA_CRM.get_visitas_mes_vendedor(GlobalEmpnit,mes,anio)
+    .then((datos)=>{
+
+        let data = [];
+
+        datos.recordset.map((r)=>{
+            data.push({vendedor:r.EMPLEADO,visitas:Number(r.CONTEO)})
+        })
+
+        new Chart(
+        document.getElementById('container_chart_visitas_vendedor'),
+        {
+        type: 'bar',
+        data: {
+            labels: data.map(row => row.vendedor),
+            datasets: [
+            {
+                label: 'Visitas por Vendedor',
+                borderColor:  'rgba(111, 39, 235, 1)',
+                backgroundColor: 'rgba(158, 111, 240, 1)',
+                data: data.map(row => row.visitas)
+            }
+            ]
+        }
+        }
+    );
+
+    })
+    .catch(()=>{
+
+    })
+    
+  
+
+};
+
+
+
+
+
+

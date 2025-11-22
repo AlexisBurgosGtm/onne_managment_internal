@@ -159,6 +159,32 @@ router.post("/rpt_ventas_productos", async(req,res)=>{
     execute.Query(res,qry)
 
 });
+router.post("/rpt_ventas_productos_compras", async(req,res)=>{
+
+    const {sucursal,anio,mes} = req.body;
+
+    let qry = `
+            SELECT DOCPRODUCTOS.CODPROD, 
+                    DOCPRODUCTOS.DESPROD, 
+                    SUM(DOCPRODUCTOS.TOTALUNIDADES) AS UNIDADES, 
+                    SUM(DOCPRODUCTOS.TOTALCOSTO) AS COSTO, 
+                    SUM(DOCPRODUCTOS.TOTALPRECIO) AS VENTA
+            FROM  DOCUMENTOS LEFT OUTER JOIN
+                  TIPODOCUMENTOS ON DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC AND DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT LEFT OUTER JOIN
+                  DOCPRODUCTOS ON DOCUMENTOS.CORRELATIVO = DOCPRODUCTOS.CORRELATIVO AND DOCUMENTOS.CODDOC = DOCPRODUCTOS.CODDOC AND DOCUMENTOS.EMPNIT = DOCPRODUCTOS.EMPNIT
+            WHERE 
+                (DOCUMENTOS.ANIO = ${anio}) AND 
+                (DOCUMENTOS.MES = ${mes}) AND 
+                (DOCUMENTOS.EMPNIT = '${sucursal}') AND 
+                (DOCUMENTOS.STATUS <> 'A') AND 
+                (TIPODOCUMENTOS.TIPODOC  IN('COM','COP'))
+            GROUP BY DOCPRODUCTOS.CODPROD, DOCPRODUCTOS.DESPROD
+            ORDER BY VENTA DESC
+        `
+
+    execute.Query(res,qry)
+
+});
 
 
 

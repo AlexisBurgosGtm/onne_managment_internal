@@ -317,6 +317,30 @@ router.post("/select_visitas_mes_fechas", async(req,res)=>{
      execute.Query(res,qry);
      
 });
+router.post("/select_visitas_mes_vendedor", async(req,res)=>{
+
+    const{sucursal,mes,anio} = req.body;
+
+    let qry = '';
+
+        qry = `
+            SELECT 
+                    EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
+                    COUNT(CRM_VISITAS.ID) AS CONTEO
+            FROM CRM_VISITAS LEFT OUTER JOIN
+                    EMPLEADOS ON CRM_VISITAS.CODEMP = EMPLEADOS.CODEMPLEADO
+            WHERE  
+                    (CRM_VISITAS.MES = ${mes}) AND 
+                    (CRM_VISITAS.ANIO = ${anio}) AND 
+                    (CRM_VISITAS.EMPNIT = '${sucursal}')
+            GROUP BY EMPLEADOS.NOMEMPLEADO
+            ORDER BY EMPLEADO;   
+        `
+    
+    
+     execute.Query(res,qry);
+     
+});
 
 
 
