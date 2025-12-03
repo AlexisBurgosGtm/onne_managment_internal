@@ -165,20 +165,24 @@ function getView(){
         tab_ajenos: ()=>{
             return `
             <div class="form-group p-2">
-                <label class="negrita">Busque un cliente para la nueva Venta:</label>
-                <div class="input-group">
-                                  
+                    
+                    <label class="negrita">Busque un cliente para la nueva Venta: (VISITA - TIPO)</label>
+                           
                     <div class="input-group">
                         <select class="form-control negrita text-primary" id="cmbVisita">
                         </select>
-                        <input type="text" class="form-control border-secondary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
-                    
+                        <select class="form-control negrita text-danger" id="cmbTipoCliente">
+                            <option value='VENTAS'>VENTAS</option>
+                            <option value='PROSPECTO'>PROSPECTOS</option>
+                        </select> 
+                    </div>
+                    <br>
+                    <div class="input-group">    
+                        <input type="text" class="form-control  border-primary" id="txtClientesAjenosBuscar" placeholder="Escriba para buscar cliente...">    
                         <button class="btn btn-md btn-onne btn-round" id="btnClientesAjenosBuscar">
                             <i class="fal fa-search"></i>
                         </button>    
                     </div>
-                </div>
-                                            
             </div>
 
             <div class="table-responsive">
@@ -341,6 +345,14 @@ function getView(){
                            
                             <div class="card card-rounded shadow border-info p-4" style="font-size:80%">
                                 
+                                <div class="form-group">
+                                    <label class="negrita">Tipo de Cliente</label>
+                                    <select id="cmbEditTipoCliente" class="form-control negrita text-danger">
+                                        <option value='VENTAS'>VENTAS</option>
+                                        <option value='PROSPECTO'>PROSPECTOS</option>
+                                    </select>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="negrita">NIT</label>
                                     <input type="text" id="txtEditNit" class="form-control">
@@ -809,6 +821,8 @@ async function addListeners(){
 
             btnEnviarCambiosCliente.disabled = true;
             btnEnviarCambiosCliente.innerHTML = '<i class="fal fa-paper-plane fa-spin"></i>';
+
+            let tipo = document.getElementById('cmbEditTipoCliente').value;
             
             let nit = document.getElementById('txtEditNit').value || 'CF';
             let tiponegocio = document.getElementById('cmbEditTipoNegocio').value || 'OTROS';
@@ -827,7 +841,7 @@ async function addListeners(){
             if (nombre=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
 
 
-            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira)
+            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira,tipo)
             .then(()=>{
                 funciones.Aviso('Solicitud enviada exitosamente!!');
                 btnEnviarCambiosCliente.disabled = false;
@@ -1036,10 +1050,11 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
 
 
 
-function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia){
+function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia,tipo){
     
   
 
+    document.getElementById('cmbEditTipoCliente').value = tipo;
     document.getElementById('txtEditNit').value = nit;
     document.getElementById('txtEditNombre').value = nombre;
     document.getElementById('txtEditDireccion').value = direccion; 
@@ -1101,6 +1116,9 @@ async function setRecordatorioVisita(codigo, nit, nombre, direccion){
 
 function buscar_cliente(sucursal,filtro,visita,idContenedor){
     
+
+    let tipo = document.getElementById('cmbTipoCliente').value;
+
         let container = document.getElementById(idContenedor);
         container.innerHTML = GlobalLoader;
                 
@@ -1111,6 +1129,7 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
             sucursal: sucursal,
             filtro: filtro,
             visita:visita,
+            tipo:tipo,
             codven:GlobalCodUsuario
         })
         .then((response) => {
@@ -1190,7 +1209,7 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
                         </td>
                         <td>
                             <button class="btn btn-info btn-circle btn-md hand shadow"
-                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}')">
+                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}','${rows.TIPO}')">
                                 <i class="fal fa-edit"></i>
                             </button>
                         </td>
@@ -1259,7 +1278,7 @@ function inicializarVista(){
 
 
 
-function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira){
+function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo){
     
     return new Promise((resolve,reject)=>{
         axios.post('/clientes/editar_cliente',{
@@ -1274,7 +1293,8 @@ function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirc
            long: long,
            telefono:telefono,
            referencia:referencia,
-           codgira:codgira
+           codgira:codgira,
+           tipo:tipo
         })
         .then((response) => {
             console.log(response);

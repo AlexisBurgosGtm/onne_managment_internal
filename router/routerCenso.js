@@ -4,13 +4,13 @@ const router = express.Router();
 
 router.post("/nuevocliente", async(req,res)=>{
 
-    const{sucursal,codven,fecha,nitclie,tiponegocio,negocio,nomclie,dirclie,codmun,coddepto,referencia,obs,telefono,visita,lat,long,sector,codgira} = req.body;
+    const{sucursal,codven,fecha,nitclie,tiponegocio,negocio,nomclie,dirclie,codmun,coddepto,referencia,obs,telefono,visita,lat,long,sector,codgira,tipocliente} = req.body;
 
     let qry = `
     INSERT INTO CLIENTES (
                     EMPNIT,DPI,NIT,NOMBRECLIENTE,DIRCLIENTE,CODMUNICIPIO,CODDEPARTAMENTO,TELEFONOCLIENTE,EMAILCLIENTE,ESTADOCIVIL,SEXO,
                     FECHANACIMIENTOCLIENTE,LATITUDCLIENTE,LONGITUDCLIENTE,CATEGORIA,CIUDADANIA,OCUPACION,CODRUTA,CALIFICACION,SALDO,FECHAINICIO,
-                    HABILITADO,DIAVISITA,LIMITECREDITO,DIASCREDITO,PROVINCIA,TIPONEGOCIO,NEGOCIO,CODCLIE,GIRA) 
+                    HABILITADO,DIAVISITA,LIMITECREDITO,DIASCREDITO,PROVINCIA,TIPONEGOCIO,NEGOCIO,CODCLIE,GIRA,TIPO) 
         SELECT 
             '${sucursal}' AS EMPNIT,'SN' AS DPI,'${nitclie}' AS NIT, '${nomclie}' AS NOMBRECLIENTE,
                 '${dirclie}' AS DIRCLIENTE, ${codmun} AS CODMUNICIPIO, ${coddepto} AS CODDEPARTAMENTO,
@@ -19,7 +19,7 @@ router.post("/nuevocliente", async(req,res)=>{
                 'P' AS CATEGORIA, '' AS CIUDADANIA, '' AS OCUPACION, CODRUTA AS CODRUTA, 'REGULAR' AS CALIFICACION,
                 0 AS SALDO, '${fecha}' AS FECHAINICIO, 'SI' AS HABILITADO, '${visita}' AS DIAVISITA,
                 0 AS LIMITECREDITO, 0 AS DIASCREDITO, '${referencia}' AS PROVINCIA, '${tiponegocio}' AS TIPONEGOCIO,
-                '${negocio}' AS NEGOCIO, '0' AS CODCLIE, ${codgira} AS GIRA 
+                '${negocio}' AS NEGOCIO, '0' AS CODCLIE, ${codgira} AS GIRA, '${tipocliente}' AS TIPO 
         FROM RUTAS WHERE  (EMPNIT = '${sucursal}') AND (CODEMPLEADO = ${codven});
     `
     

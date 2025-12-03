@@ -42,7 +42,15 @@ function getView(){
         formNuevo:()=>{
             return `
                             <div class="card shadow col-12 card-rounded p-4">
-                                 
+                            
+                                <div class="form-group">
+                                    <label>Tipo de Cliente (Ventas/Prospecto)</label>
+                                    <select id="cmbTipoCliente" class="form-control col-12 negrita text-danger">
+                                        <option value="VENTAS">VENTAS (SE LE HA REALIZADO VENTAS)</option>
+                                        <option value="PROSPECTO">PROSPECTO (SE LE VISTA MAS NO SE LE HA VENDIDO)</option>
+                                    </select>
+                                </div>  
+
                                 <div class="row">
                                     
                                     <div class="col-6">
@@ -226,11 +234,9 @@ async function addListeners(){
 
      
 
-            document.getElementById('btnGuardar').innerHTML = GlobalLoader; //   <i class="fal fa-save"></i>Guardar
-            //verifyCodigoCliente(txtCodigo.value)
-            //.then(()=>{
-                
-                document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>';
+                let latitud = document.getElementById('txtLatitud').innerText || '0';
+                if(latitud=='0'){funciones.AvisoError('No se puede guardar un cliente sin ubicación GPS');return;};
+
 
                 funciones.Confirmacion('¿Está seguro que desea GUARDAR este Cliente?')
                 .then((value)=>{
@@ -295,6 +301,9 @@ function fcnGuardarCliente(){
     
     return new Promise((resolve,reject)=>{
 
+
+        let tipocliente = document.getElementById('cmbTipoCliente').value;
+
         let txtNit = document.getElementById('txtNit');
         let cmbTipoNegocio = document.getElementById('cmbTipoNegocio');
         let cmbVisitaCliente = document.getElementById('cmbVisitaCliente');
@@ -332,7 +341,8 @@ function fcnGuardarCliente(){
             visita:cmbVisitaCliente.value,
             lat:txtLatitud.innerText,
             long:txtLongitud.innerText,
-            codgira:cmbGira
+            codgira:cmbGira,
+            tipocliente:tipocliente
         })
         .then((response) => {
             

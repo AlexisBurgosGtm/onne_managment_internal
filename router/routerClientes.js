@@ -25,7 +25,7 @@ router.post("/listado_giras", async(req,res)=>{
 
 router.post("/editar_cliente", async(req,res)=>{
 
-    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira} = req.body;
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo} = req.body;
 
     let qry = `UPDATE CLIENTES SET
                         NIT='${nitclie}',
@@ -37,7 +37,8 @@ router.post("/editar_cliente", async(req,res)=>{
                         LONGITUDCLIENTE='${long}',
                         TELEFONOCLIENTE='${telefono}',
                         PROVINCIA='${referencia}',
-                        GIRA=${codgira}
+                        GIRA=${codgira},
+                        TIPO='${tipo}'
             WHERE CODCLIENTE=${codclie} AND EMPNIT='${sucursal}';
             `
     
@@ -163,6 +164,74 @@ router.post("/listavendedor", async(req,res)=>{
 
 router.post("/listaajenosvendedor", async(req,res)=>{
 
+    const {sucursal,filtro, visita,codven,tipo}  = req.body;
+
+    
+
+    let qry = '';
+
+    switch (visita) {
+        case 'TODOS':
+            qry = `
+             SELECT TOP (150) CLIENTES.CODCLIENTE AS CODIGO, CLIENTES.NIT, CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
+				  CLIENTES.DIRCLIENTE AS DIRCLIE, CLIENTES.TELEFONOCLIENTE AS TELEFONO, CLIENTES.EMAILCLIENTE, 
+                  CLIENTES.LATITUDCLIENTE AS LAT, CLIENTES.LONGITUDCLIENTE AS LONG, 
+				  CLIENTES.PROVINCIA AS REFERENCIA, CLIENTES.DIAVISITA AS VISITA, '' AS STVISITA, 
+				  CLIENTES.CODRUTA, CLIENTES.HABILITADO, 
+                  CLIENTES.TIPONEGOCIO, CLIENTES.NEGOCIO, ISNULL(CLIENTES.LASTSALE, '2020-01-01') AS LASTSALE, 
+				  MUNICIPIOS.DESMUNICIPIO AS DESMUNI, DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, RUTAS.DESRUTA, 
+                  RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
+            FROM CLIENTES LEFT OUTER JOIN
+                  RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
+                  DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                  MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO 
+        WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+                AND (RUTAS.CODEMPLEADO=${codven})
+            OR
+                (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
+                AND (RUTAS.CODEMPLEADO=${codven})
+                AND (ISNULL(CLIENTES.TIPO,'VENTAS')='${tipo}')
+                    `
+            break;
+    
+        default:
+            qry = `
+            SELECT TOP (150) CLIENTES.CODCLIENTE AS CODIGO, CLIENTES.NIT, CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
+				  CLIENTES.DIRCLIENTE AS DIRCLIE, CLIENTES.TELEFONOCLIENTE AS TELEFONO, CLIENTES.EMAILCLIENTE, 
+                  CLIENTES.LATITUDCLIENTE AS LAT, CLIENTES.LONGITUDCLIENTE AS LONG, 
+				  CLIENTES.PROVINCIA AS REFERENCIA, CLIENTES.DIAVISITA AS VISITA, '' AS STVISITA, 
+				  CLIENTES.CODRUTA, CLIENTES.HABILITADO, 
+                  CLIENTES.TIPONEGOCIO, CLIENTES.NEGOCIO, ISNULL(CLIENTES.LASTSALE, '2020-01-01') AS LASTSALE, 
+				  MUNICIPIOS.DESMUNICIPIO AS DESMUNI, DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, RUTAS.DESRUTA, 
+                  RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
+            FROM CLIENTES LEFT OUTER JOIN
+                  RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
+                  DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
+                  MUNICIPIOS ON CLIENTES.CODMUNICIPIO = MUNICIPIOS.CODMUNICIPIO    
+            WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
+                AND (CLIENTES.DIAVISITA='${visita}')
+                AND (RUTAS.CODEMPLEADO=${codven})
+            OR
+                (CLIENTES.EMPNIT = '${sucursal}') 
+                AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
+                AND (CLIENTES.DIAVISITA='${visita}')
+                AND (RUTAS.CODEMPLEADO=${codven})
+                AND (ISNULL(CLIENTES.TIPO,'VENTAS')='${tipo}')
+                `
+
+            break;
+    }
+
+
+  
+    execute.Query(res,qry);
+
+});
+router.post("/BACKUP_listaajenosvendedor", async(req,res)=>{
+
     const {sucursal,filtro, visita,codven}  = req.body;
 
     
@@ -227,6 +296,7 @@ router.post("/listaajenosvendedor", async(req,res)=>{
     execute.Query(res,qry);
 
 })
+
 
 
 
