@@ -2,6 +2,73 @@ const execute = require('./connection');
 const express = require('express');
 const router = express.Router();
 
+
+
+router.post("/insert_recibo_factura", async(req,res)=>{
+
+    const{sucursal,fecha,coddoc,correlativo,totalcosto,totalprecio,usuario,coddoc_fac,correlativo_fac,
+        norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
+    } = req.body;
+
+    let qry = `
+            INSERT INTO DOCUMENTOS 
+	                (EMPNIT,ANIO,MES,DIA,FECHA,HORA,
+	                MINUTO,CODCAJA,CODDOC,CORRELATIVO,CODCLIENTE,
+	                DOC_NIT,DOC_NOMCLIE,DOC_DIRCLIE,TOTALCOSTO,
+	                TOTALPRECIO,CODEMBARQUE,STATUS,CONCRE,USUARIO,
+	                CORTE,SERIEFAC,NOFAC,CODVEN,PAGO,VUELTO,MARCA,OBS, DOC_SALDO,DOC_ABONO,NODOCPAGO,
+                    FPAGO_EFECTIVO,FPAGO_TARJETA,FPAGO_DEPOSITO,FPAGO_CHEQUE,FPAGO_DESCRIPCION)
+                SELECT 
+                    '${sucursal}' AS EMPNIT,
+                    YEAR('${fecha}') AS ANIO,
+                    MONTH('${fecha}') AS MES,
+                    DAY('${fecha}') AS DIA,
+                    '${fecha}' AS FECHA,
+                    0 AS HORA,
+	                0 AS MINUTO,
+                    CODCAJA,
+                    '${coddoc}' AS CODDOC,
+                    ${correlativo} AS CORRELATIVO,
+                    CODCLIENTE,
+	                DOC_NIT,
+                    DOC_NOMCLIE,
+                    DOC_DIRCLIE,
+                    ${totalcosto} AS TOTALCOSTO,
+	                ${totalprecio} AS TOTALPRECIO,
+                    CODEMBARQUE,
+                    'O' AS STATUS,
+                    'CON' AS CONCRE,
+                    ${usuario} AS USUARIO,
+	                0 AS CORTE,
+                    '${coddoc_fac}' AS SERIEFAC,
+                    '${correlativo_fac}' AS NOFAC,
+                    ${codven} AS CODVEN,
+                    ${totalprecio} AS PAGO,
+                    0 AS VUELTO,
+                    '' AS MARCA,
+                    '${obs}' AS OBS, 
+                    0 AS DOC_SALDO,
+                    ${totalprecio} AS DOC_ABONO,
+                    '${norecibo}' AS NODOCPAGO,
+                    ${fpago_efectivo} AS FPAGO_EFECTIVO,
+                    ${fpago_tarjeta} AS FPAGO_TARJETA,
+                    ${fpago_deposito} AS FPAGO_DEPOSITO,
+                    ${fpago_cheque} AS FPAGO_CHEQUE,
+                    '${fpago_descripcion}' AS FPAGO_DESCRIPCION
+                FROM DOCUMENTOS
+                WHERE 
+                    EMPNIT='${sucursal}' AND 
+                    CODDOC='${coddoc_fac}' AND 
+                    CORRELATIVO=${correlativo_fac}; 
+                `
+    
+    
+     execute.Query(res,qry);
+     
+});
+
+
+
 router.post("/listado", async(req,res)=>{
 
     const{empnit,codven} = req.body;
@@ -16,7 +83,10 @@ router.post("/listado", async(req,res)=>{
                     ISNULL(DOCUMENTOS.TOTALPRECIO, 0) - ISNULL(DOCUMENTOS.DOC_ABONO, 0) AS SALDO, 
                     DOCUMENTOS.DOC_ABONO AS ABONOS, 
                     DOCUMENTOS.CODCLIENTE, 
-                    DOCUMENTOS.VENCIMIENTO AS VENCE
+                    DOCUMENTOS.VENCIMIENTO AS VENCE,
+                    DOCUMENTOS.FEL_SERIE,
+                    DOCUMENTOS.FEL_NUMERO,
+                    DOCUMENTOS.FEL_FECHA
         FROM     DOCUMENTOS LEFT OUTER JOIN
                   CLIENTES ON DOCUMENTOS.EMPNIT = CLIENTES.EMPNIT AND DOCUMENTOS.CODCLIENTE = CLIENTES.CODCLIENTE LEFT OUTER JOIN
                   TIPODOCUMENTOS ON DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT AND DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC
