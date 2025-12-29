@@ -2,6 +2,23 @@ const execute = require('./connection');
 const express = require('express');
 const router = express.Router();
 
+
+router.post("/correlativo", async(req,res)=>{
+    const {empnit,coddoc} = req.body;
+        
+    let qry ='';
+
+    qry = `SELECT CODDOC,
+            CORRELATIVO 
+        FROM TIPODOCUMENTOS 
+        WHERE EMPNIT='${empnit}' AND CODDOC='${coddoc}'`     
+    
+    execute.Query(res,qry);
+
+});
+
+
+
 router.post("/update_correlativo_auto", async(req,res)=>{
     const {sucursal,coddoc} = req.body;
         
@@ -71,8 +88,12 @@ router.get("/tipo", async(req,res)=>{
         
     let qry ='';
 
-    qry = `SELECT CODDOC,CORRELATIVO FROM ME_TIPODOCUMENTOS WHERE CODSUCURSAL='${app}' AND TIPODOC='${tipo}'`     
+    qry = `SELECT CODDOC,CORRELATIVO 
+                    FROM TIPODOCUMENTOS 
+            WHERE EMPNIT='${empnit}' AND TIPODOC='${tipo}'`     
   
+           
+
     execute.Query(res,qry);
 
 });

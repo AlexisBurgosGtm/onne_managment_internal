@@ -81,6 +81,10 @@ let GlobalSelectedCorrelativo = '';
 
 let selected_tab = '';
 
+let selected_saldo_fac = 0;
+let selected_abonos_fac = 0;
+
+
 let GlobalSelectedApp = '';
 
 let GlobalSistema = 'ISC';

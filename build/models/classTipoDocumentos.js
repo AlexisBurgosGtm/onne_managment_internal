@@ -146,18 +146,16 @@ let classTipoDocumentos = {
         })
         
     },
-    BACKUP_getCorrelativoDocumento: (tipodoc,coddoc)=>{
+    correlativo: (coddoc)=>{
         
         return new Promise((resolve,reject)=>{
             let correlativo = '0';
             let data = {
                 empnit:GlobalEmpnit,
-                tipo:tipodoc,
-                coddoc:coddoc,
-                app:GlobalSistema
+                coddoc:coddoc
             }
-            
-            axios.get('/tipodocumentos/correlativodoc?empnit=' + GlobalEmpnit + '&tipo=' + tipodoc + '&coddoc=' + coddoc  + '&app=' + GlobalSistema)
+
+            axios.post('/tipodocumentos/correlativo', data)
             .then((response) => {
                 const data = response.data;        
                 data.recordset.map((rows)=>{
@@ -170,5 +168,5 @@ let classTipoDocumentos = {
             });
         })
         
-    }
+    },
 }

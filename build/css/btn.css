@@ -69,7 +69,7 @@
   position: fixed;
   z-index: 1088;
   left: 21px;
-  bottom: 15px;
+  bottom: 35px;
 }
 
 .btn-bottom-lr { 
@@ -84,7 +84,7 @@
       z-index: 1088;
       left: 50%;
       right: 50%;
-      bottom: 15px;
+      bottom: 35px;
 }
 
 

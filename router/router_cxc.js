@@ -6,9 +6,17 @@ const router = express.Router();
 
 router.post("/insert_recibo_factura", async(req,res)=>{
 
-    const{sucursal,fecha,coddoc,correlativo,totalcosto,totalprecio,usuario,coddoc_fac,correlativo_fac,
+    const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
+        foto,
         norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
     } = req.body;
+
+    
+    let totalcosto = (Number(fpago_efectivo)+Number(fpago_deposito)+Number(fpago_tarjeta)+Number(fpago_cheque));
+    let totalprecio= (Number(fpago_efectivo)+Number(fpago_deposito)+Number(fpago_tarjeta)+Number(fpago_cheque));
+
+
+    let nuevocorrelativo = Number(correlativo)+1;
 
     let qry = `
             INSERT INTO DOCUMENTOS 
@@ -38,7 +46,7 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                     CODEMBARQUE,
                     'O' AS STATUS,
                     'CON' AS CONCRE,
-                    ${usuario} AS USUARIO,
+                    '${usuario}' AS USUARIO,
 	                0 AS CORTE,
                     '${coddoc_fac}' AS SERIEFAC,
                     '${correlativo_fac}' AS NOFAC,
@@ -62,11 +70,110 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                     CORRELATIVO=${correlativo_fac}; 
                 `
     
-    
-     execute.Query(res,qry);
+            
+                let qryUpdate = `UPDATE TIPODOCUMENTOS SET CORRELATIVO=${nuevocorrelativo} 
+                                WHERE EMPNIT='${sucursal}' AND CODDOC='${coddoc}';`
+
+                let qryFotoDocumento = `INSERT INTO DOCUMENTOS_FOTOS
+                                        (EMPNIT,CODDOC,CORRELATIVO,FOTO) 
+                                        SELECT '${sucursal}' AS EMPNIT, '${coddoc}' AS CODDOC, 
+                                        ${correlativo} AS CORRELATIVO, 
+                                        '${foto}' AS FOTO;`
+
+                if(foto==''){qryFotoDocumento=''}
+
+
+             
+
+     execute.Query(res,qry + qryUpdate + qryFotoDocumento) ;
      
 });
+//FUNCIONA DIRECTO COMO RECIBO
+router.post("/BACKUP_insert_recibo_factura", async(req,res)=>{
 
+    const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
+        norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
+    } = req.body;
+
+    
+    let totalcosto = (Number(fpago_efectivo)+Number(fpago_deposito)+Number(fpago_tarjeta)+Number(fpago_cheque));
+    let totalprecio= (Number(fpago_efectivo)+Number(fpago_deposito)+Number(fpago_tarjeta)+Number(fpago_cheque));
+
+
+    let nuevocorrelativo = Number(correlativo)+1;
+
+    let qry = `
+            INSERT INTO DOCUMENTOS 
+	                (EMPNIT,ANIO,MES,DIA,FECHA,HORA,
+	                MINUTO,CODCAJA,CODDOC,CORRELATIVO,CODCLIENTE,
+	                DOC_NIT,DOC_NOMCLIE,DOC_DIRCLIE,TOTALCOSTO,
+	                TOTALPRECIO,CODEMBARQUE,STATUS,CONCRE,USUARIO,
+	                CORTE,SERIEFAC,NOFAC,CODVEN,PAGO,VUELTO,MARCA,OBS, DOC_SALDO,DOC_ABONO,NODOCPAGO,
+                    FPAGO_EFECTIVO,FPAGO_TARJETA,FPAGO_DEPOSITO,FPAGO_CHEQUE,FPAGO_DESCRIPCION)
+                SELECT 
+                    '${sucursal}' AS EMPNIT,
+                    YEAR('${fecha}') AS ANIO,
+                    MONTH('${fecha}') AS MES,
+                    DAY('${fecha}') AS DIA,
+                    '${fecha}' AS FECHA,
+                    0 AS HORA,
+	                0 AS MINUTO,
+                    CODCAJA,
+                    '${coddoc}' AS CODDOC,
+                    ${correlativo} AS CORRELATIVO,
+                    CODCLIENTE,
+	                DOC_NIT,
+                    DOC_NOMCLIE,
+                    DOC_DIRCLIE,
+                    ${totalcosto} AS TOTALCOSTO,
+	                ${totalprecio} AS TOTALPRECIO,
+                    CODEMBARQUE,
+                    'O' AS STATUS,
+                    'CON' AS CONCRE,
+                    '${usuario}' AS USUARIO,
+	                0 AS CORTE,
+                    '${coddoc_fac}' AS SERIEFAC,
+                    '${correlativo_fac}' AS NOFAC,
+                    ${codven} AS CODVEN,
+                    ${totalprecio} AS PAGO,
+                    0 AS VUELTO,
+                    '' AS MARCA,
+                    '${obs}' AS OBS, 
+                    0 AS DOC_SALDO,
+                    ${totalprecio} AS DOC_ABONO,
+                    '${norecibo}' AS NODOCPAGO,
+                    ${fpago_efectivo} AS FPAGO_EFECTIVO,
+                    ${fpago_tarjeta} AS FPAGO_TARJETA,
+                    ${fpago_deposito} AS FPAGO_DEPOSITO,
+                    ${fpago_cheque} AS FPAGO_CHEQUE,
+                    '${fpago_descripcion}' AS FPAGO_DESCRIPCION
+                FROM DOCUMENTOS
+                WHERE 
+                    EMPNIT='${sucursal}' AND 
+                    CODDOC='${coddoc_fac}' AND 
+                    CORRELATIVO=${correlativo_fac}; 
+                `
+    
+            
+                let qryUpdate = `UPDATE TIPODOCUMENTOS SET CORRELATIVO=${nuevocorrelativo} 
+                                WHERE EMPNIT='${sucursal}' AND CODDOC='${coddoc}';`
+
+
+                let qryUpdateSaldo = `
+                    UPDATE DOCUMENTOS
+                        SET 
+                            DOC_SALDO=${(Number(saldo_fac)-Number(totalprecio))},
+                            DOC_ABONO=${(Number(abonos_fac)+Number(totalprecio))}
+                    WHERE 
+                        EMPNIT='${sucursal}' AND 
+                        CODDOC='${coddoc_fac}' AND 
+                        CORRELATIVO=${correlativo_fac}; 
+                    `
+    
+
+     execute.Query(res,qry + qryUpdate + qryUpdateSaldo);
+     
+});
 
 
 router.post("/listado", async(req,res)=>{
