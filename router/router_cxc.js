@@ -48,8 +48,8 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                     'CON' AS CONCRE,
                     '${usuario}' AS USUARIO,
 	                0 AS CORTE,
-                    '${coddoc_fac}' AS SERIEFAC,
-                    '${correlativo_fac}' AS NOFAC,
+                    '${coddoc}' AS SERIEFAC,
+                    '${correlativo}' AS NOFAC,
                     ${codven} AS CODVEN,
                     ${totalprecio} AS PAGO,
                     0 AS VUELTO,
@@ -83,16 +83,28 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                 if(foto==''){qryFotoDocumento=''}
 
 
+                let qryDocumentosAbonos = `INSERT INTO DOCUMENTOS_FACTURAS_ABONADAS
+                                        (EMPNIT,FECHA,CODDOC,CORRELATIVO,ABONO,CODDOC_FAC,CORRELATIVO_FAC)
+                                        SELECT 
+                                            '${sucursal}' AS EMPNIT,
+                                            '${fecha}' AS FECHA,
+                                            '${coddoc}' AS CODDOC,
+                                            ${correlativo} AS CORRELATIVO,
+                                            ${totalprecio} AS ABONO,
+                                            '${coddoc_fac}' AS CODDOC_FAC,
+                                            ${correlativo_fac} AS CORRELATIVO_FAC;`
+
              
 
-     execute.Query(res,qry + qryUpdate + qryFotoDocumento) ;
+     execute.Query(res,qry + qryDocumentosAbonos + qryUpdate + qryFotoDocumento);
+
      
 });
-//FUNCIONA DIRECTO COMO RECIBO
-router.post("/BACKUP_insert_recibo_factura", async(req,res)=>{
+router.post("/insert_recibo_factura_multiple", async(req,res)=>{
 
     const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
-        norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
+        foto,
+        norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven,jsonFacturasAbonadas
     } = req.body;
 
     
@@ -132,8 +144,8 @@ router.post("/BACKUP_insert_recibo_factura", async(req,res)=>{
                     'CON' AS CONCRE,
                     '${usuario}' AS USUARIO,
 	                0 AS CORTE,
-                    '${coddoc_fac}' AS SERIEFAC,
-                    '${correlativo_fac}' AS NOFAC,
+                    '${coddoc}' AS SERIEFAC,
+                    '${correlativo}' AS NOFAC,
                     ${codven} AS CODVEN,
                     ${totalprecio} AS PAGO,
                     0 AS VUELTO,
@@ -158,22 +170,40 @@ router.post("/BACKUP_insert_recibo_factura", async(req,res)=>{
                 let qryUpdate = `UPDATE TIPODOCUMENTOS SET CORRELATIVO=${nuevocorrelativo} 
                                 WHERE EMPNIT='${sucursal}' AND CODDOC='${coddoc}';`
 
+                let qryFotoDocumento = `INSERT INTO DOCUMENTOS_FOTOS
+                                        (EMPNIT,CODDOC,CORRELATIVO,FOTO) 
+                                        SELECT '${sucursal}' AS EMPNIT, '${coddoc}' AS CODDOC, 
+                                        ${correlativo} AS CORRELATIVO, 
+                                        '${foto}' AS FOTO;`
 
-                let qryUpdateSaldo = `
-                    UPDATE DOCUMENTOS
-                        SET 
-                            DOC_SALDO=${(Number(saldo_fac)-Number(totalprecio))},
-                            DOC_ABONO=${(Number(abonos_fac)+Number(totalprecio))}
-                    WHERE 
-                        EMPNIT='${sucursal}' AND 
-                        CODDOC='${coddoc_fac}' AND 
-                        CORRELATIVO=${correlativo_fac}; 
-                    `
-    
+                if(foto==''){qryFotoDocumento=''}
 
-     execute.Query(res,qry + qryUpdate + qryUpdateSaldo);
+                let qryDocumentosAbonos = '';
+
+                let datos_temp = JSON.parse(jsonFacturasAbonadas);
+
+                datos_temp.map((r)=>{
+                    qryDocumentosAbonos += `
+                                INSERT INTO DOCUMENTOS_FACTURAS_ABONADAS
+                                (EMPNIT,FECHA,CODDOC,CORRELATIVO,ABONO,CODDOC_FAC,CORRELATIVO_FAC)
+                                    SELECT 
+                                            '${sucursal}' AS EMPNIT,
+                                            '${fecha}' AS FECHA,
+                                            '${coddoc}' AS CODDOC,
+                                            ${correlativo} AS CORRELATIVO,
+                                            ${r.ABONO} AS ABONO,
+                                            '${r.CODDOC}' AS CODDOC_FAC,
+                                            ${r.CORRELATIVO} AS CORRELATIVO_FAC;`
+                })
+
+                
+
+             
+
+     execute.Query(res,qry + qryDocumentosAbonos + qryUpdate + qryFotoDocumento) ;
      
 });
+
 
 
 router.post("/listado", async(req,res)=>{
@@ -202,6 +232,35 @@ router.post("/listado", async(req,res)=>{
             AND (DOCUMENTOS.EMPNIT = '${empnit}') AND (DOCUMENTOS.STATUS <> 'A') 
                   AND (DOCUMENTOS.CODVEN = ${codven})
         ORDER BY DOCUMENTOS.VENCIMIENTO DESC;
+    `
+    
+    
+     execute.Query(res,qry);
+     
+});
+router.post("/listado_clientes", async(req,res)=>{
+
+    const{empnit,codven} = req.body;
+
+    let qry = `
+        SELECT  
+            CLIENTES.CODCLIENTE AS CODCLIE, 
+            CLIENTES.NIT, 
+            CLIENTES.NOMBRECLIENTE AS NOMCLIE, 
+            CLIENTES.DIRCLIENTE, 
+            SUM(DOCUMENTOS.TOTALPRECIO) AS IMPORTE, 
+            SUM(ISNULL(DOCUMENTOS.TOTALPRECIO, 0) - ISNULL(DOCUMENTOS.DOC_ABONO, 0)) AS SALDO, 
+            SUM(DOCUMENTOS.DOC_ABONO) AS ABONOS
+        FROM  DOCUMENTOS LEFT OUTER JOIN
+            TIPODOCUMENTOS ON DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT AND DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC RIGHT OUTER JOIN
+            CLIENTES ON DOCUMENTOS.EMPNIT = CLIENTES.EMPNIT AND DOCUMENTOS.CODCLIENTE = CLIENTES.CODCLIENTE
+        WHERE  (TIPODOCUMENTOS.TIPODOC IN ('FAC', 'FEF', 'FES', 'FEC', 'FPC', 'FCP')) AND 
+            (DOCUMENTOS.CONCRE = 'CRE') AND 
+            (DOCUMENTOS.DOC_SALDO > 0.01) AND 
+            (DOCUMENTOS.EMPNIT = '${empnit}') AND 
+            (DOCUMENTOS.STATUS <> 'A') AND (DOCUMENTOS.CODVEN = ${codven})
+        GROUP BY CLIENTES.CODCLIENTE, CLIENTES.DIRCLIENTE, CLIENTES.NOMBRECLIENTE, CLIENTES.NIT
+        ORDER BY CLIENTES.NOMBRECLIENTE
     `
     
     

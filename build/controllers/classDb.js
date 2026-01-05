@@ -1,5 +1,4 @@
-const DbName = "onne_managment_v3";
-const DbName_old = "onne_managment_v3";
+const DbName = "onne_managment_v4";
 
 var tblDocumentos = {
     name: 'documentos',
@@ -104,6 +103,7 @@ var tblTempventas = {
     }
 };
 
+
 var tblCredenciales = {
     name: 'credenciales',
     columns: {
@@ -159,15 +159,28 @@ var tblDepartamentos = {
 };
 
 
-var database = {
-    name: DbName,
-    tables: [tblDepartamentos,tblMunicipios,tblDocumentos,tblProductos,tblClientes,tblTempventas,tblCredenciales,tempcenso]
+var tbl_temp_cxc = {
+    name: 'temp_cxc',
+    columns: {
+        ID:{ primaryKey: true, autoIncrement: true },
+        CODSUCURSAL:{dataType: "string"},
+        CODDOC:{dataType: "string"},
+        CORRELATIVO:{dataType: "string"},
+        FECHA:{dataType: "string"},
+        VENCE:{dataType: "string"},
+        IMPORTE:{dataType: "number"},
+        SALDO:{dataType: "number"},
+        ABONO:{dataType: "number"}
+    }
 };
 
-var database_old = {
-    name: DbName_old,
-    tables: [tblDocumentos,tblProductos,tblClientes,tblTempventas,tblCredenciales,tempcenso]
+
+var database = {
+    name: DbName,
+    tables: [tbl_temp_cxc, tblDepartamentos,tblMunicipios,tblDocumentos,tblProductos,tblClientes,tblTempventas,tblCredenciales,tempcenso]
 };
+
+
  
 // initiate jsstore connection
 var connection = new JsStore.Connection();
@@ -188,21 +201,7 @@ async function connectDb(){
     
 }
 
-async function connectDb_old(){
-   
-    var isDbCreatedOld = await connection_old.initDb(database_old);
-    // isDbCreated will be true when database will be initiated for first time
-    if(isDbCreatedOld){
-        //alert('Db Created & connection is opened');
-       
-    }
-    else{
-        //alert('Connection is opened');
-      console.log('db vieja conectada...')
-    }
 
-}
 //inicia la conexión a la db
 connectDb();
 
-connectDb_old(); //conecta a la versión vieja de la base de datos

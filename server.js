@@ -89,6 +89,30 @@ app.get("/",function(req,res){
 	res.sendFile(path + 'index.html');
 }); 
 
+app.get("/factura",function(req,res){
+
+  const {sucursal,coddoc,correlativo} = req.query;
+
+  let factura = __dirname + '/build/factura.html'
+
+
+	res.sendFile(factura);
+
+}); 
+app.post("/factura",function(req,res){
+
+    const {sucursal,coddoc,correlativo} = req.body;
+
+
+
+
+
+
+}); 
+
+
+
+
 app.get("/login",function(req,res){
   res.redirect('/');
 }); 

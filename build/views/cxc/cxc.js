@@ -14,6 +14,12 @@ function getView(){
                             ${view.vista_abonos()}
                         </div>   
                         <div class="tab-pane fade" id="cuatro" role="tabpanel" aria-labelledby="home-tab">
+                            ${view.vista_clientes()}
+                        </div> 
+                        <div class="tab-pane fade" id="cinco" role="tabpanel" aria-labelledby="home-tab">
+                            ${view.vista_cliente_facturas()}
+                        </div> 
+                        <div class="tab-pane fade" id="seis" role="tabpanel" aria-labelledby="home-tab">
                             ${view.vista_cobro_multiple()}
                         </div>    
                     </div>
@@ -33,6 +39,10 @@ function getView(){
                         </li>  
                         <li class="nav-item">
                             <a class="nav-link negrita text-danger" id="tab-cuatro" data-toggle="tab" href="#cuatro" role="tab" aria-controls="home" aria-selected="true">
+                                <i class="fal fa-comments"></i></a>
+                        </li> 
+                         <li class="nav-item">
+                            <a class="nav-link negrita text-danger" id="tab-cinco" data-toggle="tab" href="#cinco" role="tab" aria-controls="home" aria-selected="true">
                                 <i class="fal fa-comments"></i></a>
                         </li>         
                     </ul>
@@ -218,14 +228,109 @@ function getView(){
             </button>
             `
         },
+        vista_clientes:()=>{
+            return `
+              <div class="card card-rounded col-12">
+                <div class="card-body p-4">
+
+                    <h3 class="negrita text-secondary">SELECCIONE UN CLIENTE</h3>
+
+
+                    <div class="table-responsive">
+
+                        <div class="form-group">
+                            <label>Escriba para buscar...</label>
+                            <input type="text" class="form-control border-onne" placeholder="Escriba para buscar..."
+                            oninput="funciones.FiltrarTabla('tbl_multi_clientes','txtBuscarMultiClientes')"
+                            id="txtBuscarMultiClientes">
+                        </div>
+
+                        <table class="table table-bordered table-striped col-12 h-full" id="tbl_multi_clientes">
+                            <thead class="bg-onne text-white">
+                                <tr>
+                                    <td>CLIENTE</td>
+                                    <td>DIRECCION</td>
+                                    <td>SALDO</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_multi_data_clientes"></tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+            `
+        },
+        vista_cliente_facturas:()=>{
+          
+            return `
+             <div class="card card-rounded col-12">
+                <div class="card-body p-4">
+
+                    <h3 class="negrita text-primary">FACTURAS PENDIENTES DEL CLIENTE</h3>
+                    <br>
+                    <label class="text-secondary negrita">INDIQUE EL MONTO A ABONAR EN CADA FACTURA</label>
+                    <br>
+
+                    <div class="table-reponsive">
+                        
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Escriba para buscar...</label>
+                                    <input type="text" class="form-control border-danger" 
+                                        placeholder="Escriba para buscar..."
+                                        id="txtBuscarFacturaCliente"
+                                        oninput="funciones.FiltrarTabla('tbl_facturas_cliente','txtBuscarFacturaCliente')"    
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="negrita text-danger">Q 0.00</h3>
+                            </div>
+                        </div>
+
+                        
+
+                        <table class="table table-bordered col-12 h-full" id="tbl_facturas_cliente">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <td>FACTURA</td>
+                                    <td>VENCE</td>
+                                    <td>IMPORTE</td>
+                                    <td>SALDO</td>
+                                    <td>ABONO</td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_data_facturas_cliente">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
+            onclick="document.getElementById('tab-cuatro').click()">
+                <i class="fal fa-arrow-left"></i>
+            </button>
+
+        
+            <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow"
+            id="btnSiguienteCobroMultiple">
+                <i class="fal fa-arrow-right"></i>
+            </button>
+            `
+            
+        },
         vista_cobro_multiple:()=>{
             return `
             <div class="card card-rounded col-12">
                 <div class="card-body p-4">
 
                     <h3 class="negrita text-secondary">NUEVO COBRO A MULTIPLES FACTURAS</h3>
-                   
-                
 
                 </div>
             </div>
@@ -234,32 +339,27 @@ function getView(){
             <div class="card card-rounded col-12">
                 <div class="card-body p-4">
 
-
                             <div class="row">
                                 <div class="col-7">
                                     <h3 class="negrita text-primary">FORMA DEL PAGO</h3>
                                 </div>
                                 <div class="col-5">
-                                    <h3 class="negrita text-danger text-right" id="lb_factura_total_recibo">Q 10,000.00</h3>
+                                    <h3 class="negrita text-danger text-right" id="lb_multi_total_recibo">Q 0.00</h3>
                                 </div>
                             </div>
-
                             
-                            
-                             <div class="row">
+                            <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Fecha</label>
-                                        <input type="date" class="form-control negrita border-secondary text-danger"  id="txt_factura_fecha">
+                                        <input type="date" class="form-control negrita border-secondary text-danger"  id="txt_multi_fecha">
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label class="negrita text-secondary">No. Recibo</label>
-                                        <input type="text" class="form-control negrita border-secondary text-danger"  id="txt_factura_no_recibo">
+                                        <input type="text" class="form-control negrita border-secondary text-danger"  id="txt_multi_no_recibo">
                                     </div>
-                                  
-                                
                                 </div>
                             </div>
                             <br>
@@ -267,9 +367,9 @@ function getView(){
                             <div class="form-group">
                                     <label class="negrita text-secondary">Documento Interno</label>
                                     <div class="input-group">
-                                        <select classs="form-control negrita" id="cmb_factura_coddoc">
+                                        <select classs="form-control negrita" id="cmb_multi_coddoc">
                                         </select>
-                                        <input type="number" class="form-control negrita" disabled="true" id="txt_factura_correlativo">
+                                        <input type="number" class="form-control negrita" disabled="true" id="txt_multi_correlativo">
                                     </div>
                             </div>
                             
@@ -278,7 +378,7 @@ function getView(){
                                 
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Efectivo</label>
-                                        <input type="number" class="form-control negrita border-secondary text-danger" id="txt_factura_fp_efectivo">
+                                        <input type="number" class="form-control negrita border-secondary text-danger" id="txt_multi_fp_efectivo">
                                     </div>
                                 
                                 </div>
@@ -286,7 +386,7 @@ function getView(){
                             
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Depósito</label>
-                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_factura_fp_deposito">
+                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_multi_fp_deposito">
                                     </div>
                                 
                                 </div>
@@ -299,7 +399,7 @@ function getView(){
                                     
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Tarjeta</label>
-                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_factura_fp_tarjeta">
+                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_multi_fp_tarjeta">
                                     </div>
                                     
                                 </div>
@@ -307,7 +407,7 @@ function getView(){
                             
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Cheque</label>
-                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_factura_fp_cheque">
+                                        <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_multi_fp_cheque">
                                     </div>
                                 
                                 </div>
@@ -316,43 +416,38 @@ function getView(){
 
                             <div class="form-group">
                                 <label class="negrita text-secondary">Descripción de la forma de pago</label>
-                                <input type="text" class="form-control negrita border-secondary" id="txt_factura_fp_descripcion">
+                                <input type="text" class="form-control negrita border-secondary" id="txt_multi_fp_descripcion">
                             </div>
                             
 
                             <div class="form-group">
                                 <label>Observaciones:</label>
-                                <textarea rows="2" class="form-control negrita border-secondary text-secondary" id="txt_factura_obs"></textarea>
+                                <textarea rows="2" class="form-control negrita border-secondary text-secondary" id="txt_multi_obs"></textarea>
                             </div>
 
                             <div class="form-group">
 
                                 <label class="negrita text-secondary">Foto del Comprobante</label>
                                 
-                                <img id="img_factura_foto" width="100px" height="100px">
+                                <img id="img_multi_foto" width="100px" height="100px">
 
-                                 <input type="file" id="txt_factura_foto" >
+                                <input type="file" id="txt_multi_foto" >
                                 
                             </div>
                   
                 </div>
             </div>
+           
 
 
             <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
-            onclick="document.getElementById('tab-uno').click()">
+            onclick="document.getElementById('tab-cinco').click()">
                 <i class="fal fa-arrow-left"></i>
             </button>
 
-
-            <button class="btn btn-primary btn-bottom-middle btn-circle btn-xl hand shadow hidden"
-            id="btn_factura_camera">                
-                <i class="fal fa-camera"></i>
-            </button>
-
-
+        
             <button class="btn btn-info btn-bottom-r btn-circle btn-xl hand shadow"
-            id="btnGuardarCobro">
+            id="btnGuardarCobroMultiple">
                 <i class="fal fa-save"></i>
             </button>
             `
@@ -398,7 +493,7 @@ function getView(){
             </button>
             `
         },
-         modal_camara:()=>{
+        modal_camara:()=>{
             return `
             <div class="modal fade js-modal-settings modal-backdrop-transparent modal-with-scroll" tabindex="-1" 
                 role="dialog" aria-hidden="true" id="modal_barcode">
@@ -449,7 +544,18 @@ function addListeners(){
         get_tbl_cxc();
 
 
-        classTipoDocumentos.comboboxTipodoc('PRC','cmb_factura_coddoc')
+    
+
+        
+        listeners_cobro_individual();
+        
+        listeners_cobro_multiple();
+
+};
+
+function listeners_cobro_individual(){
+
+      classTipoDocumentos.comboboxTipodoc('PRC','cmb_factura_coddoc')
         .then(()=>{
             classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
             .then((correlativo)=>{
@@ -588,16 +694,6 @@ function addListeners(){
         });
 
 
-        document.getElementById('btnNuevoCobroMultiple').addEventListener('click',()=>{
-
-
-            nuevo_cobro_multiple();
-
-
-
-
-
-        })
 
 };
 
@@ -675,209 +771,7 @@ function get_data_cxc(){
     }) 
 }
 
-function NUEVA_get_tbl_cxc(){
 
-
-    let tabla = document.getElementById('containerCxc');
-    
-    let datos_tabla = '';
-    let container = '';
-
-    if(funciones.detectarPc()=='pc'){
-
-       
-        datos_tabla = `<div class="form-group">
-                            <label class="negrita text-secondary">Escriba para buscar...</label>
-                            <input type="text" class="form-control negrita" id="txtBuscar"
-                            oninput="funciones.FiltrarTabla('tblCxc','txtBuscar')"
-                            placeholder="Escriba para buscar....">
-                        </div>
-
-                        <table class="table table-responsive table-hover col-12" id="tblCxc">
-                            <thead class="bg-onne text-white">
-                                <tr>
-                                    <td>DOCUMENTO</td>
-                                    <td>CLIENTE</td>
-                                    <td>VENCE</td>
-                                    <td>IMPORTE</td>
-                                    <td>ABONOS</td>
-                                    <td>SALDO</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody id="tblDataCxc">
-                            
-                            </tbody>
-                        </table>
-                        `;
-        tabla.innerHTML = datos_tabla;
-        container = document.getElementById('tblDataCxc');
-        container.innerHTML = GlobalLoader;
-
-    }else{ // es TEL
-        container = document.getElementById('containerCxc');
-        container.innerHTML = GlobalLoader;
-    }
-
-    
-   
-
-    get_data_cxc()
-    .then((data)=>{
-        let str = '';
-
-            if(funciones.detectarPc()=='tel'){
-                data.recordset.map((r)=>{
-                    str += `
-                        <div class="card card-rounded col-12">
-                            <div class="card-body p-2">
-
-                                <div class="row">
-                                    ${r.NOMCLIE}
-                                    <br>
-                                    <small>${r.DIRCLIE}</small>
-                                </div>
-                                <br>
-                                <div class="row">
-
-                                </div>
-
-                                ${r.CODDOC}-${r.CORRELATIVO}
-
-                            
-                            </div>
-                        </div>
-                        <br>
-                        `
-                })
-
-                container.innerHTML = str;
-            }else{ // es PC
-                data.recordset.map((r)=>{
-                    str += `
-                    <tr>
-                        <td>${r.CODDOC}-${r.CORRELATIVO}
-                            <br>
-                            <small>${funciones.convertDateNormal(r.FECHA)}</small>
-                        </td>
-                        <td>${r.NOMCLIE}
-                            <br>
-                            <small>${r.DIRCLIE}</small>
-                        </td>
-                        <td>${funciones.convertDateNormal(r.VENCE)}</td>
-                        <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
-                        <td>${funciones.setMoneda(r.ABONOS,'Q')}</td>
-                        <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
-                        <td>
-                            <button class="btn btn-circle btn-success btn-md hand shadow"
-                            onclick="get_nuevo_abono('${r.CODDOC}','${r.CORRELATIVO}','${r.FEL_SERIE}','${r.FEL_NUMERO}','${funciones.limpiarTexto(r.NOMCLIE)}')">
-                                <i class="fal fa-dollar-sign"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-circle btn-warning btn-md hand shadow"
-                            onclick="get_listado_abonos('${r.CODDOC}','${r.CORRELATIVO}','${r.NOMCLIE}','${funciones.setMoneda(r.IMPORTE,'Q')}')">
-                                <i class="fal fa-list"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    `
-                })
-                 container.innerHTML = str;
-
-            }
-       
-
-    })
-    .catch(()=>{
-        container.innerHTML = 'No hay datos...'
-    })
-
-
-};
-function BACKUP_get_tbl_cxc(){
-
-
-    let tabla = document.getElementById('containerCxc');
-    
-    let datos_tabla = '';
-    
-       
-        datos_tabla = `<div class="form-group">
-                            <label class="negrita text-secondary">Escriba para buscar...</label>
-                            <input type="text" class="form-control negrita" id="txtBuscar"
-                            oninput="funciones.FiltrarTabla('tblCxc','txtBuscar')"
-                            placeholder="Escriba para buscar....">
-                        </div>
-
-                        <table class="table table-responsive table-hover col-12" id="tblCxc">
-                            <thead class="bg-onne text-white">
-                                 <td>DOCUMENTO</td>
-                                    <td>CLIENTE</td>
-                                    <td>VENCE</td>
-                                    <td>IMPORTE</td>
-                                    <td>ABONOS</td>
-                                    <td>SALDO</td>
-                                    <td></td>
-                                    <td></td>
-                            </thead>
-                            <tbody id="tblDataCxc">
-                            
-                            </tbody>
-                        </table>
-                        `;
-        tabla.innerHTML = datos_tabla;
-        container = document.getElementById('tblDataCxc');
-        container.innerHTML = GlobalLoader;
-
-    
-
-    get_data_cxc()
-    .then((data)=>{
-        let str = '';
-
-                data.recordset.map((r)=>{
-                     str += `
-                    <tr>
-                        <td>${r.CODDOC}-${r.CORRELATIVO}
-                            <br>
-                            <small>${funciones.convertDateNormal(r.FECHA)}</small>
-                        </td>
-                        <td>${r.NOMCLIE}
-                            <br>
-                            <small>${r.DIRCLIE}</small>
-                        </td>
-                        <td>${funciones.convertDateNormal(r.VENCE)}</td>
-                        <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
-                        <td>${funciones.setMoneda(r.ABONOS,'Q')}</td>
-                        <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
-                        <td>
-                            <button class="btn btn-circle btn-success btn-md hand shadow"
-                            onclick="get_nuevo_abono('${r.CODDOC}','${r.CORRELATIVO}','${r.FEL_SERIE}','${r.FEL_NUMERO}','${funciones.limpiarTexto(r.NOMCLIE)}')">
-                                <i class="fal fa-dollar-sign"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-circle btn-warning btn-md hand shadow"
-                            onclick="get_listado_abonos('${r.CODDOC}','${r.CORRELATIVO}','${r.NOMCLIE}','${funciones.setMoneda(r.IMPORTE,'Q')}')">
-                                <i class="fal fa-list"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    `
-                })
-                 container.innerHTML = str;
-
-       
-
-    })
-    .catch(()=>{
-        container.innerHTML = 'No hay datos...'
-    })
-
-
-};
 function get_tbl_cxc(){
 
 
@@ -1121,7 +1015,214 @@ function insert_data_cxc(){
 }
 
 
+function listeners_cobro_multiple(){
 
-function nuevo_cobro_multiple(){
+
+        classTipoDocumentos.comboboxTipodoc('PRC','cmb_multi_coddoc')
+        .then(()=>{
+            classTipoDocumentos.correlativo(document.getElementById('cmb_multi_coddoc').value)
+            .then((correlativo)=>{
+                document.getElementById('txt_multi_correlativo').value = correlativo;
+            })
+            .catch(()=>{
+                document.getElementById('txt_multi_correlativo').value = '0';
+            })
+        })
+        .catch(()=>{
+            document.getElementById('txt_multi_correlativo').value = '0';
+        });
+
+        document.getElementById('cmb_multi_coddoc').addEventListener('change',()=>{
+            
+                classTipoDocumentos.correlativo(document.getElementById('cmb_multi_coddoc').value)
+                .then((correlativo)=>{
+                    document.getElementById('txt_multi_correlativo').value = correlativo;
+                })
+                .catch(()=>{
+                    document.getElementById('txt_multi_correlativo').value = '0';
+                })
+
+        });
+
+        
+        document.getElementById('btnNuevoCobroMultiple').addEventListener('click',()=>{
+            nuevo_cobro_multiple();
+           
+        });
+
+
+        document.getElementById('txt_multi_fp_efectivo').addEventListener('input',()=>{
+            get_total_multiple_fpago()
+        });
+
+        document.getElementById('txt_multi_fp_deposito').addEventListener('input',()=>{
+            get_total_multiple_fpago()
+        });
+
+        document.getElementById('txt_multi_fp_tarjeta').addEventListener('input',()=>{
+            get_total_multiple_fpago()
+        });
+        
+        document.getElementById('txt_multi_fp_cheque').addEventListener('input',()=>{
+            get_total_multiple_fpago()
+        });
+
+
+        document.getElementById('txt_multi_foto').addEventListener('change',()=>{
+
+            const image = document.getElementById('txt_multi_foto').files[0];
     
+            if (image !== undefined) {
+                const fileReader = new FileReader();
+                
+                fileReader.addEventListener('load', function () {
+                    const imgEl = document.getElementById('img_multi_foto');
+                    imgEl.src = this.result;
+                    imgEl.alt = 'La imagen no cargado correctamente.';
+                    
+                });    
+                
+                fileReader.readAsDataURL(image);
+            }else{
+                document.getElementById('img_multi_foto').src = '';
+            }
+        });
+
+
+
+
+        document.getElementById('btnSiguienteCobroMultiple').addEventListener('click',()=>{
+
+            
+            
+            document.getElementById('tab-seis').click();
+
+            if(get_total_abonos_cliente()==0){
+                funciones.AvisoError('Indique el monto abonado a cada documento');
+                return;
+            }
+
+
+
+
+
+
+
+        });
+
+};
+function nuevo_cobro_multiple(){
+  
+        document.getElementById('tab-cuatro').click();
+
+        document.getElementById('lb_multi_total_recibo').innerText = 'Q 0.00';
+        document.getElementById('txt_multi_fecha').value = funciones.getFecha();
+        document.getElementById('txt_multi_no_recibo').value = '';
+        document.getElementById('txt_multi_fp_efectivo').value = '0';
+        document.getElementById('txt_multi_fp_deposito').value = '0';
+        document.getElementById('txt_multi_fp_tarjeta').value = '0';
+        document.getElementById('txt_multi_fp_cheque').value = '0';
+
+        document.getElementById('txt_multi_fp_descripcion').value = '';
+        document.getElementById('txt_multi_obs').value = '';
+        document.getElementById('img_multi_foto').src = '';
+        document.getElementById('txt_multi_foto').value = '';
+    
+        tbl_clientes_saldo();
+
+};
+function get_total_multiple_fpago(){
+
+    let total = 0;
+    
+    return new Promise((resolve, reject) => {
+
+        
+        let efectivo = document.getElementById('txt_multi_fp_efectivo').value || 0;
+        let deposito = document.getElementById('txt_multi_fp_deposito').value || 0;
+        let tarjeta = document.getElementById('txt_multi_fp_tarjeta').value || 0;
+        let cheque = document.getElementById('txt_multi_fp_cheque').value || 0;
+
+        try {
+            total = Number(efectivo) + Number(deposito) + Number(tarjeta) + Number(cheque);
+        } catch (error) {
+            total = 0;
+        }
+        
+        document.getElementById('lb_multi_total_recibo').innerText = funciones.setMoneda(total,'Q');
+
+        resolve(total);
+        
+    })
+
+};
+function data_cxc_clientes(){
+
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/cxc/listado_clientes', {empnit:GlobalEmpnit,codven:GlobalCodUsuario})
+        .then((response) => {
+            if(response.status.toString()=='200'){
+                let data = response.data;
+                if(Number(data.rowsAffected[0])>0){
+                    resolve(data);             
+                }else{
+                    reject();
+                }            
+            }else{
+                reject();
+            }             
+        }, (error) => {
+            reject();
+        });
+    }) 
+};
+function tbl_clientes_saldo(){
+
+    let container = document.getElementById('tbl_multi_data_clientes');
+    container.innerHTML = GlobalLoader;
+
+    data_cxc_clientes()
+    .then((data)=>{
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `
+                <tr class="hand"
+                    onclick="nuevo_cobro_multiple_cliente('${r.CODCLIE}')">
+                    <td>${r.NOMCLIE}
+                        <br>
+                        <small>NIT: ${r.NIT}</small>
+                    </td>
+                    <td>${funciones.limpiarTexto(r.DIRCLIENTE)}</td>
+                    <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
+                </tr>
+            `
+        })
+        container.innerHTML = str;
+    })
+    .catch(()=>{
+        container.innerHTML = '';
+    })
+
+};
+
+function nuevo_cobro_multiple_cliente(codclie){
+
+    document.getElementById('tab-cinco').click();
+
+
+
+
+};
+
+function get_total_abonos_cliente(){
+
+    let total = 0;
+
+
+
+
+
+    return total;
+
 }
