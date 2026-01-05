@@ -44,7 +44,7 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                     ${totalcosto} AS TOTALCOSTO,
 	                ${totalprecio} AS TOTALPRECIO,
                     CODEMBARQUE,
-                    'O' AS STATUS,
+                    'P' AS STATUS,
                     'CON' AS CONCRE,
                     '${usuario}' AS USUARIO,
 	                0 AS CORTE,
@@ -140,7 +140,7 @@ router.post("/insert_recibo_factura_multiple", async(req,res)=>{
                     ${totalcosto} AS TOTALCOSTO,
 	                ${totalprecio} AS TOTALPRECIO,
                     CODEMBARQUE,
-                    'O' AS STATUS,
+                    'P' AS STATUS,
                     'CON' AS CONCRE,
                     '${usuario}' AS USUARIO,
 	                0 AS CORTE,
@@ -319,6 +319,38 @@ router.post("/abonos_factura", async(req,res)=>{
      
 });
 
+
+router.post("/pagos_pendientes_autorizacion", async(req,res)=>{
+
+    const{sucursal,codven} = req.body;
+
+    let qry = `
+        SELECT  DOCUMENTOS.FECHA, 
+                DOCUMENTOS.CODDOC, 
+                DOCUMENTOS.CORRELATIVO, 
+                DOCUMENTOS.CODCLIENTE AS CODCLIE, 
+                DOCUMENTOS.DOC_NIT AS NIT, 
+                DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, 
+                DOCUMENTOS.DOC_DIRCLIE AS DIRCLIE, 
+                DOCUMENTOS.TOTALPRECIO, 
+                DOCUMENTOS.FPAGO_EFECTIVO, 
+                DOCUMENTOS.FPAGO_TARJETA, 
+                DOCUMENTOS.FPAGO_DEPOSITO, 
+                DOCUMENTOS.FPAGO_CHEQUE, 
+                DOCUMENTOS.FPAGO_DESCRIPCION
+        FROM  DOCUMENTOS LEFT OUTER JOIN
+                TIPODOCUMENTOS ON DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC 
+                AND DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT
+        WHERE  (DOCUMENTOS.EMPNIT = '${sucursal}') AND 
+            (DOCUMENTOS.CODVEN = ${codven}) AND 
+            (DOCUMENTOS.STATUS = 'P') AND 
+            (TIPODOCUMENTOS.TIPODOC = 'PRC')
+    `
+    
+  
+     execute.Query(res,qry);
+     
+});
 
 
 

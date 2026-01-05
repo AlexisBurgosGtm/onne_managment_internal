@@ -260,6 +260,13 @@ function getView(){
 
                 </div>
             </div>
+
+
+            <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
+            onclick="document.getElementById('tab-uno').click()">
+                <i class="fal fa-arrow-left"></i>
+            </button>
+
             `
         },
         vista_cliente_facturas:()=>{
