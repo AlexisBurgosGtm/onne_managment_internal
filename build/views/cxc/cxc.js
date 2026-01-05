@@ -21,6 +21,9 @@ function getView(){
                         </div> 
                         <div class="tab-pane fade" id="seis" role="tabpanel" aria-labelledby="home-tab">
                             ${view.vista_cobro_multiple()}
+                        </div>
+                        <div class="tab-pane fade" id="siete" role="tabpanel" aria-labelledby="home-tab">
+                            ${view.vista_lista_recibos()}
                         </div>    
                     </div>
 
@@ -41,10 +44,18 @@ function getView(){
                             <a class="nav-link negrita text-danger" id="tab-cuatro" data-toggle="tab" href="#cuatro" role="tab" aria-controls="home" aria-selected="true">
                                 <i class="fal fa-comments"></i></a>
                         </li> 
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link negrita text-danger" id="tab-cinco" data-toggle="tab" href="#cinco" role="tab" aria-controls="home" aria-selected="true">
                                 <i class="fal fa-comments"></i></a>
-                        </li>         
+                        </li>   
+                        <li class="nav-item">
+                            <a class="nav-link negrita text-danger" id="tab-seis" data-toggle="tab" href="#seis" role="tab" aria-controls="home" aria-selected="true">
+                                <i class="fal fa-comments"></i></a>
+                        </li>       
+                        <li class="nav-item">
+                            <a class="nav-link negrita text-danger" id="tab-siete" data-toggle="tab" href="#siete" role="tab" aria-controls="home" aria-selected="true">
+                                <i class="fal fa-comments"></i></a>
+                        </li>     
                     </ul>
                 </div>
                
@@ -64,6 +75,10 @@ function getView(){
                 </div>
             </div>
 
+            <button class="btn btn-warning btn-bottom-l btn-circle btn-xl hand shadow"
+            id="btnListadoRecibos">
+                <i class="fal fa-list"></i>
+            </button>
 
             
             <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow"
@@ -498,6 +513,29 @@ function getView(){
             onclick="document.getElementById('tab-uno').click()">
                 <i class="fal fa-arrow-left"></i>
             </button>
+            `
+        },
+        vista_lista_recibos:()=>{
+            return `
+            <div class="card card-rounded shadow">
+                <div class="card-body p-2">
+                    
+                    <h4 class="negrita text-danger">Documentos de Pago Emitidos</h4>
+                    
+                    <div class="table-responsive col-12">
+                        
+
+                       
+                    </div>
+                    
+                </div>
+            </div>
+
+            <button class="btn btn-secondary btn-bottom-l btn-circle btn-xl hand shadow"
+            onclick="document.getElementById('tab-uno').click()">
+                <i class="fal fa-arrow-left"></i>
+            </button>
+
             `
         },
         modal_camara:()=>{
@@ -1024,6 +1062,15 @@ function insert_data_cxc(){
 
 function listeners_cobro_multiple(){
 
+    
+    document.getElementById('btnListadoRecibos').addEventListener('click',()=>{
+
+        document.getElementById('tab-siete').click();
+
+        tbl_lista_recibos();
+
+    })
+
 
         classTipoDocumentos.comboboxTipodoc('PRC','cmb_multi_coddoc')
         .then(()=>{
@@ -1233,3 +1280,10 @@ function get_total_abonos_cliente(){
     return total;
 
 }
+
+
+
+function tbl_lista_recibos(){
+
+
+};

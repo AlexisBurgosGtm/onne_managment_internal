@@ -211,6 +211,41 @@ router.post("/listado", async(req,res)=>{
     const{empnit,codven} = req.body;
 
     let qry = `
+            SELECT 
+                DOCUMENTOS.DOC_NIT AS NIT, 
+                DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, 
+                ISNULL(CLIENTES.DIRCLIENTE, 'CIUDAD') AS DIRCLIE, 
+                DOCUMENTOS.FECHA, 
+                DOCUMENTOS.CODDOC, 
+                DOCUMENTOS.CORRELATIVO, 
+                DOCUMENTOS.TOTALPRECIO AS IMPORTE, 
+                ISNULL(DOCUMENTOS.TOTALPRECIO, 0) - ISNULL(DOCUMENTOS.DOC_ABONO, 0) AS SALDO, 
+                DOCUMENTOS.DOC_ABONO AS ABONOS, 
+                DOCUMENTOS.CODCLIENTE, 
+                DOCUMENTOS.VENCIMIENTO AS VENCE, 
+                DOCUMENTOS.FEL_SERIE, 
+                DOCUMENTOS.FEL_NUMERO, DOCUMENTOS.FEL_FECHA
+            FROM  RUTAS RIGHT OUTER JOIN
+                CLIENTES ON RUTAS.CODRUTA = CLIENTES.CODRUTA AND RUTAS.EMPNIT = CLIENTES.EMPNIT RIGHT OUTER JOIN
+                DOCUMENTOS ON CLIENTES.EMPNIT = DOCUMENTOS.EMPNIT AND CLIENTES.CODCLIENTE = DOCUMENTOS.CODCLIENTE LEFT OUTER JOIN
+                TIPODOCUMENTOS ON DOCUMENTOS.EMPNIT = TIPODOCUMENTOS.EMPNIT AND DOCUMENTOS.CODDOC = TIPODOCUMENTOS.CODDOC
+            WHERE 
+                (RUTAS.CODEMPLEADO = ${codven}) AND   
+                (TIPODOCUMENTOS.TIPODOC IN ('FAC', 'FEF', 'FES', 'FEC', 'FPC', 'FCP')) 
+                    AND (DOCUMENTOS.CONCRE = 'CRE') AND (DOCUMENTOS.DOC_SALDO > 0.01) 
+                    AND (DOCUMENTOS.EMPNIT = '${empnit}') AND (DOCUMENTOS.STATUS <> 'A') 
+        ORDER BY DOCUMENTOS.VENCIMIENTO DESC;
+    `
+    
+    
+     execute.Query(res,qry);
+     
+});
+router.post("/BACKUP_listado", async(req,res)=>{
+
+    const{empnit,codven} = req.body;
+
+    let qry = `
        SELECT DOCUMENTOS.DOC_NIT AS NIT, 
                     DOCUMENTOS.DOC_NOMCLIE AS NOMCLIE, 
                     ISNULL(CLIENTES.DIRCLIENTE,'CIUDAD') AS DIRCLIE, 
