@@ -81,7 +81,7 @@ function getView(){
             </button>
 
             
-            <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow"
+            <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow hidden"
             id="btnNuevoCobroMultiple">
                 <i class="fal fa-plus"></i>
             </button>
@@ -523,11 +523,24 @@ function getView(){
                     <h4 class="negrita text-danger">Documentos de Pago Emitidos</h4>
                     
                     <div class="table-responsive col-12">
-                        
 
-                       
+                        <table class="table table-bordered h-full col-12">
+                            <thead class="bg-base text-white">
+                                <tr>
+                                    <td>DOCUMENTO</td>
+                                    <td>FECHA</td>
+                                    <td>CLIENTE</td>
+                                    <td>IMPORTE</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_data_recibos">
+                            </tbody>
+                        </table>
+
                     </div>
-                    
+
                 </div>
             </div>
 

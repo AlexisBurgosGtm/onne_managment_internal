@@ -1,4 +1,4 @@
-const DbName = "onne_managment_v4";
+const DbName = "onne_managment_v5";
 
 var tblDocumentos = {
     name: 'documentos',

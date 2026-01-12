@@ -35,13 +35,6 @@ InicializarServiceWorkerNotif();
 
 
 
-// LISTENER DE LOS BOTONES DEL MENU
-/*
-let btnMenuInicioSalir = document.getElementById('btnMenuInicioSalir');
-btnMenuInicioSalir.addEventListener('click',()=>{
-    classNavegar.login();
-});
-*/
 
 
 // LISTENER DEL BOTON PARA CERRAR EL MODAL DEL MENU LATERAL

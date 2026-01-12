@@ -50,7 +50,11 @@ const FEL_URL_CUI = "https://felcloud-instance-three.feel.com.gt/api/v2/servicio
 
 
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+
+app.use(express.json({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb', extended: true}));
+
 
 app.use(express.static('build'));
 
