@@ -384,11 +384,33 @@ router.post("/pagos_pendientes_autorizacion", async(req,res)=>{
     
   
     console.log(qry)
+
+     execute.Query(res,qry);
+     
+});
+router.post("/delete_recibo_pago", async(req,res)=>{
+
+    const{sucursal,coddoc,correlativo} = req.body;
+
+    let qry = `
+        DELETE FROM DOCUMENTOS 
+             WHERE EMPNIT='${sucursal}' AND 
+                        CODDOC='${coddoc}' AND 
+                        CORRELATIVO=${correlativo};
+        DELETE FROM DOCUMENTOS_FACTURAS_ABONADAS
+            WHERE EMPNIT='${sucursal}' AND 
+                        CODDOC='${coddoc}' AND 
+                        CORRELATIVO=${correlativo};
+        DELETE FROM DOCUMENTOS_FOTOS
+            WHERE EMPNIT='${sucursal}' AND 
+                        CODDOC='${coddoc}' AND 
+                        CORRELATIVO=${correlativo};
+        `
+    
     
      execute.Query(res,qry);
      
 });
-
 
 
 

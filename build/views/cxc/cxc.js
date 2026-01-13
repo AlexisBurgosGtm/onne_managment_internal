@@ -523,8 +523,15 @@ function getView(){
                     <h4 class="negrita text-danger">Documentos de Pago Emitidos</h4>
                     
                     <div class="table-responsive col-12">
+                        
+                        <div class="form-group">
+                            <label>Escriba para buscar...</label>
+                            <input type="text" class="form-control" placeholder="Escriba para buscar..."
+                            id="txtBuscarRecibo"
+                            oninput="funciones.FiltrarTabla('tbl_recibos','txtBuscarRecibo')">
+                        </div>
 
-                        <table class="table table-bordered h-full col-12">
+                        <table class="table table-bordered h-full col-12" id="tbl_recibos">
                             <thead class="bg-onne text-white">
                                 <tr>
                                     <td>DOCUMENTO</td>
@@ -1076,7 +1083,7 @@ function insert_data_cxc(){
     
     
 
-}
+};
 
 
 function listeners_cobro_multiple(){
@@ -1162,26 +1169,18 @@ function listeners_cobro_multiple(){
         });
 
 
-
-
         document.getElementById('btnSiguienteCobroMultiple').addEventListener('click',()=>{
-
             
-            
-            document.getElementById('tab-seis').click();
+                document.getElementById('tab-seis').click();
 
-            if(get_total_abonos_cliente()==0){
-                funciones.AvisoError('Indique el monto abonado a cada documento');
-                return;
-            }
-
-
-
-
-
-
+                if(get_total_abonos_cliente()==0){
+                    funciones.AvisoError('Indique el monto abonado a cada documento');
+                    return;
+                }
 
         });
+
+
 
 };
 function nuevo_cobro_multiple(){
@@ -1317,7 +1316,7 @@ function tbl_lista_recibos(){
                     <td>${r.CODDOC}-${r.CORRELATIVO}</td>
                     <td>${funciones.convertDateNormal(r.FECHA)}</td>
                     <td>${r.NOMCLIE}</td>
-                    <td>${funciones.setMoneda(r.TOTALPRECIO,'Q')}}</td>
+                    <td>${funciones.setMoneda(r.TOTALPRECIO,'Q')}</td>
                     <td>
                         <button class="btn btn-primary btn-md btn-circle hand shadow"
                         onclick="fcn_abrir_ticket_pago('${GlobalEmpnit}','${r.CODDOC}','${r.CORRELATIVO}')">
@@ -1348,7 +1347,45 @@ function tbl_lista_recibos(){
 function fcn_abrir_ticket_pago(sucursal,coddoc,correlativo){
 
     let url = `${window.location.origin.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}`;
-    console.log(url)
+   
     window.open( url, '_blank');
+
+};
+
+function eliminar_recibo_pago(sucursal,coddoc,correlativo,idbtn){
+
+    let btn = document.getElementById(idbtn);
+
+    funciones.Confirmacion('¿Está seguro que desea ELIMINAR este recibo de pago?')
+    .then((value)=>{
+        if(value==true){
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fal fa-trash fa-spin"></i>`;
+
+
+            GF.cxc_delete_recibo_pago(coddoc,correlativo)
+            .then(()=>{
+
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fal fa-trash"></i>`;
+
+                funciones.Aviso('Documento Eliminado Exitosamente!!');
+
+                tbl_lista_recibos();                
+
+            })
+            .catch(()=>{
+                
+                funciones.AvisoError('El documento no se pudo ELIMINAR');
+
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fal fa-trash"></i>`;
+
+            })
+
+
+        }
+    })
 
 };

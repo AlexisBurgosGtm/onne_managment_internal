@@ -170,5 +170,30 @@ let GF = {
             });
         })     
     },
+    cxc_delete_recibo_pago:(coddoc,correlativo)=>{
+        return new Promise((resolve,reject)=>{
+    
+            axios.post(GlobalUrlCalls + '/cxc/delete_recibo_pago',
+                {
+                    sucursal:GlobalEmpnit,
+                    coddoc:coddoc,
+                    correlativo:correlativo
+                })
+            .then((response) => {
+                if(response.status.toString()=='200'){
+                    let data = response.data;
+                    if(Number(data.rowsAffected[0])>0){
+                        resolve(data);             
+                    }else{
+                        reject();
+                    }            
+                }else{
+                    reject();
+                }             
+            }, (error) => {
+                reject();
+            });
+        })     
+    },
 };
 
