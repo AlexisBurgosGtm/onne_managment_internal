@@ -1347,7 +1347,7 @@ function tbl_lista_recibos(){
 
 function fcn_abrir_ticket_pago(sucursal,coddoc,correlativo){
 
-    let url = `${window.location.hostname.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}`;
+    let url = `${window.location.origin.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}`;
     console.log(url)
     window.open( url, '_blank');
 
