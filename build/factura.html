@@ -85,6 +85,7 @@
                                     </div>
                                     <div class="border-top textbox-info">
                                         <p class="f-left"><strong>RECIBO No.</strong></p>
+                                        <p class="f-left" id="lbNodocpago"></p>
                                         <p class="f-right" id="lbDocumento">-- --</p>
                                     </div>
                                     <div class="textbox-info">
@@ -110,6 +111,7 @@
                                     <table style="margin-top: 25px !important" class="border-bottom width-100 table-f-12 mb-10">
                                         <thead class="border-bottom-dotted">
                                             <tr>
+                                                <th class="description" width="30%">Doc.Interno</th>
                                                 <th class="description" width="30%">Factura</th>
                                                 <th class="quantity text-right">Fecha</th>
                                                 <th class="price text-right">Abono</th>
@@ -389,6 +391,9 @@
             let fpago_cheque = '';
             let fpago_descripcion = '';
 
+            let nodocpago = '';
+            let obs = '';
+
             let tbl = document.getElementById('tblDataDetalle');
             tbl.innerHTML = 'Cargando datos...';
 
@@ -407,9 +412,12 @@
                     fpago_tarjeta = funciones.setMoneda(r.FPAGO_TARJETA,'Q');
                     fpago_cheque = funciones.setMoneda(r.FPAGO_CHEQUE,'Q');
                     fpago_descripcion = r.FPAGO_DESCRIPCION;
+                    nodocpago = r.NODOCPAGO;
+                    obs = funciones.limpiarTexto(r.OBS);
 
                     str += `
                         <tr>
+                            <td class="description">${r.CODDOC_FAC}-${r.CORRELATIVO_FAC}</td>
                             <td class="description">${r.FEL_SERIE} - ${r.FEL_NUMERO}</td>
                             <td class="quantity text-right">${funciones.convertDateNormal3(r.FECHA_FAC)}</td>
                             <td class="price text-right">${funciones.setMoneda(r.ABONO,'Q')}</td>
@@ -430,6 +438,7 @@
             document.getElementById('lbFpagoCheque').innerText = fpago_cheque;
             document.getElementById('lbFpagoTotal').innerText = totalprecio;
             document.getElementById('lbFpagoDescripcion').innerText = fpago_descripcion;
+            document.getElementById('lbNodocpago').innerText = nodocpago;
 
 
     })

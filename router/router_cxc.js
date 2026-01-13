@@ -348,7 +348,7 @@ router.post("/abonos_factura", async(req,res)=>{
 
     `
     
-    console.log(qry);
+    
     
      execute.Query(res,qry);
      
@@ -383,7 +383,7 @@ router.post("/pagos_pendientes_autorizacion", async(req,res)=>{
     `
     
   
-    console.log(qry)
+ 
 
      execute.Query(res,qry);
      

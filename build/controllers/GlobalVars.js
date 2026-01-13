@@ -1,4 +1,4 @@
-let versionapp = 'mod 13.01.2026:2';
+let versionapp = 'mod 13.01.2026:3';
 
 
 let GlobalServerUrl = '';
