@@ -105,16 +105,7 @@ app.get("/factura",function(req,res){
 	res.sendFile(factura);
 
 }); 
-app.post("/factura",function(req,res){
 
-    const {sucursal,coddoc,correlativo} = req.body;
-
-
-
-
-
-
-}); 
 
 
 
@@ -177,7 +168,7 @@ app.use('/documentos', router_documentos);
 app.use("/",router);
 
 app.use("*",function(req,res){
-  //res.redirect('/');
+  res.redirect('/');
   //res.send('<h1 class="text-danger">NO DISPONIBLE</h1>');
 });
 

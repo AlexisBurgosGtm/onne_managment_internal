@@ -383,6 +383,8 @@ router.post("/pagos_pendientes_autorizacion", async(req,res)=>{
     `
     
   
+    console.log(qry)
+    
      execute.Query(res,qry);
      
 });

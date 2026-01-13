@@ -146,5 +146,29 @@ let GF = {
             });
         })     
     },
+    data_cxc_recibos_pago_pendientes_autorizar:(codemp)=>{
+        return new Promise((resolve,reject)=>{
+    
+            axios.post(GlobalUrlCalls + '/cxc/pagos_pendientes_autorizacion',
+                {
+                    sucursal:GlobalEmpnit,
+                    codven:codemp
+                })
+            .then((response) => {
+                if(response.status.toString()=='200'){
+                    let data = response.data;
+                    if(Number(data.rowsAffected[0])>0){
+                        resolve(data);             
+                    }else{
+                        reject();
+                    }            
+                }else{
+                    reject();
+                }             
+            }, (error) => {
+                reject();
+            });
+        })     
+    },
 };
 

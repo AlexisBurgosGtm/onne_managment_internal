@@ -1304,28 +1304,51 @@ function get_total_abonos_cliente(){
 
 function tbl_lista_recibos(){
 
-    let container = document.getElementById('tbl_data_recibos');
-    container.innerHTML = GlobalLoader;
-    
+        let container = document.getElementById('tbl_data_recibos');
+        container.innerHTML = GlobalLoader;
+        
+        GF.data_cxc_recibos_pago_pendientes_autorizar(GlobalCodUsuario)
+        .then((data)=>{
+            let str = '';
+            data.recordset.map((r)=>{
+                let btnElim = `btnElimn${r.CODDOC}-${r.CORRELATIVO}`
+                str += `
+                <tr>
+                    <td>${r.CODDOC}-${r.CORRELATIVO}</td>
+                    <td>${funciones.convertDateNormal(r.FECHA)}</td>
+                    <td>${r.NOMCLIE}</td>
+                    <td>${funciones.setMoneda(r.TOTALPRECIO,'Q')}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-md btn-circle hand shadow"
+                        onclick="fcn_abrir_ticket_pago('${GlobalEmpnit}','${r.CODDOC}','${r.CORRELATIVO}')">
+                            <i class="fal fa-print"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-md btn-circle hand shadow" id="${btnElim}"
+                        onclick="eliminar_recibo_pago('${GlobalEmpnit}','${r.CODDOC}','${r.CORRELATIVO}','${btnElim}')">
+                            <i class="fal fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                `
+            })
+            container.innerHTML = str;
+        })
+        .catch((error)=>{
+            console.log(error)
+            container.innerHTML = 'No se cargaron datos...';
+        })
 
-    `
-    <tr>
-        <td>DOCUMENTO</td>
-        <td>FECHA</td>
-        <td>CLIENTE</td>
-        <td>IMPORTE</td>
-        <td></td>
-        <td></td>
-    </tr>
-    `
-
-    
+  
 
 };
 
 
 function fcn_abrir_ticket_pago(sucursal,coddoc,correlativo){
 
-    window.open(`${window.location.href.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}` , '_blank');
+    let url = `${window.location.hostname.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}`;
+    console.log(url)
+    window.open( url, '_blank');
 
 };
