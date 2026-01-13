@@ -525,7 +525,7 @@ function getView(){
                     <div class="table-responsive col-12">
 
                         <table class="table table-bordered h-full col-12">
-                            <thead class="bg-base text-white">
+                            <thead class="bg-onne text-white">
                                 <tr>
                                     <td>DOCUMENTO</td>
                                     <td>FECHA</td>
@@ -690,6 +690,12 @@ function listeners_cobro_individual(){
                                                     btnGuardarCobro.disabled = false;
                                                     btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
                                                     funciones.Aviso('Documento creado exitosamente!!');
+
+                                                    let coddoc = document.getElementById('cmb_factura_coddoc').value;
+                                                    let correlativo = document.getElementById('txt_factura_correlativo').value;
+
+                                                    fcn_abrir_ticket_pago(GlobalEmpnit,coddoc,correlativo);
+
                                                     document.getElementById('tab-uno').click();
                                                     get_tbl_cxc();
                                                 })
@@ -1298,5 +1304,28 @@ function get_total_abonos_cliente(){
 
 function tbl_lista_recibos(){
 
+    let container = document.getElementById('tbl_data_recibos');
+    container.innerHTML = GlobalLoader;
+    
+
+    `
+    <tr>
+        <td>DOCUMENTO</td>
+        <td>FECHA</td>
+        <td>CLIENTE</td>
+        <td>IMPORTE</td>
+        <td></td>
+        <td></td>
+    </tr>
+    `
+
+    
+
+};
+
+
+function fcn_abrir_ticket_pago(sucursal,coddoc,correlativo){
+
+    window.open(`${window.location.href.toString()}/factura?sucursal=${sucursal}&coddoc=${coddoc}&correlativo=${correlativo}` , '_blank');
 
 };

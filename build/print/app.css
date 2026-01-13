@@ -1027,3 +1027,6 @@ table.table-text-center td, table.table-text-center th{
 .jstree-hovered .tree-actions {
   display: inherit;
 }
+.negrita2 {
+  font-weight: bold;
+}

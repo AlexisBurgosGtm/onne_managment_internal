@@ -27,6 +27,8 @@ var router_fel = require('./router/routerFEL');
 var router_reportes = require('./router/router_reportes');
 var router_cxc = require('./router/router_cxc');
 var router_crm = require('./router/router_crm');
+var router_documentos = require('./router/router_documentos');
+
 
 var http = require('http').Server(app);
 //var io = require('socket.io')(http);
@@ -166,12 +168,16 @@ app.use('/cxc', router_cxc);
 
 app.use('/crm', router_crm);
 
+app.use('/documentos', router_documentos);
+
+
+
 
 
 app.use("/",router);
 
 app.use("*",function(req,res){
-  res.redirect('/');
+  //res.redirect('/');
   //res.send('<h1 class="text-danger">NO DISPONIBLE</h1>');
 });
 
