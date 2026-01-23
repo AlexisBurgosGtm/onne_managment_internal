@@ -14,7 +14,8 @@ router.get("/login",async(req,res)=>{
             CODTIPOEMPLEADO AS TIPO, 
             WHATSAPP AS CODDOC, 
             EMPNIT AS CODSUCURSAL,
-            0 AS OBJETIVO 
+            0 AS OBJETIVO,
+            ISNULL(CODDOC_REC,'') AS CODDOC_REC 
         FROM EMPLEADOS 
             WHERE EMPNIT='${codsucursal}' 
                 AND NOMEMPLEADO='${user}' 

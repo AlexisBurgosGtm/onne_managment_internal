@@ -1,4 +1,4 @@
-let versionapp = 'mod 13.01.2026:4';
+let versionapp = 'mod 23.01.2026:0';
 
 
 let GlobalServerUrl = '';
@@ -47,6 +47,7 @@ let GlobalSelectedId;
 let GlobalSelectedCodigo;
 let GlobalSelectedFecha;
 let GlobalCoddoc = 'PED01';
+let GlobalCoddocRec = '';
 let GlobalTotalDocumento = 0;
 let GlobalTotalCostoDocumento = 0;
 let GlobalCodBodega = '01';

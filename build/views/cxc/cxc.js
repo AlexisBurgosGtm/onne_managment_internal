@@ -620,6 +620,160 @@ function addListeners(){
 
 function listeners_cobro_individual(){
 
+
+    document.getElementById('cmb_factura_coddoc').innerHTML = `<option value='${GlobalCoddocRec}'>${GlobalCoddocRec}</option>`;
+            classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
+            .then((correlativo)=>{
+                document.getElementById('txt_factura_correlativo').value = correlativo;
+            })
+            .catch(()=>{
+                document.getElementById('txt_factura_correlativo').value = '0';
+            })
+    
+
+
+       
+
+
+        document.getElementById('txt_factura_fp_efectivo').addEventListener('input',()=>{
+            get_total_fpago()
+        });
+
+        document.getElementById('txt_factura_fp_deposito').addEventListener('input',()=>{
+            get_total_fpago()
+        });
+
+        document.getElementById('txt_factura_fp_tarjeta').addEventListener('input',()=>{
+            get_total_fpago()
+        });
+        
+        document.getElementById('txt_factura_fp_cheque').addEventListener('input',()=>{
+            get_total_fpago()
+        });
+
+
+        let btnGuardarCobro = document.getElementById('btnGuardarCobro');
+        btnGuardarCobro.addEventListener('click',()=>{
+
+
+          
+
+                funciones.Confirmacion('¿Está seguro que desea CREAR este nuevo Recibo de Pago?')
+                .then((value)=>{
+                    if(value==true){
+
+                                get_total_fpago()
+                                .then((total)=>{
+                                        if(Number(total)==0){
+                                            funciones.AvisoError('Escriba el monto pagado');
+                                        }else{
+
+                                            btnGuardarCobro.disabled = true;
+                                            btnGuardarCobro.innerHTML = `<i class="fal fa-spin fa-save"></i>`;
+
+                                            funciones.showToast('Cargando correlativo');
+
+                                            get_correlativo_recibos()
+                                            .then(()=>{
+
+                                                if(document.getElementById('cmb_factura_coddoc').value.toString()==''){
+                                                         funciones.AvisoError('Revise el correlativo de su recibo');
+                                                        btnGuardarCobro.disabled = false;
+                                                        btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
+                                                        return;
+                                                };
+                                                if(document.getElementById('txt_factura_correlativo').value.toString()=='0'){
+                                                         funciones.AvisoError('Revise el correlativo de su recibo');
+                                                        btnGuardarCobro.disabled = false;
+                                                        btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
+                                                        return;
+                                                };
+
+                                                btnGuardarCobro.disabled = true;
+                                                btnGuardarCobro.innerHTML = `<i class="fal fa-spin fa-save"></i>`;
+
+                                                insert_data_cxc()
+                                                .then(()=>{
+                                                    btnGuardarCobro.disabled = false;
+                                                    btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
+                                                    funciones.Aviso('Documento creado exitosamente!!');
+
+                                                    let coddoc = document.getElementById('cmb_factura_coddoc').value;
+                                                    let correlativo = document.getElementById('txt_factura_correlativo').value;
+
+                                                  
+
+                                                    fcn_abrir_ticket_pago(GlobalEmpnit,coddoc,correlativo);
+
+                                                    document.getElementById('tab-uno').click();
+                                                    get_tbl_cxc();
+                                                })
+                                                .catch(()=>{
+                                                    funciones.AvisoError('No se pudo crear el recibo de pago');
+                                                    btnGuardarCobro.disabled = false;
+                                                    btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
+                                                    
+                                                })
+                                                
+                                            })
+                                            .catch(()=>{
+                                                funciones.AvisoError('No se pudo obtener el correlativo de recibos, revise su conexion a internet');
+                                                btnGuardarCobro.disabled = false;
+                                                btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
+                                            })
+
+                                            
+
+
+
+                                        };
+
+
+                                })
+
+
+
+                        
+
+
+                    }
+                })
+
+          
+
+        });
+
+
+      
+        
+        document.getElementById('txt_factura_foto').addEventListener('change',()=>{
+
+            const image = document.getElementById('txt_factura_foto').files[0];
+    
+            if (image !== undefined) {
+                const fileReader = new FileReader();
+                
+                fileReader.addEventListener('load', function () {
+                    const imgEl = document.getElementById('img_factura_foto');
+                    imgEl.src = this.result;
+                    imgEl.alt = 'La imagen no cargado correctamente.';
+                    
+                });    
+                
+                fileReader.readAsDataURL(image);
+            }else{
+                document.getElementById('img_factura_foto').src = '';
+            }
+        });
+
+
+
+};
+
+function BACKUP_listeners_cobro_individual(){
+
+
+    
       classTipoDocumentos.comboboxTipodoc('PRC','cmb_factura_coddoc')
         .then(()=>{
             classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)

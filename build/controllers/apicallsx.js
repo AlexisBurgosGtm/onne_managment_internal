@@ -69,6 +69,7 @@ let apigen = {
                             GlobalPassUsuario = pass;
                             GlobalTipoUsuario = rows.TIPO;
                             GlobalCoddoc= rows.CODDOC;
+                            GlobalCoddocRec= rows.CODDOC_REC;
                             GlobalCodSucursal = sucursal;
                             GlobalSistema = sucursal;
                             GlobalEmpnit = sucursal;
