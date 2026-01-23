@@ -155,7 +155,7 @@ function getView(){
                                     <div class="input-group">
                                         <select classs="form-control negrita" id="cmb_factura_coddoc">
                                         </select>
-                                        <input type="number" class="form-control negrita" disabled="true" id="txt_factura_correlativo">
+                                        <input type="number" class="form-control negrita" disabled id="txt_factura_correlativo">
                                     </div>
                             </div>
                             
