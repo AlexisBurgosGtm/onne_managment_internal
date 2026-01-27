@@ -1,4 +1,4 @@
-const DbName = "onne_managment_v5";
+const DbName = "onne_managment_v6";
 
 var tblDocumentos = {
     name: 'documentos',
@@ -165,12 +165,14 @@ var tbl_temp_cxc = {
         ID:{ primaryKey: true, autoIncrement: true },
         CODSUCURSAL:{dataType: "string"},
         CODDOC:{dataType: "string"},
-        CORRELATIVO:{dataType: "string"},
+        CORRELATIVO:{dataType: "number"},
         FECHA:{dataType: "string"},
         VENCE:{dataType: "string"},
         IMPORTE:{dataType: "number"},
         SALDO:{dataType: "number"},
-        ABONO:{dataType: "number"}
+        ABONO:{dataType: "number"},
+        FEL_SERIE:{dataType: "string"},
+        FEL_NUMERO:{dataType: "string"}
     }
 };
 

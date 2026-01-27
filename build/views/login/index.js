@@ -77,6 +77,7 @@ function getView(){
             <div class="col-md-4 col-sm-12 col-lg-4 col-lx-4"></div>
         </div>
 
+        <div id="app"></div>
        
         <div class="form-group" align="right">
             <small class="">Onne Managment - ${versionapp}</small>
@@ -97,7 +98,7 @@ function getView(){
 
 function addListeners(){
     
-    console.log('iniciando login... ');
+   
     
     let frmLogin = document.getElementById('frmLogin');
     let btnIniciar = document.getElementById('btnIniciar');
@@ -145,6 +146,8 @@ function InicializarVista(){
 
    //getCredenciales();
  
+
+
 
 };
 

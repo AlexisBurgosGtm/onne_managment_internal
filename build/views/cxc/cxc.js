@@ -80,6 +80,12 @@ function getView(){
                 <i class="fal fa-list"></i>
             </button>
 
+
+            <button class="btn btn-outline-secondary btn-bottom-middle btn-circle btn-xl hand shadow"
+            id="btnRecargarLista">
+                <i class="fal fa-sync"></i>
+            </button>
+
             
             <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow hidden"
             id="btnNuevoCobroMultiple">
@@ -89,7 +95,7 @@ function getView(){
         },
         vista_cobro:()=>{
             return `
-            <div class="card card-rounded col-12">
+            <div class="card card-rounded col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <div class="card-body p-4">
 
                     <h3 class="negrita text-secondary">NUEVO COBRO A FACTURA</h3>
@@ -245,8 +251,8 @@ function getView(){
         },
         vista_clientes:()=>{
             return `
-              <div class="card card-rounded col-12">
-                <div class="card-body p-4">
+              <div class="card card-rounded col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="card-body p-2">
 
                     <h3 class="negrita text-secondary">SELECCIONE UN CLIENTE</h3>
 
@@ -287,8 +293,8 @@ function getView(){
         vista_cliente_facturas:()=>{
           
             return `
-             <div class="card card-rounded col-12">
-                <div class="card-body p-4">
+             <div class="card card-rounded col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="card-body p-2">
 
                     <h3 class="negrita text-primary">FACTURAS PENDIENTES DEL CLIENTE</h3>
                     <br>
@@ -324,6 +330,7 @@ function getView(){
                                     <td>SALDO</td>
                                     <td>ABONO</td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody id="tbl_data_facturas_cliente">
@@ -349,7 +356,7 @@ function getView(){
         },
         vista_cobro_multiple:()=>{
             return `
-            <div class="card card-rounded col-12">
+            <div class="card card-rounded col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <div class="card-body p-4">
 
                     <h3 class="negrita text-secondary">NUEVO COBRO A MULTIPLES FACTURAS</h3>
@@ -609,7 +616,10 @@ function addListeners(){
         get_tbl_cxc();
 
 
-    
+
+        document.getElementById('btnRecargarLista').addEventListener('click',()=>{
+            get_tbl_cxc();
+        });
 
         
         listeners_cobro_individual();
@@ -770,157 +780,7 @@ function listeners_cobro_individual(){
 
 };
 
-function BACKUP_listeners_cobro_individual(){
 
-
-    
-      classTipoDocumentos.comboboxTipodoc('PRC','cmb_factura_coddoc')
-        .then(()=>{
-            classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
-            .then((correlativo)=>{
-                document.getElementById('txt_factura_correlativo').value = correlativo;
-            })
-            .catch(()=>{
-                document.getElementById('txt_factura_correlativo').value = '0';
-            })
-        })
-        .catch(()=>{
-            document.getElementById('txt_factura_correlativo').value = '0';
-        });
-
-
-        document.getElementById('cmb_factura_coddoc').addEventListener('change',()=>{
-            
-                classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
-                .then((correlativo)=>{
-                    document.getElementById('txt_factura_correlativo').value = correlativo;
-                })
-                .catch(()=>{
-                    document.getElementById('txt_factura_correlativo').value = '0';
-                })
-
-        });
-
-
-        document.getElementById('txt_factura_fp_efectivo').addEventListener('input',()=>{
-            get_total_fpago()
-        });
-
-        document.getElementById('txt_factura_fp_deposito').addEventListener('input',()=>{
-            get_total_fpago()
-        });
-
-        document.getElementById('txt_factura_fp_tarjeta').addEventListener('input',()=>{
-            get_total_fpago()
-        });
-        
-        document.getElementById('txt_factura_fp_cheque').addEventListener('input',()=>{
-            get_total_fpago()
-        });
-
-
-        let btnGuardarCobro = document.getElementById('btnGuardarCobro');
-        btnGuardarCobro.addEventListener('click',()=>{
-
-
-          
-
-                funciones.Confirmacion('¿Está seguro que desea CREAR este nuevo Recibo de Pago?')
-                .then((value)=>{
-                    if(value==true){
-
-                                get_total_fpago()
-                                .then((total)=>{
-                                        if(Number(total)==0){
-                                            funciones.AvisoError('Escriba el monto pagado');
-                                        }else{
-
-                                            btnGuardarCobro.disabled = true;
-                                            btnGuardarCobro.innerHTML = `<i class="fal fa-spin fa-save"></i>`;
-
-                                            funciones.showToast('Cargando correlativo');
-
-                                            get_correlativo_recibos()
-                                            .then(()=>{
-
-                                                btnGuardarCobro.disabled = true;
-                                                btnGuardarCobro.innerHTML = `<i class="fal fa-spin fa-save"></i>`;
-
-                                                insert_data_cxc()
-                                                .then(()=>{
-                                                    btnGuardarCobro.disabled = false;
-                                                    btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
-                                                    funciones.Aviso('Documento creado exitosamente!!');
-
-                                                    let coddoc = document.getElementById('cmb_factura_coddoc').value;
-                                                    let correlativo = document.getElementById('txt_factura_correlativo').value;
-
-                                                    fcn_abrir_ticket_pago(GlobalEmpnit,coddoc,correlativo);
-
-                                                    document.getElementById('tab-uno').click();
-                                                    get_tbl_cxc();
-                                                })
-                                                .catch(()=>{
-                                                    funciones.AvisoError('No se pudo crear el recibo de pago');
-                                                    btnGuardarCobro.disabled = false;
-                                                    btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
-                                                    
-                                                })
-                                                
-                                            })
-                                            .catch(()=>{
-                                                funciones.AvisoError('No se pudo obtener el correlativo de recibos, revise su conexion a internet');
-                                                btnGuardarCobro.disabled = false;
-                                                btnGuardarCobro.innerHTML = `<i class="fal fa-save"></i>`;
-                                            })
-
-                                            
-
-
-
-                                        };
-
-
-                                })
-
-
-
-                        
-
-
-                    }
-                })
-
-          
-
-        });
-
-
-      
-        
-        document.getElementById('txt_factura_foto').addEventListener('change',()=>{
-
-            const image = document.getElementById('txt_factura_foto').files[0];
-    
-            if (image !== undefined) {
-                const fileReader = new FileReader();
-                
-                fileReader.addEventListener('load', function () {
-                    const imgEl = document.getElementById('img_factura_foto');
-                    imgEl.src = this.result;
-                    imgEl.alt = 'La imagen no cargado correctamente.';
-                    
-                });    
-                
-                fileReader.readAsDataURL(image);
-            }else{
-                document.getElementById('img_factura_foto').src = '';
-            }
-        });
-
-
-
-};
 
 function get_correlativo_recibos(){
 
@@ -1032,10 +892,15 @@ function get_tbl_cxc(){
         container = document.getElementById('tblDataCxc');
         container.innerHTML = GlobalLoader;
 
-    
+
+    let btnRecargarLista = document.getElementById('btnRecargarLista');
+
+    btnRecargarLista.disabled = true; 
+    btnRecargarLista.innerHTML = `<i class="fal fa-sync fa-spin"></i>`;
 
     get_data_cxc()
     .then((data)=>{
+
         let str = '';
 
                 data.recordset.map((r)=>{
@@ -1044,12 +909,23 @@ function get_tbl_cxc(){
                         <td>${r.CODDOC}-${r.CORRELATIVO}
                             <br>
                             <small>${funciones.convertDateNormal(r.FECHA)}</small>
+                            <br>
+                            <button class="btn btn-sm btn-success hand shadow"
+                            onclick="get_nuevo_abono('${r.CODDOC}','${r.CORRELATIVO}','${r.FEL_SERIE}','${r.FEL_NUMERO}','${funciones.limpiarTexto(r.NOMCLIE)}','${r.IMPORTE}','${r.ABONOS}','${r.SALDO}')">
+                                <i class="fal fa-dollar-sign"></i> Abonar
+                            </button>
                         </td>
                         <td>${r.NOMCLIE}
                             <br>
                             <small>${r.DIRCLIE}</small>
                         </td>
-                        <td>${funciones.convertDateNormal(r.VENCE)}</td>
+                        <td>${funciones.convertDateNormal(r.VENCE)}
+                            <br>
+                             <button class="btn btn-warning btn-sm hand shadow"
+                            onclick="get_listado_abonos('${r.CODDOC}','${r.CORRELATIVO}','${r.NOMCLIE}','${funciones.setMoneda(r.IMPORTE,'Q')}')">
+                                <i class="fal fa-list"></i> Historial
+                            </button>
+                        </td>
                         <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
                         <td>${funciones.setMoneda(r.ABONOS,'Q')}</td>
                         <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
@@ -1070,18 +946,18 @@ function get_tbl_cxc(){
                 })
                  container.innerHTML = str;
 
-       
+                btnRecargarLista.disabled = false; 
+                btnRecargarLista.innerHTML = `<i class="fal fa-sync"></i>`;
 
     })
     .catch(()=>{
+        btnRecargarLista.disabled = false; 
+        btnRecargarLista.innerHTML = `<i class="fal fa-sync"></i>`;
         container.innerHTML = 'No hay datos...'
     })
 
 
 };
-
-
-
 
 
 function get_listado_abonos(coddoc,correlativo,nomclie,importe){
@@ -1097,7 +973,6 @@ function get_listado_abonos(coddoc,correlativo,nomclie,importe){
     get_tbl_abonos(coddoc,correlativo);
 
 };
-
 
 function get_tbl_abonos(coddoc,correlativo){
 
@@ -1139,11 +1014,6 @@ function get_tbl_abonos(coddoc,correlativo){
 
 };
 
-
-
-
-
-
 function get_nuevo_abono(coddoc,correlativo,felserie,felnumero,nomclie,importe,abonos,saldo){
 
 
@@ -1175,7 +1045,6 @@ function get_nuevo_abono(coddoc,correlativo,felserie,felnumero,nomclie,importe,a
     get_total_fpago();
     
 };
-
 
 function insert_data_cxc(){
 
@@ -1239,6 +1108,11 @@ function insert_data_cxc(){
 
 };
 
+
+
+//---------------------------
+// cobro multiple
+//---------------------------
 
 function listeners_cobro_multiple(){
 
@@ -1419,8 +1293,8 @@ function tbl_clientes_saldo(){
                         <br>
                         <small>NIT: ${r.NIT}</small>
                     </td>
-                    <td>${funciones.limpiarTexto(r.DIRCLIENTE)}</td>
-                    <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
+                    <td><small>${funciones.limpiarTexto(r.DIRCLIENTE)}</small></td>
+                    <td class="negrita text-danger">${funciones.setMoneda(r.SALDO,'Q')}</td>
                 </tr>
             `
         })
@@ -1437,9 +1311,87 @@ function nuevo_cobro_multiple_cliente(codclie){
     document.getElementById('tab-cinco').click();
 
 
-
+    tbl_facturas_cliente_multiple(codclie);
 
 };
+function data_facturas_cliente_multiple(codclie){
+    
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/cxc/listado_facturas_cliente', {empnit:GlobalEmpnit,codclie:codclie})
+        .then((response) => {
+            if(response.status.toString()=='200'){
+                let data = response.data;
+                if(Number(data.rowsAffected[0])>0){
+                    resolve(data);             
+                }else{
+                    reject();
+                }            
+            }else{
+                reject();
+            }             
+        }, (error) => {
+            reject();
+        });
+    })
+
+};
+function tbl_facturas_cliente_multiple(codclie){
+
+
+        let container = document.getElementById('tbl_data_facturas_cliente');
+        container.innerHTML = GlobalLoader;
+
+        db_cxc.delete_temp_cxc()
+        .then(()=>{
+
+            data_facturas_cliente_multiple(codclie)
+            .then((data)=>{
+                
+                    data.recordset.map((r)=>{
+                        db_cxc.insert_temp_cxc_multiple(r)
+                    })
+
+                    db_cxc.select_temp_cxc()
+                    .then((data)=>{
+                        
+                        let str = '';
+                        data.map((r)=>{
+                            str += `
+                                    <tr>
+                                        <td>
+                                            <small>${r.FEL_SERIE}-${r.FEL_NUMERO}</small>
+                                            <br>
+                                            <small>${r.CODDOC}-${r.CORRELATIVO}</small>
+                                        </td>
+                                        <td>${funciones.convertDateNormal(r.VENCE)}</td>
+                                        <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
+                                        <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
+                                        <td>${funciones.setMoneda(r.ABONO,'Q')}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                            `
+                        })
+
+                        container.innerHTML = str;
+
+                    })
+                    .catch(()=>{
+                        container.innerHTML = 'No hay datos...'
+                    })
+
+            })
+            .catch(()=>{
+                container.innerHTML = 'No hay datos...'
+            })
+            
+        })
+
+       
+    
+
+}
 
 function get_total_abonos_cliente(){
 
@@ -1454,7 +1406,16 @@ function get_total_abonos_cliente(){
 }
 
 
+//---------------------------
+// cobro multiple
+//---------------------------
 
+
+
+
+//---------------------------
+//historial de recibos
+//---------------------------
 function tbl_lista_recibos(){
 
         let container = document.getElementById('tbl_data_recibos');
@@ -1496,7 +1457,6 @@ function tbl_lista_recibos(){
   
 
 };
-
 
 function fcn_abrir_ticket_pago(sucursal,coddoc,correlativo){
 
@@ -1543,3 +1503,6 @@ function eliminar_recibo_pago(sucursal,coddoc,correlativo,idbtn){
     })
 
 };
+//---------------------------
+//historial de recibos
+//---------------------------

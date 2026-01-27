@@ -1,4 +1,6 @@
-﻿//var socket = io();
+﻿
+
+//var socket = io();
 
 //inicializa la instalacion de la app
 funciones.instalationHandlers('btnInstalarApp');

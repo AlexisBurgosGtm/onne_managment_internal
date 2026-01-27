@@ -1034,10 +1034,27 @@ let db_cxc = {
                 if(del){
                     resolve();
                 }else{
-                    reject();
+                    resolve();
                 }
         }) 
 
     
-    }
+    },
+    insert_temp_cxc_multiple: (data)=>{  
+
+        return new Promise((resolve,reject)=>{
+            connection.insert({
+                into: "temp_cxc",
+                values: [data], //you can insert multiple values at a time
+            })
+            .then(()=>{
+                resolve();
+            })
+            .catch(()=>{
+                reject();
+            })
+        }) 
+        
+        
+    },
 }
