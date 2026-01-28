@@ -1057,4 +1057,22 @@ let db_cxc = {
         
         
     },
+    update_abono_factura:()=>{
+        return new Promise(async(resolve, reject) => {
+
+              var noOfRowsUpdated = await connection.update({ 
+                in: "temp_cxc",
+                Set: data,
+                Where: {
+                    ID: Number(id)
+                }
+            });
+            if (Number(noOfRowsUpdated) > 0) {
+                funciones.Aviso('Cliente Actualizado Exitosamente');
+                resolve();
+            }else{
+                reject();
+            }
+        })
+    }
 }

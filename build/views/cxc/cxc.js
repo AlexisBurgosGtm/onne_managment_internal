@@ -17,7 +17,7 @@ function getView(){
                             ${view.vista_clientes()}
                         </div> 
                         <div class="tab-pane fade" id="cinco" role="tabpanel" aria-labelledby="home-tab">
-                            ${view.vista_cliente_facturas()}
+                            ${view.vista_cliente_facturas() + view.modal_importe_abono_factura()}
                         </div> 
                         <div class="tab-pane fade" id="seis" role="tabpanel" aria-labelledby="home-tab">
                             ${view.vista_cobro_multiple()}
@@ -87,7 +87,7 @@ function getView(){
             </button>
 
             
-            <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow hidden"
+            <button class="btn btn-success btn-bottom-r btn-circle btn-xl hand shadow"
             id="btnNuevoCobroMultiple">
                 <i class="fal fa-plus"></i>
             </button>
@@ -321,7 +321,7 @@ function getView(){
 
                         
 
-                        <table class="table table-bordered col-12 h-full" id="tbl_facturas_cliente">
+                        <table class="table table-bordered table-striped col-12 h-full" id="tbl_facturas_cliente">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <td>FACTURA</td>
@@ -353,6 +353,61 @@ function getView(){
             </button>
             `
             
+        },
+        modal_importe_abono_factura:()=>{
+            return `
+            <div class="modal fade js-modal-settings modal-backdrop-transparent modal-with-scroll" tabindex="-1" 
+                role="dialog" aria-hidden="true" id="modal_abono">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="dropdown-header bg-secondary d-flex justify-content-center align-items-center w-100">
+                            <h4 class="m-0 text-center color-white">
+                                INDIQUE EL MONTO DEL ABONO
+                            </h4>
+                        </div>
+                        <div class="modal-body p-4">
+                            
+                            <div class="card card-rounded" id="">
+                                <div class="card-body p-4">
+
+
+                                    <div class="form-group">
+                                        <label>Saldo de la Factura</label>
+                                        <input type="number" class="negrita text-danger form-control" id="txtImporteSaldo" disabled="true">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Indique el monto a Abonar</label>
+                                        <input type="number" class="negrita text-success form-control" id="txtImporteAbono">
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-xl btn-secondary btn-circle hand shadow" data-dismiss="modal">
+                                                <i class="fal fa-arrow-left"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-xl btn-success btn-circle hand shadow" id="btnAceptarImporteAbono">
+                                                <i class="fal fa-save"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <br>
+                                
+                             
+                            </div>                              
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            `
         },
         vista_cobro_multiple:()=>{
             return `
@@ -1210,6 +1265,29 @@ function listeners_cobro_multiple(){
 
 
 
+        //boton cambiar cantidad de factura
+        document.getElementById('btnAceptarImporteAbono').addEventListener('click',()=>{
+
+            let saldo = document.getElementById('txtImporteSaldo').value || '0';
+
+
+            let abono = document.getElementById('txtImporteAbono').value || '';
+            if(abono==''){
+                funciones.AvisoError('Indique un monto de abono');
+                return;
+            };
+            if(Number(abono)>Number(saldo)){
+                funciones.AvisoError('Abono mayor al saldo');
+                return;
+            };
+
+            
+
+            recargar_grid_facturas_cliente();
+
+        });
+
+
 };
 function nuevo_cobro_multiple(){
   
@@ -1358,7 +1436,7 @@ function tbl_facturas_cliente_multiple(codclie){
                         let str = '';
                         data.map((r)=>{
                             str += `
-                                    <tr>
+                                    <tr class="hand" onclick="get_abono_factura('${r.CODDOC}','${r.CORRELATIVO}','${r.SALDO}')">
                                         <td>
                                             <small>${r.FEL_SERIE}-${r.FEL_NUMERO}</small>
                                             <br>
@@ -1367,7 +1445,7 @@ function tbl_facturas_cliente_multiple(codclie){
                                         <td>${funciones.convertDateNormal(r.VENCE)}</td>
                                         <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
                                         <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
-                                        <td>${funciones.setMoneda(r.ABONO,'Q')}</td>
+                                        <td class="negrita text-danger">${funciones.setMoneda(r.ABONO,'Q')}</td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -1403,8 +1481,52 @@ function get_total_abonos_cliente(){
 
     return total;
 
-}
+};
+function recargar_grid_facturas_cliente(){
+                    
+        let container = document.getElementById('tbl_data_facturas_cliente');
+        container.innerHTML = GlobalLoader;
+                    
+        db_cxc.select_temp_cxc()
+        .then((data)=>{
+                        
+            let str = '';
+            data.map((r)=>{
+                            str += `
+                                    <tr class="hand" onclick="get_abono_factura('${r.CODDOC}','${r.CORRELATIVO}','${r.SALDO}')">
+                                        <td>
+                                            <small>${r.FEL_SERIE}-${r.FEL_NUMERO}</small>
+                                            <br>
+                                            <small>${r.CODDOC}-${r.CORRELATIVO}</small>
+                                        </td>
+                                        <td>${funciones.convertDateNormal(r.VENCE)}</td>
+                                        <td>${funciones.setMoneda(r.IMPORTE,'Q')}</td>
+                                        <td>${funciones.setMoneda(r.SALDO,'Q')}</td>
+                                        <td class="negrita text-danger">${funciones.setMoneda(r.ABONO,'Q')}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                            `
+            })
 
+            container.innerHTML = str;
+
+        })
+        .catch(()=>{
+            container.innerHTML = 'No hay datos...'
+        })
+
+};
+function get_abono_factura(coddoc,correlativo,saldo){
+    
+    $('#modal_abono').modal('show');
+
+    document.getElementById('txtImporteSaldo').value = saldo;
+    document.getElementById('txtImporteAbono').value = '';
+    document.getElementById('txtImporteAbono').focus();
+
+
+}
 
 //---------------------------
 // cobro multiple

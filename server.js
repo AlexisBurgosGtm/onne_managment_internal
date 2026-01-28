@@ -119,6 +119,17 @@ app.get("/test_service",function(req,res){
 }); 
 
 
+app.get("/cxc",function(req,res){
+  
+  const {empnit,codemp} = req.query;
+
+  io.emit('cxc', empnit,codemp);
+
+  res.send('ok');
+
+}); 
+
+
 //Router para SUCURSALES
 app.use('/sucursales', routerSucursales);
 

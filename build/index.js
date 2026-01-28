@@ -1,6 +1,31 @@
 ﻿
+var socket = io();
 
-//var socket = io();
+socket.on('cxc', function(empnit,codemp){
+  
+  
+  
+      try {
+          if(GlobalEmpnit==empnit){
+              if(codemp.toString()==GlobalCodUsuario.toString()){
+                  funciones.showToast('Pago autorizado...');
+
+                  console.log('recargando cxc.....');
+
+                  try {
+                      get_tbl_cxc();
+                  } catch (error) {
+                    
+                  }
+              }
+          }
+          
+      } catch (error) {
+        console.log('Previo: ' +  error);
+      }
+      
+});
+
 
 //inicializa la instalacion de la app
 funciones.instalationHandlers('btnInstalarApp');
