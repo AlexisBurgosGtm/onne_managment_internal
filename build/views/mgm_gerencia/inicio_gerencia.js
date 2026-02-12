@@ -342,6 +342,17 @@ function getView(){
                 <div class="card-body p-2">
             
                     <div class="table-responsive col-12">
+                        
+                        <div class="row">
+                            <div class="col-6">
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-success btn-md col-12 hand shadow" id="btnExportarVisitasCRM">
+                                    <i class="fal fa-share"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <br>
                         <table class="table h-full btn-bordered col-12" id="tblVisitas">
                             <thead class="bg-onne text-white negrita">
                                 <tr>
@@ -534,6 +545,38 @@ function addListeners(){
 
 
 
+        let btnExportarVisitasCRM = document.getElementById('btnExportarVisitasCRM');
+        btnExportarVisitasCRM.addEventListener('click',()=>{
+
+            let anio = document.getElementById('cmbAnio').value;
+            let mes = document.getElementById('cmbMes').value;
+
+
+            funciones.showToast('Exportando...');
+
+            btnExportarVisitasCRM.disabled = true;
+            btnExportarVisitasCRM.innerHTML = `<i class="fal fa-share fa-spin"></i> Exportando...`;
+
+            DATA_CRM.get_visitas_mes_export(GlobalEmpnit,mes,anio)
+            .then((data)=>{
+
+                btnExportarVisitasCRM.disabled = false;
+                btnExportarVisitasCRM.innerHTML = `<i class="fal fa-share"></i> Exportar`;
+
+                let datos = data.recordset;
+
+
+                funciones.export_json_to_xlsx(datos,`VisitasCRM-${mes}-${anio}`)
+               
+               
+            })
+            .catch(()=>{
+                funciones.AvisoError('No se pudo generar...');
+                btnExportarVisitasCRM.disabled = false;
+                btnExportarVisitasCRM.innerHTML = `<i class="fal fa-share"></i> Exportar`;
+            })
+                    
+        })
 
 
 };
