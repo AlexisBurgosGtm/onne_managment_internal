@@ -345,9 +345,15 @@ function getView(){
                         
                         <div class="row">
                             <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control col-12"
+                                    id="txtBuscarVisitas"
+                                    oninput="funciones.FiltrarTabla('tblVisitas','txtBuscarVisitas')"
+                                    placeholder="Escriba para buscar....">
+                                </div>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-success btn-md col-12 hand shadow" id="btnExportarVisitasCRM">
+                                <button class="btn btn-success btn-sm col-12 hand shadow" id="btnExportarVisitasCRM">
                                     <i class="fal fa-share"></i> Exportar
                                 </button>
                             </div>
