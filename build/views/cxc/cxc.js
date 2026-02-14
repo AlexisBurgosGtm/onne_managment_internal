@@ -217,15 +217,24 @@ function getView(){
                                 <textarea rows="2" class="form-control negrita border-secondary text-secondary" id="txt_factura_obs"></textarea>
                             </div>
 
-                            <div class="form-group">
-
-                                <label class="negrita text-secondary">Foto del Comprobante</label>
-                                
-                                <img id="img_factura_foto" width="100px" height="100px">
-
-                                 <input type="file" id="txt_factura_foto" >
-                                
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="negrita text-secondary">Foto1 Comprobante</label>
+                                        <img id="img_factura_foto" width="150px" height="150px">
+                                        <input type="file" id="txt_factura_foto" style="color: transparent">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="negrita text-secondary">Foto2 Comprobante</label>
+                                        <img id="img_factura_foto2" width="150px" height="150px">
+                                        <input type="file" id="txt_factura_foto2" style="color: transparent">
+                                    </div>
+                                </div>
                             </div>
+
+                            
                   
                 </div>
             </div>
@@ -515,7 +524,7 @@ function getView(){
                                 
                                 <img id="img_multi_foto" width="100px" height="100px">
 
-                                <input type="file" id="txt_multi_foto" >
+                                <input type="file" id="txt_multi_foto" style="color: transparent">
                                 
                             </div>
                   
@@ -686,8 +695,9 @@ function addListeners(){
 function listeners_cobro_individual(){
 
 
-    document.getElementById('cmb_factura_coddoc').innerHTML = `<option value='${GlobalCoddocRec}'>${GlobalCoddocRec}</option>`;
-            classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
+        document.getElementById('cmb_factura_coddoc').innerHTML = `<option value='${GlobalCoddocRec}'>${GlobalCoddocRec}</option>`;
+        
+        classTipoDocumentos.correlativo(document.getElementById('cmb_factura_coddoc').value)
             .then((correlativo)=>{
                 document.getElementById('txt_factura_correlativo').value = correlativo;
             })
@@ -821,13 +831,32 @@ function listeners_cobro_individual(){
                 fileReader.addEventListener('load', function () {
                     const imgEl = document.getElementById('img_factura_foto');
                     imgEl.src = this.result;
-                    imgEl.alt = 'La imagen no cargado correctamente.';
+                    imgEl.alt = 'Cargar foto...';
                     
                 });    
                 
                 fileReader.readAsDataURL(image);
             }else{
                 document.getElementById('img_factura_foto').src = '';
+            }
+        });
+        document.getElementById('txt_factura_foto2').addEventListener('change',()=>{
+
+            const image = document.getElementById('txt_factura_foto2').files[0];
+    
+            if (image !== undefined) {
+                const fileReader = new FileReader();
+                
+                fileReader.addEventListener('load', function () {
+                    const imgEl = document.getElementById('img_factura_foto2');
+                    imgEl.src = this.result;
+                    imgEl.alt = 'Cargar foto...';
+                    
+                });    
+                
+                fileReader.readAsDataURL(image);
+            }else{
+                document.getElementById('img_factura_foto2').src = '';
             }
         });
 
@@ -1097,6 +1126,9 @@ function get_nuevo_abono(coddoc,correlativo,felserie,felnumero,nomclie,importe,a
     document.getElementById('img_factura_foto').src = '';
     document.getElementById('txt_factura_foto').value = '';
 
+    document.getElementById('img_factura_foto2').src = '';
+    document.getElementById('txt_factura_foto2').value = '';
+
     get_total_fpago();
     
 };
@@ -1106,7 +1138,8 @@ function insert_data_cxc(){
 
         let saldo = 0;
         let abonos = 0;
-        let foto = document.getElementById('img_factura_foto').src || '';
+        let foto = document.getElementById('img_factura_foto').src || ''; if(foto.toString().includes('http')==true){foto=''};
+        let foto2 = document.getElementById('img_factura_foto2').src || ''; if(foto2.toString().includes('http')==true){foto2=''};
     
         let data = {
             sucursal:GlobalEmpnit,
@@ -1126,7 +1159,8 @@ function insert_data_cxc(){
             fpago_cheque:Number(document.getElementById('txt_factura_fp_cheque').value || 0),
             fpago_descripcion:funciones.limpiarTexto(document.getElementById('txt_factura_fp_descripcion').value || ''),
             obs:funciones.limpiarTexto(document.getElementById('txt_factura_obs').value || ''),
-            foto:foto
+            foto:foto,
+            foto2:foto2
         };
 
 
@@ -1134,6 +1168,73 @@ function insert_data_cxc(){
         return new Promise((resolve,reject)=>{
 
             axios.post('/cxc/insert_recibo_factura', data)
+            .then((response) => {
+
+                console.log(response);
+
+                if(response.status.toString()=='200'){
+                        
+                        let data = response.data;
+                        if(data=='error'){
+                            reject()
+                        }else{
+                            if(Number(data.rowsAffected[0])>0){ 
+                                resolve();             
+                            }else{
+                                reject();
+                            }
+                        }   
+                           
+                }else{
+                    reject();
+                }             
+            }, (error) => {
+                reject();
+            });
+        });
+    
+    
+
+};
+
+function insert_data_cxc_multiple(){
+
+
+        let saldo = 0;
+        let abonos = 0;
+        let foto = document.getElementById('img_factura_foto').src || ''; if(foto.toString().includes('http')==true){foto=''};
+        let foto2 = document.getElementById('img_factura_foto2').src || ''; if(foto2.toString().includes('http')==true){foto2=''};
+    
+        let jsonFacturasAbonadas = '';
+
+        let data = {
+            sucursal:GlobalEmpnit,
+            fecha:funciones.devuelveFecha('txt_factura_fecha'),
+            coddoc:document.getElementById('cmb_factura_coddoc').value,
+            correlativo: document.getElementById('txt_factura_correlativo').value,
+            usuario:GlobalUsuario,
+            codven:GlobalCodUsuario,
+            saldo_fac:saldo,
+            abono_fac:abonos,
+            coddoc_fac:document.getElementById('lbCobroFacturaCoddoc').innerText,
+            correlativo_fac:document.getElementById('lbCobroFacturaCorrelativo').innerText,
+            norecibo:document.getElementById('txt_factura_no_recibo').value || '',
+            fpago_efectivo:Number(document.getElementById('txt_factura_fp_efectivo').value || 0),
+            fpago_deposito:Number(document.getElementById('txt_factura_fp_deposito').value || 0),
+            fpago_tarjeta:Number(document.getElementById('txt_factura_fp_tarjeta').value || 0),
+            fpago_cheque:Number(document.getElementById('txt_factura_fp_cheque').value || 0),
+            fpago_descripcion:funciones.limpiarTexto(document.getElementById('txt_factura_fp_descripcion').value || ''),
+            obs:funciones.limpiarTexto(document.getElementById('txt_factura_obs').value || ''),
+            foto:foto,
+            foto2:foto2,
+            jsonFacturasAbonadas:jsonFacturasAbonadas
+        };
+
+
+
+        return new Promise((resolve,reject)=>{
+
+            axios.post('/cxc/insert_recibo_factura_multiple', data)
             .then((response) => {
 
                 console.log(response);

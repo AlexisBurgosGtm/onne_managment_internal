@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/insert_recibo_factura", async(req,res)=>{
 
     const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
-        foto,
+        foto,foto2,
         norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
     } = req.body;
 
@@ -75,10 +75,10 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                                 WHERE EMPNIT='${sucursal}' AND CODDOC='${coddoc}';`
 
                 let qryFotoDocumento = `INSERT INTO DOCUMENTOS_FOTOS
-                                        (EMPNIT,CODDOC,CORRELATIVO,FOTO) 
+                                        (EMPNIT,CODDOC,CORRELATIVO,FOTO,FOTO2) 
                                         SELECT '${sucursal}' AS EMPNIT, '${coddoc}' AS CODDOC, 
                                         ${correlativo} AS CORRELATIVO, 
-                                        '${foto}' AS FOTO;`
+                                        '${foto}' AS FOTO,'${foto2}' AS FOTO2;`
 
                 if(foto==''){qryFotoDocumento=''}
 
@@ -103,7 +103,7 @@ router.post("/insert_recibo_factura", async(req,res)=>{
 router.post("/insert_recibo_factura_multiple", async(req,res)=>{
 
     const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
-        foto,
+        foto,foto2,
         norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven,jsonFacturasAbonadas
     } = req.body;
 
@@ -174,7 +174,7 @@ router.post("/insert_recibo_factura_multiple", async(req,res)=>{
                                         (EMPNIT,CODDOC,CORRELATIVO,FOTO) 
                                         SELECT '${sucursal}' AS EMPNIT, '${coddoc}' AS CODDOC, 
                                         ${correlativo} AS CORRELATIVO, 
-                                        '${foto}' AS FOTO;`
+                                        '${foto}' AS FOTO,'${foto2}' AS FOTO2;`
 
                 if(foto==''){qryFotoDocumento=''}
 
@@ -234,7 +234,7 @@ router.post("/listado", async(req,res)=>{
                 (TIPODOCUMENTOS.TIPODOC IN ('FAC', 'FEF', 'FES', 'FEC', 'FPC', 'FCP')) 
                     AND (DOCUMENTOS.CONCRE = 'CRE') AND (DOCUMENTOS.DOC_SALDO > 0.01) 
                     AND (DOCUMENTOS.EMPNIT = '${empnit}') AND (DOCUMENTOS.STATUS <> 'A') 
-        ORDER BY DOCUMENTOS.VENCIMIENTO DESC;
+        ORDER BY DOCUMENTOS.VENCIMIENTO ASC;
     `
     
     
