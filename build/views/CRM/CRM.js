@@ -321,6 +321,7 @@ let DATA_CRM = {
                 codemp:codemp,
                 codcliente:codcliente,
                 fecha:fecha,
+                hora:funciones.getHora(),
                 motivo:motivo,
                 notas:notas,
                 acciones:acciones,

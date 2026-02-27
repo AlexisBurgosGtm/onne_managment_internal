@@ -2,6 +2,35 @@ const execute = require('./connection');
 const express = require('express');
 const router = express.Router();
 
+
+router.post("/config_clave_admin", async(req,res)=>{
+
+    const{sucursal} = req.body;
+
+    let qry = `
+        SELECT PASS AS CLAVE FROM CONFIG WHERE ID=2;
+    `
+    
+    
+     execute.Query(res,qry);
+     
+});
+
+router.post("/config_clave_operaciones", async(req,res)=>{
+
+    const{sucursal} = req.body;
+
+    let qry = `
+        SELECT PASS AS CLAVE FROM CONFIG WHERE ID=21;
+    `
+    
+    
+     execute.Query(res,qry);
+     
+});
+
+
+
 router.post("/config", async(req,res)=>{
 
     const{sucursal} = req.body;

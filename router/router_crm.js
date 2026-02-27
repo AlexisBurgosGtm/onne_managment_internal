@@ -152,7 +152,8 @@ router.post("/select_visitas", async(req,res)=>{
         qry = `
             SELECT 
                 CRM_VISITAS.ID,
-                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.FECHA,
+                ISNULL(CRM_VISITAS.HORA,'00:00') AS HORA, 
                 CRM_VISITAS.CODEMP,
                 EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
                 CRM_VISITAS.CODCLIENTE, 
@@ -183,7 +184,8 @@ router.post("/select_visitas", async(req,res)=>{
         qry = `
             SELECT 
                 CRM_VISITAS.ID,
-                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.FECHA,
+                ISNULL(CRM_VISITAS.HORA,'00:00') AS HORA, 
                 CRM_VISITAS.CODEMP,
                 EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
                 CRM_VISITAS.CODCLIENTE, 
@@ -221,13 +223,15 @@ router.post("/select_visitas", async(req,res)=>{
 });
 router.post("/insert_visita", async(req,res)=>{
 
-    const{sucursal,fecha,codemp,codcliente,motivo,notas,acciones,latitud,longitud} = req.body;
+    const{sucursal,fecha,hora,codemp,codcliente,motivo,notas,acciones,latitud,longitud} = req.body;
 
     let qry = `
         INSERT INTO CRM_VISITAS 
-            (EMPNIT,FECHA,MES,ANIO,CODEMP,CODCLIENTE,MOTIVO,NOTAS,ACCIONES,LATITUD,LONGITUD)
+            (EMPNIT,FECHA,HORA,MES,ANIO,CODEMP,CODCLIENTE,MOTIVO,NOTAS,ACCIONES,LATITUD,LONGITUD)
         SELECT '${sucursal}' AS EMPNIT, 
-                '${fecha}' AS FECHA, MONTH('${fecha}') AS MES, 
+                '${fecha}' AS FECHA,
+                '${hora}' AS HORA, 
+                MONTH('${fecha}') AS MES, 
                 YEAR('${fecha}') AS ANIO, 
                 ${codemp} AS CODEMP, ${codcliente} AS CODCLIENTE, 
                 '${motivo}' AS MOTIVO, '${notas}' AS NOTAS, '${acciones}' AS ACCIONES,
@@ -262,7 +266,8 @@ router.post("/select_visitas_mes", async(req,res)=>{
         qry = `
             SELECT 
                 CRM_VISITAS.ID,
-                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.FECHA,
+                ISNULL(CRM_VISITAS.HORA,'00:00') AS HORA, 
                 CRM_VISITAS.CODEMP,
                 EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
                 CRM_VISITAS.CODCLIENTE, 
@@ -305,7 +310,8 @@ router.post("/select_visitas_mes_export", async(req,res)=>{
 
         qry = `
             SELECT 
-                CRM_VISITAS.FECHA, 
+                CRM_VISITAS.FECHA,
+                ISNULL(CRM_VISITAS.HORA,'00:00') AS HORA, 
                 EMPLEADOS.NOMEMPLEADO AS EMPLEADO, 
                 CRM_VISITAS.CODCLIENTE AS CODIGO_CLIENTE, 
                 CRM_VISITAS.MOTIVO, 

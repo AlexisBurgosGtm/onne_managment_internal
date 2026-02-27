@@ -363,6 +363,7 @@ function getView(){
                             <thead class="bg-onne text-white negrita">
                                 <tr>
                                     <td>FECHA</td>
+                                    <td>HORA</td>
                                     <td>EMPLEADO</td>
                                     <td>TIPO</td>
                                     <td>CLIENTE</td>
