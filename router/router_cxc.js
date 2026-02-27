@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/insert_recibo_factura", async(req,res)=>{
 
-    const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
+    const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac,descuento_fac, abonos_fac,
         foto,foto2,
         norecibo,fpago_efectivo,fpago_deposito,fpago_tarjeta,fpago_cheque,fpago_descripcion,obs,codven
     } = req.body;
@@ -24,7 +24,7 @@ router.post("/insert_recibo_factura", async(req,res)=>{
 	                MINUTO,CODCAJA,CODDOC,CORRELATIVO,CODCLIENTE,
 	                DOC_NIT,DOC_NOMCLIE,DOC_DIRCLIE,TOTALCOSTO,
 	                TOTALPRECIO,CODEMBARQUE,STATUS,CONCRE,USUARIO,
-	                CORTE,SERIEFAC,NOFAC,CODVEN,PAGO,VUELTO,MARCA,OBS, DOC_SALDO,DOC_ABONO,NODOCPAGO,
+	                CORTE,SERIEFAC,NOFAC,CODVEN,PAGO,VUELTO,MARCA,OBS, DOC_SALDO,DOC_ABONO,TOTALDESCUENTO,NODOCPAGO,
                     FPAGO_EFECTIVO,FPAGO_TARJETA,FPAGO_DEPOSITO,FPAGO_CHEQUE,FPAGO_DESCRIPCION)
                 SELECT 
                     '${sucursal}' AS EMPNIT,
@@ -55,8 +55,9 @@ router.post("/insert_recibo_factura", async(req,res)=>{
                     0 AS VUELTO,
                     '' AS MARCA,
                     '${obs}' AS OBS, 
-                    0 AS DOC_SALDO,
+                    ${saldo_fac} AS DOC_SALDO,
                     ${totalprecio} AS DOC_ABONO,
+                    ${descuento_fac} AS TOTALDESCUENTO,
                     '${norecibo}' AS NODOCPAGO,
                     ${fpago_efectivo} AS FPAGO_EFECTIVO,
                     ${fpago_tarjeta} AS FPAGO_TARJETA,
@@ -101,6 +102,8 @@ router.post("/insert_recibo_factura", async(req,res)=>{
      
 });
 router.post("/insert_recibo_factura_multiple", async(req,res)=>{
+
+    //NO FUNCIONA REVISAR CAMPOS
 
     const{sucursal,fecha,coddoc,correlativo,usuario,coddoc_fac,correlativo_fac,saldo_fac, abonos_fac,
         foto,foto2,

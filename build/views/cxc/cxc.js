@@ -110,12 +110,18 @@ function getView(){
                     <div class="row">
                         <div class="col-4 text-center">
                             <label class="negrita text-info" id="lb_factura_importe">Importe: 0.00</label>
+                            <br>
+                            <label class="text-info">Importe</label>
                         </div>
                         <div class="col-4 text-center">
                             <label class="negrita text-success" id="lb_factura_abonos">Abonos: 0.00</label>
+                            <br>
+                            <label class="text-success">Abonos</label>
                         </div>
                         <div class="col-4 text-center">
                             <label class="negrita text-danger" id="lb_factura_saldo">Saldo: 0.00</label>
+                            <br>
+                            <label class="text-danger">Saldo</label>
                         </div>
                     </div>
 
@@ -138,7 +144,7 @@ function getView(){
 
                             
                             
-                             <div class="row">
+                            <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Fecha</label>
@@ -155,6 +161,8 @@ function getView(){
                                 </div>
                             </div>
                             <br>
+
+                        
 
                             <div class="form-group">
                                     <label class="negrita text-secondary">Documento Interno</label>
@@ -200,6 +208,26 @@ function getView(){
                                     <div class="form-group">
                                         <label class="negrita text-secondary">Cheque</label>
                                         <input type="number" class="form-control negrita border-secondary text-danger"  id="txt_factura_fp_cheque">
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            <br>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    
+                                    <div class="form-group">
+                                        <label class="negrita text-info">Descuento</label>
+                                        <input type="number" class="form-control negrita border-info text-info"  id="txt_factura_fp_descuento">
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-6">
+                            
+                                    <div class="form-group">
+                                        <label class="negrita text-info">Saldo</label>
+                                        <input type="number" class="form-control negrita border-info text-info"  id="txt_factura_fp_saldo">
                                     </div>
                                 
                                 </div>
@@ -1136,7 +1164,14 @@ function get_nuevo_abono(coddoc,correlativo,felserie,felnumero,nomclie,importe,a
 function insert_data_cxc(){
 
 
-        let saldo = 0;
+        let saldoFac = document.getElementById('lb_factura_saldo').innerText.replace('Q','').replace(' ','').replace(',','');
+        let totalpago =  (Number(document.getElementById('txt_factura_fp_efectivo').value || 0) + Number(document.getElementById('txt_factura_fp_deposito').value || 0) + Number(document.getElementById('txt_factura_fp_tarjeta').value || 0) + Number(document.getElementById('txt_factura_fp_cheque').value || 0))
+
+        
+
+        let saldo = document.getElementById('txt_factura_fp_saldo').value || (Number(saldoFac)-Number(totalpago));
+        let descuento = document.getElementById('txt_factura_fp_saldo').value || 0;
+
         let abonos = 0;
         let foto = document.getElementById('img_factura_foto').src || ''; if(foto.toString().includes('http')==true){foto=''};
         let foto2 = document.getElementById('img_factura_foto2').src || ''; if(foto2.toString().includes('http')==true){foto2=''};
@@ -1148,7 +1183,8 @@ function insert_data_cxc(){
             correlativo: document.getElementById('txt_factura_correlativo').value,
             usuario:GlobalUsuario,
             codven:GlobalCodUsuario,
-            saldo_fac:saldo,
+            saldo_fac:Number(saldo),
+            descuento_fac:Number(descuento),
             abono_fac:abonos,
             coddoc_fac:document.getElementById('lbCobroFacturaCoddoc').innerText,
             correlativo_fac:document.getElementById('lbCobroFacturaCorrelativo').innerText,
