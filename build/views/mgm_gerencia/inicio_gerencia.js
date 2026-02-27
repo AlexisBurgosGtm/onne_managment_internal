@@ -865,6 +865,7 @@ function rpt_visitas_mes(){
             str += `
             <tr>
                 <td>${funciones.convertDateNormal(r.FECHA)}</td>
+                <td>${r.HORA}</td>
                 <td>${r.EMPLEADO}</td>
                 <td>${r.TIPO}</td>
                 <td>${r.CLIENTE}
