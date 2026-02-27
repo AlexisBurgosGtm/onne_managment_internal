@@ -17,17 +17,16 @@
     
     <link rel="stylesheet" href="./print/vendor.css">
     <link rel="stylesheet" href="./print/app.css">
+    <script src="./print/pace.min.js"></script>
+    <link rel="stylesheet" href="./print/big-counter.css">
     
   
 <style>.action-link[data-v-0437fe02]{cursor:pointer}</style><style>.action-link[data-v-1a6c22aa]{cursor:pointer}</style><style>.action-link[data-v-608de639]{cursor:pointer}</style></head>
 
-<body class="  pace-done">
-    <div class="pace  pace-inactive">
-        <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
-            <div class="pace-progress-inner"></div>
-        </div>  
-        <div class="pace-activity"></div>
-    </div>
+<body class="">
+    
+    
+
     <div id="app"></div>
         
     <div class="container">
@@ -146,6 +145,18 @@
                                         <p class="width-50 text-right sub-headings negrita2" id="lbFpagoTotal"></p>
                                     </div>
                                     <!-- Total Paid-->
+                                    <hr>
+                                    <!-- SALDO DESCUENTO -->
+                                    <div class="flex-box">
+                                        <p class="left text-right sub-headings">DESCUENTO:</p>
+                                        <p class="width-50 text-right sub-headings negrita2" id="lbFpagoDescuento"></p>
+                                    </div>
+                                    <div class="flex-box">
+                                        <p class="left text-right sub-headings">SALDO:</p>
+                                        <p class="width-50 text-right sub-headings negrita2" id="lbFpagoSaldo"></p>
+                                    </div>
+                                    <!-- SALDO DESCUENTO -->
+                                    <hr>
         
                                     <p colspan="2" class="text-left mb-0">
                                         <small>Datos de la forma de pago:</small>
@@ -449,6 +460,10 @@
             document.getElementById('lbFpagoTarjeta').innerText = fpago_tarjeta;
             document.getElementById('lbFpagoCheque').innerText = fpago_cheque;
             document.getElementById('lbFpagoTotal').innerText = totalprecio;
+
+            document.getElementById('lbFpagoDescuento').innerText = totaldescuento;
+            document.getElementById('lbFpagoSaldo').innerText = saldo;
+
             document.getElementById('lbFpagoDescripcion').innerText = fpago_descripcion;
             document.getElementById('lbNodocpago').innerText = nodocpago;
             document.getElementById('lbObs').innerText = obs;
@@ -467,6 +482,8 @@
             document.getElementById('lbFpagoTarjeta').innerText = '';
             document.getElementById('lbFpagoCheque').innerText = '';
             document.getElementById('lbFpagoTotal').innerText = '';
+            document.getElementById('lbFpagoDescuento').innerText = '';
+            document.getElementById('lbFpagoSaldo').innerText = '';
             document.getElementById('lbFpagoDescripcion').innerText = '';
             document.getElementById('lbNodocpago').innerText = '';
             document.getElementById('lbObs').innerText = '';

@@ -99,7 +99,7 @@ app.get("/factura",function(req,res){
 
   const {sucursal,coddoc,correlativo} = req.query;
 
-  let factura = __dirname + '/build/factura.html'
+  let factura = __dirname + '/build/ticket_recibo.html'
 
 
 	res.sendFile(factura);
