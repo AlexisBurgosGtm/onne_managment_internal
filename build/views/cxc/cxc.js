@@ -1170,7 +1170,7 @@ function insert_data_cxc(){
         
 
         let saldo = document.getElementById('txt_factura_fp_saldo').value || (Number(saldoFac)-Number(totalpago));
-        let descuento = document.getElementById('txt_factura_fp_saldo').value || 0;
+        let descuento = document.getElementById('txt_factura_fp_descuento').value || 0;
 
         let abonos = 0;
         let foto = document.getElementById('img_factura_foto').src || ''; if(foto.toString().includes('http')==true){foto=''};
