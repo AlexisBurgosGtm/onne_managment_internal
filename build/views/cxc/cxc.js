@@ -1720,7 +1720,7 @@ function tbl_lista_recibos(){
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-md btn-circle hand shadow" id="${btnElim}"
+                        <button class="hidden btn btn-danger btn-md btn-circle hand shadow" id="${btnElim}"
                         onclick="eliminar_recibo_pago('${GlobalEmpnit}','${r.CODDOC}','${r.CORRELATIVO}','${btnElim}')">
                             <i class="fal fa-trash"></i>
                         </button>
