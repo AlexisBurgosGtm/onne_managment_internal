@@ -755,6 +755,7 @@ function listeners_cobro_individual(){
         });
 
 
+        //COBRO INDIVIDUAL
         let btnGuardarCobro = document.getElementById('btnGuardarCobro');
         btnGuardarCobro.addEventListener('click',()=>{
 
@@ -804,7 +805,7 @@ function listeners_cobro_individual(){
                                                     let coddoc = document.getElementById('cmb_factura_coddoc').value;
                                                     let correlativo = document.getElementById('txt_factura_correlativo').value;
 
-                                                  
+                                                    fcn_limpiar_campos('individual');
 
                                                     fcn_abrir_ticket_pago(GlobalEmpnit,coddoc,correlativo);
 
@@ -891,7 +892,28 @@ function listeners_cobro_individual(){
 
 
 };
+function fcn_limpiar_campos(tipo){
 
+    switch (tipo) {
+        case 'individual':
+                document.getElementById('txt_factura_no_recibo').value= '';
+                document.getElementById('txt_factura_fp_efectivo').value= '0';
+                document.getElementById('txt_factura_fp_deposito').value= '0';
+                document.getElementById('txt_factura_fp_tarjeta').value= '0';
+                document.getElementById('txt_factura_fp_cheque').value= '0';
+                document.getElementById('txt_factura_fp_descuento').value= '0';
+                document.getElementById('txt_factura_fp_saldo').value= '0';
+                document.getElementById('txt_factura_fp_descripcion').value= '';
+                document.getElementById('txt_factura_obs').value= '';
+            break;
+    
+        default:
+            break;
+    }
+ 
+
+
+};
 
 
 function get_correlativo_recibos(){
