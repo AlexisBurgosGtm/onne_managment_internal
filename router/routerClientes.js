@@ -25,7 +25,7 @@ router.post("/listado_giras", async(req,res)=>{
 
 router.post("/editar_cliente", async(req,res)=>{
 
-    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo} = req.body;
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto} = req.body;
 
     let qry = `UPDATE CLIENTES SET
                         NIT='${nitclie}',
@@ -38,7 +38,9 @@ router.post("/editar_cliente", async(req,res)=>{
                         TELEFONOCLIENTE='${telefono}',
                         PROVINCIA='${referencia}',
                         GIRA=${codgira},
-                        TIPO='${tipo}'
+                        TIPO='${tipo}',
+                        CODMUNICIPIO=${codmun},
+                        CODDEPARTAMENTO=${coddepto}
             WHERE CODCLIENTE=${codclie} AND EMPNIT='${sucursal}';
             `
     
@@ -179,7 +181,11 @@ router.post("/listaajenosvendedor", async(req,res)=>{
 				  CLIENTES.PROVINCIA AS REFERENCIA, CLIENTES.DIAVISITA AS VISITA, '' AS STVISITA, 
 				  CLIENTES.CODRUTA, CLIENTES.HABILITADO, 
                   CLIENTES.TIPONEGOCIO, CLIENTES.NEGOCIO, ISNULL(CLIENTES.LASTSALE, '2020-01-01') AS LASTSALE, 
-				  MUNICIPIOS.DESMUNICIPIO AS DESMUNI, DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, RUTAS.DESRUTA, 
+				  CLIENTES.CODMUNICIPIO AS CODMUN,
+                  MUNICIPIOS.DESMUNICIPIO AS DESMUNI,
+                  CLIENTES.CODDEPARTAMENTO AS CODDEPTO, 
+                  DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, 
+                  RUTAS.DESRUTA, 
                   RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
             FROM CLIENTES LEFT OUTER JOIN
                   RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
@@ -188,6 +194,7 @@ router.post("/listaajenosvendedor", async(req,res)=>{
         WHERE  (CLIENTES.EMPNIT = '${sucursal}') 
                 AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
                 AND (RUTAS.CODEMPLEADO=${codven})
+                AND (ISNULL(CLIENTES.TIPO,'VENTAS')='${tipo}')
             OR
                 (CLIENTES.EMPNIT = '${sucursal}') 
                 AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')
@@ -204,7 +211,11 @@ router.post("/listaajenosvendedor", async(req,res)=>{
 				  CLIENTES.PROVINCIA AS REFERENCIA, CLIENTES.DIAVISITA AS VISITA, '' AS STVISITA, 
 				  CLIENTES.CODRUTA, CLIENTES.HABILITADO, 
                   CLIENTES.TIPONEGOCIO, CLIENTES.NEGOCIO, ISNULL(CLIENTES.LASTSALE, '2020-01-01') AS LASTSALE, 
-				  MUNICIPIOS.DESMUNICIPIO AS DESMUNI, DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, RUTAS.DESRUTA, 
+				  CLIENTES.CODMUNICIPIO AS CODMUN,
+                  MUNICIPIOS.DESMUNICIPIO AS DESMUNI,
+                  CLIENTES.CODDEPARTAMENTO AS CODDEPTO,  
+                  DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, 
+                  RUTAS.DESRUTA, 
                   RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
             FROM CLIENTES LEFT OUTER JOIN
                   RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
@@ -214,6 +225,7 @@ router.post("/listaajenosvendedor", async(req,res)=>{
                 AND (CLIENTES.NOMBRECLIENTE LIKE '%${filtro}%')
                 AND (CLIENTES.DIAVISITA='${visita}')
                 AND (RUTAS.CODEMPLEADO=${codven})
+                AND (ISNULL(CLIENTES.TIPO,'VENTAS')='${tipo}')
             OR
                 (CLIENTES.EMPNIT = '${sucursal}') 
                 AND (CLIENTES.NEGOCIO LIKE '%${filtro}%')

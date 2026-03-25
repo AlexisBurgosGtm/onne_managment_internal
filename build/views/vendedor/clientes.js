@@ -393,6 +393,16 @@ function getView(){
                                     <select id="cmbEditGira" class="form-control"></select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="negrita">Municipio</label>
+                                    <select id="cmbEditMunicipio" class="form-control"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="negrita">Departamento</label>
+                                    <select id="cmbEditDepartamento" class="form-control"></select>
+                                </div>
+
                                 
                                
                                 <div class="row">
@@ -707,6 +717,7 @@ async function addListeners(){
         document.getElementById('cmbEditGira').innerHTML= `<option value='0'>SN</option>` 
     })
 
+    get_combos_mun_deptos('cmbEditMunicipio','cmbEditDepartamento');
 
 
     document.getElementById('btnTabNVAtras').addEventListener('click',()=>{
@@ -836,12 +847,14 @@ async function addListeners(){
             let longitud = document.getElementById('txtEditLongitud').value || 0;
 
             let codgira = document.getElementById('cmbEditGira').value;
+            let codmun = document.getElementById('cmbEditMunicipio').value;
+            let coddepto = document.getElementById('cmbEditDepartamento').value;
 
             if (negocio=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
             if (nombre=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
 
 
-            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira,tipo)
+            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira,tipo,codmun,coddepto)
             .then(()=>{
                 funciones.Aviso('Solicitud enviada exitosamente!!');
                 btnEnviarCambiosCliente.disabled = false;
@@ -1050,7 +1063,7 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
 
 
 
-function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia,tipo){
+function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia,tipo,codmun,coddepto){
     
   
 
@@ -1065,6 +1078,9 @@ function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegoci
     document.getElementById('txtEditLongitud').value = long;
     document.getElementById('cmbEditTipoNegocio').value = tiponegocio;
     document.getElementById('txtEditNegocio').value = negocio;
+
+    document.getElementById('cmbEditMunicipio').value = codmun;
+    document.getElementById('cmbEditDepartamento').value = coddepto;
 
     GlobalSelectedCodCliente = codigo;
     GlobalSelectedNomCliente = nombre;
@@ -1084,7 +1100,6 @@ async function getHistorialCliente(codigo,nit,nombre){
     $('#ModalHistorialCliente').modal('show')
 
 };
-
 
 
 async function setRecordatorioVisita(codigo, nit, nombre, direccion){
@@ -1110,8 +1125,6 @@ async function setRecordatorioVisita(codigo, nit, nombre, direccion){
     })
     
 };
-
-
 
 
 function buscar_cliente(sucursal,filtro,visita,idContenedor){
@@ -1209,7 +1222,7 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
                         </td>
                         <td>
                             <button class="btn btn-info btn-circle btn-md hand shadow"
-                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}','${rows.TIPO}')">
+                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}','${rows.TIPO}','${rows.CODMUN}','${rows.CODDEPTO}')">
                                 <i class="fal fa-edit"></i>
                             </button>
                         </td>
@@ -1231,10 +1244,89 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
 };
 
 
+
+
+function get_combos_mun_deptos(idContainerMun,idcontainerDep){
+
+
+
+    let contenedor = document.getElementById(idContainerMun);
+    let strdata = '';
+    
+
+    let contenedor2 = document.getElementById(idcontainerDep);
+    let strdata2 = '';
+   
+
+
+    get_municipios()
+    .then((data)=>{
+        data.recordset.map((rows)=>{
+                strdata = strdata + `<option value='${rows.CODIGO}'>${rows.DESCRIPCION}</option>`
+        })
+        contenedor.innerHTML = strdata;
+    })
+    .catch(()=>{
+        contenedor.innerHTML = `<option value='0'>NO SE CARGARON</option>`
+    })
+
+    get_departamentos()
+    .then((data)=>{
+        data.recordset.map((rows)=>{
+                strdata2 = strdata2 + `<option value='${rows.CODIGO}'>${rows.DESCRIPCION}</option>`
+        })
+        contenedor2.innerHTML = strdata2;
+    })
+    .catch(()=>{
+        contenedor2.innerHTML = `<option value='0'>NO SE CARGARON</option>`
+    })
+
+
+  
+  
+};
 function get_giras(){
     return new Promise((resolve,reject)=>{
 
         axios.post('/clientes/listado_giras', {
+            sucursal: GlobalEmpnit
+        })  
+        .then(async(response) => {
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+           reject();
+        });
+
+    })
+};
+function get_municipios(){
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/censo/municipios', {
+            sucursal: GlobalEmpnit
+        })  
+        .then(async(response) => {
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+           reject();
+        });
+
+    })
+};
+function get_departamentos(){
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/censo/departamentos', {
             sucursal: GlobalEmpnit
         })  
         .then(async(response) => {
@@ -1278,7 +1370,7 @@ function inicializarVista(){
 
 
 
-function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo){
+function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto){
     
     return new Promise((resolve,reject)=>{
         axios.post('/clientes/editar_cliente',{
@@ -1294,7 +1386,9 @@ function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirc
            telefono:telefono,
            referencia:referencia,
            codgira:codgira,
-           tipo:tipo
+           tipo:tipo,
+           codmun:codmun,
+           coddepto:coddepto
         })
         .then((response) => {
             console.log(response);
