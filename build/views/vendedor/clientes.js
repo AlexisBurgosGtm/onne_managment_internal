@@ -169,11 +169,11 @@ function getView(){
                     <label class="negrita">Busque un cliente para la nueva Venta: (VISITA - TIPO)</label>
                            
                     <div class="input-group">
-                        <select class="form-control negrita text-primary" id="cmbVisita">
+                        <select class="form-control negrita text-primary hidden" id="cmbVisita">
                         </select>
                         <select class="form-control negrita text-danger" id="cmbTipoCliente">
-                            <option value='VENTAS'>VENTAS</option>
-                            <option value='PROSPECTO'>PROSPECTOS</option>
+                            <option value='VENTAS'>COMPRADOR</option>
+                            <option value='PROSPECTO'>PRESCRIPTOR</option>
                         </select> 
                     </div>
                     <br>
@@ -348,8 +348,8 @@ function getView(){
                                 <div class="form-group">
                                     <label class="negrita">Tipo de Cliente</label>
                                     <select id="cmbEditTipoCliente" class="form-control negrita text-danger">
-                                        <option value='VENTAS'>VENTAS</option>
-                                        <option value='PROSPECTO'>PROSPECTOS</option>
+                                        <option value='VENTAS'>COMPRADOR</option>
+                                        <option value='PROSPECTO'>PRESCRIPTOR</option>
                                     </select>
                                 </div>
 
@@ -368,7 +368,7 @@ function getView(){
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="negrita">Nombre Cliente</label>
+                                    <label class="negrita">Razón Social</label>
                                     <input type="text" id="txtEditNombre" class="form-control">
                                 </div>
 

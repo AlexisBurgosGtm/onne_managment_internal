@@ -848,8 +848,10 @@ let funciones = {
     },
     getComboTipoClientes:()=>{
       return `
-        <option value="FARMACIA">FARMACIA</option>
         <option value="MEDICO">MEDICO</option>
+        <option value="FARMACIA">FARMACIA</option>
+        <option value="INSTITUCION">INSTITUCION</option>
+        <option value="ENFERMERO">ENFERMERO PROFESIONAL</option>
         <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
         <option value="OTROS">OTROS</option>
       `

@@ -46,8 +46,8 @@ function getView(){
                                 <div class="form-group">
                                     <label>Tipo de Cliente (Ventas/Prospecto)</label>
                                     <select id="cmbTipoCliente" class="form-control col-12 negrita text-danger">
-                                        <option value="VENTAS">VENTAS (SE LE HA REALIZADO VENTAS)</option>
-                                        <option value="PROSPECTO">PROSPECTO (SE LE VISTA MAS NO SE LE HA VENDIDO)</option>
+                                        <option value="VENTAS">COMPRADOR</option>
+                                        <option value="PROSPECTO">PRESCRIPTOR</option>
                                     </select>
                                 </div>  
 
@@ -81,7 +81,7 @@ function getView(){
                    
                                 <br>
                                 <div class="form-group">
-                                    <label>Nombre y Apellido:</label>
+                                    <label>Razón Social:</label>
                                     <input id="txtNomcliente" class="form-control" type="text" maxlenght="200" placeholder="nombre completo">
                                 </div>
 
