@@ -54,7 +54,7 @@ let classNavegar = {
 
         let strFooter =    `<button class="btn btn-sm text-white"  id="btnMenu2VendedorClientes">
                                 <i class="fal fa-shopping-cart"></i>
-                                Visitas
+                                Vender
                             </button>                            
 
                             <button class="btn btn-sm text-white" id="btnMenu2VendedorLogro">

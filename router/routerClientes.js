@@ -3,6 +3,21 @@ const express = require('express');
 const router = express.Router();
 
 
+router.post("/listado_descripciones", async(req,res)=>{
+
+    const{sucursal,tipo} = req.body;
+
+    let qry = `SELECT CODIGO, DESCRIPCION
+                FROM DESCRIPCIONES
+                WHERE EMPNIT='${sucursal}' AND TIPO='${tipo}'
+                ORDER BY DESCRIPCION;
+            `
+    
+     execute.Query(res,qry);
+     
+});
+
+
 router.post("/listado_giras", async(req,res)=>{
 
     const{sucursal} = req.body;
@@ -13,6 +28,36 @@ router.post("/listado_giras", async(req,res)=>{
                 ORDER BY DESCRIPCION;
             `
     
+     execute.Query(res,qry);
+     
+});
+
+
+router.post("/editar_cliente", async(req,res)=>{
+
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto,especialidad,colegiado,categoria,encargado} = req.body;
+
+    let qry = `UPDATE CLIENTES SET
+                        NIT='${nitclie}',
+                        NOMBRECLIENTE='${nomclie}',
+                        DIRCLIENTE='${dirclie}',
+                        TIPONEGOCIO='${tiponegocio}',
+                        NEGOCIO='${negocio}',
+                        LATITUDCLIENTE='${lat}',
+                        LONGITUDCLIENTE='${long}',
+                        TELEFONOCLIENTE='${telefono}',
+                        PROVINCIA='${referencia}',
+                        GIRA=${codgira},
+                        TIPO='${tipo}',
+                        CODMUNICIPIO=${codmun},
+                        CODDEPARTAMENTO=${coddepto},
+                        CRM_ESPECIALIDAD='${especialidad}',
+                        CRM_CATEGORIA='${categoria}',
+                        CRM_COLEGIADO='${colegiado}',
+                        CRM_ENCARGADO='${encargado}'
+            WHERE CODCLIENTE=${codclie} AND EMPNIT='${sucursal}';
+            `
+    
 
  
     
@@ -21,11 +66,9 @@ router.post("/listado_giras", async(req,res)=>{
 
     
 });
+router.post("/BACKUP_editar_cliente", async(req,res)=>{
 
-
-router.post("/editar_cliente", async(req,res)=>{
-
-    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto} = req.body;
+    const{sucursal,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto,especialidad,colegiado,categoria,encargado} = req.body;
 
     let qry = `UPDATE CLIENTES SET
                         NIT='${nitclie}',
@@ -186,7 +229,13 @@ router.post("/listaajenosvendedor", async(req,res)=>{
                   CLIENTES.CODDEPARTAMENTO AS CODDEPTO, 
                   DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, 
                   RUTAS.DESRUTA, 
-                  RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
+                  RUTAS.CODEMPLEADO, 
+                  ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO,
+                  ISNULL(CLIENTES.GIRA,0) AS GIRA,
+                  ISNULL(CLIENTES.CRM_ESPECIALIDAD,'') AS ESPECIALIDAD,
+                  ISNULL(CLIENTES.CRM_CATEGORIA,'A+') AS CATEGORIA,
+                  ISNULL(CLIENTES.CRM_COLEGIADO,'') AS COLEGIADO,
+                  ISNULL(CLIENTES.CRM_ENCARGADO,'') AS ENCARGADO
             FROM CLIENTES LEFT OUTER JOIN
                   RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
                   DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN
@@ -216,7 +265,13 @@ router.post("/listaajenosvendedor", async(req,res)=>{
                   CLIENTES.CODDEPARTAMENTO AS CODDEPTO,  
                   DEPARTAMENTOS.DESDEPARTAMENTO AS DESDEPTO, 
                   RUTAS.DESRUTA, 
-                  RUTAS.CODEMPLEADO, ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO
+                  RUTAS.CODEMPLEADO, 
+                  ISNULL(CLIENTES.TIPO,'VENTAS') AS TIPO,
+                  ISNULL(CLIENTES.GIRA,0) AS GIRA,
+                  ISNULL(CLIENTES.CRM_ESPECIALIDAD,'') AS ESPECIALIDAD,
+                  ISNULL(CLIENTES.CRM_CATEGORIA,'A+') AS CATEGORIA,
+                  ISNULL(CLIENTES.CRM_COLEGIADO,'') AS COLEGIADO,
+                  ISNULL(CLIENTES.CRM_ENCARGADO,'') AS ENCARGADO
             FROM CLIENTES LEFT OUTER JOIN
                   RUTAS ON CLIENTES.CODRUTA = RUTAS.CODRUTA AND CLIENTES.EMPNIT = RUTAS.EMPNIT LEFT OUTER JOIN
                   DEPARTAMENTOS ON CLIENTES.CODDEPARTAMENTO = DEPARTAMENTOS.CODDEPARTAMENTO LEFT OUTER JOIN

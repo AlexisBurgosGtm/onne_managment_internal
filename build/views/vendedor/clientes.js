@@ -393,6 +393,36 @@ function getView(){
                                     <select id="cmbEditGira" class="form-control"></select>
                                 </div>
 
+                                  <div class="form-group">
+                                    <label class="">Especialidad:</label>
+                                    <select id="cmbEditEspecialidad" class="form-control"></select>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Colegiado:</label>
+                                    <input id="txtEditColegiado" class="form-control" type="text" maxlenght="250" placeholder="">
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label class="">Categoria:</label>
+                                    <select id="cmbEditCategoria" class="form-control">
+                                        <option value="A+">A+</option>
+                                        <option value="A">A</option>
+                                        <option value="B+">B+</option>
+                                        <option value="C+">C+</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Encargado/a:</label>
+                                    <input id="txtEditEncargado" class="form-control" type="text" maxlenght="250" placeholder="">
+                                </div>
+                                <br>
+
                                 <div class="form-group">
                                     <label class="negrita">Municipio</label>
                                     <select id="cmbEditMunicipio" class="form-control"></select>
@@ -704,18 +734,36 @@ async function addListeners(){
     cmbVisita.value = funciones.getDiaSemana(fa.getDay());
 
 
-    
+
+    //CARGA GIRAS
     get_giras()
     .then((data)=>{
         let str = '';
         data.recordset.map((r)=>{
-            str += `<option value='${r.CODGIRA}'>${r.DESGIRA}</option>`
+            str += `<option value='${r.CODIGO}'>${r.DESCRIPCION}</option>`
         })
         document.getElementById('cmbEditGira').innerHTML= str;
     })
     .catch(()=>{
         document.getElementById('cmbEditGira').innerHTML= `<option value='0'>SN</option>` 
     })
+    //-----------------------------------
+
+   
+    //CARGA ESPECIALIDADES
+    get_especialidades()
+    .then((data)=>{
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `<option value='${r.DESCRIPCION}'>${r.DESCRIPCION}</option>`
+        })
+        document.getElementById('cmbEditEspecialidad').innerHTML= str;
+    })
+    .catch(()=>{
+        document.getElementById('cmbEditEspecialidad').innerHTML= `<option value=''>SN</option>` 
+    })
+    //-----------------------------------
+
 
     get_combos_mun_deptos('cmbEditMunicipio','cmbEditDepartamento');
 
@@ -850,11 +898,18 @@ async function addListeners(){
             let codmun = document.getElementById('cmbEditMunicipio').value;
             let coddepto = document.getElementById('cmbEditDepartamento').value;
 
+
+            let cmbEditEspecialidad = document.getElementById('cmbEditEspecialidad').value || '';
+            let txtEditColegiado = document.getElementById('txtEditColegiado').value || ''; txtEditColegiado = funciones.limpiarTexto(txtEditColegiado);
+            let cmbEditCategoria = document.getElementById('cmbEditCategoria').value || '';
+            let txtEditEncargado = document.getElementById('txtEditEncargado').value || ''; txtEditEncargado = funciones.limpiarTexto(txtEditEncargado);
+
+
             if (negocio=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
             if (nombre=='SN'){funciones.AvisoError('Escriba el nombre del negocio');return;}
 
 
-            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira,tipo,codmun,coddepto)
+            send_solicitud_cliente(GlobalSelectedCodCliente,nit,tiponegocio,funciones.limpiarTexto(negocio),funciones.limpiarTexto(nombre),funciones.limpiarTexto(direccion),latitud,longitud,telefono,referencia,codgira,tipo,codmun,coddepto,cmbEditEspecialidad,txtEditColegiado,cmbEditCategoria,txtEditEncargado)
             .then(()=>{
                 funciones.Aviso('Solicitud enviada exitosamente!!');
                 btnEnviarCambiosCliente.disabled = false;
@@ -1063,7 +1118,7 @@ function getMenuCliente(codigo,nombre,direccion,telefono,lat,long,nit){
 
 
 
-function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia,tipo,codmun,coddepto){
+function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegocio,negocio,referencia,tipo,codmun,coddepto,gira,especialidad,categoria,colegiado,encargado){
     
   
 
@@ -1081,6 +1136,12 @@ function getEditCliente(codigo,nombre,direccion,telefono,lat,long,nit,tiponegoci
 
     document.getElementById('cmbEditMunicipio').value = codmun;
     document.getElementById('cmbEditDepartamento').value = coddepto;
+
+    document.getElementById('cmbEditGira').value = gira;
+    document.getElementById('cmbEditEspecialidad').value = especialidad;
+    document.getElementById('txtEditColegiado').value = colegiado;
+    document.getElementById('cmbEditCategoria').value = categoria;
+    document.getElementById('txtEditEncargado').value = encargado;
 
     GlobalSelectedCodCliente = codigo;
     GlobalSelectedNomCliente = nombre;
@@ -1222,7 +1283,7 @@ function buscar_cliente(sucursal,filtro,visita,idContenedor){
                         </td>
                         <td>
                             <button class="btn btn-info btn-circle btn-md hand shadow"
-                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}','${rows.TIPO}','${rows.CODMUN}','${rows.CODDEPTO}')">
+                            onclick="getEditCliente('${rows.CODIGO}','${funciones.limpiarTexto(rows.NOMCLIE)}','${funciones.limpiarTexto(rows.DIRCLIE)}','${rows.TELEFONO}','${rows.LAT}','${rows.LONG}','${rows.NIT}','${rows.TIPONEGOCIO}','${funciones.limpiarTexto(rows.NEGOCIO)}','${funciones.limpiarTexto(rows.REFERENCIA)}','${rows.TIPO}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.GIRA}','${rows.ESPECIALIDAD}','${rows.CATEGORIA}','${rows.COLEGIADO}','${rows.ENCARGADO}')">
                                 <i class="fal fa-edit"></i>
                             </button>
                         </td>
@@ -1288,8 +1349,9 @@ function get_combos_mun_deptos(idContainerMun,idcontainerDep){
 function get_giras(){
     return new Promise((resolve,reject)=>{
 
-        axios.post('/clientes/listado_giras', {
-            sucursal: GlobalEmpnit
+         axios.post('/clientes/listado_descripciones', {
+            sucursal: GlobalEmpnit,
+            tipo:'GIRAS'
         })  
         .then(async(response) => {
             const data = response.data;
@@ -1299,6 +1361,32 @@ function get_giras(){
                 resolve(data);
             }
         }, (error) => {
+           reject();
+        });
+
+    })
+};
+function get_especialidades(){
+    
+    console.log('por aqui...');
+
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/clientes/listado_descripciones', {
+            sucursal: GlobalEmpnit,
+            tipo:'ESPECIALIDADES'
+        })  
+        .then(async(response) => {
+            console.log('respuesta especialidades');
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+            console.log('error especialidades');
+            console.log(error)
            reject();
         });
 
@@ -1370,7 +1458,46 @@ function inicializarVista(){
 
 
 
-function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto){
+function send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto,especialidad,colegiado,categoria,encargado){
+    
+    return new Promise((resolve,reject)=>{
+        axios.post('/clientes/editar_cliente',{
+            sucursal: GlobalCodSucursal,
+            codclie: codclie,
+            nitclie: nitclie,
+            tiponegocio: tiponegocio,
+            negocio: negocio,
+            nomclie: nomclie,
+            dirclie: dirclie,
+            lat: lat,
+            long: long,
+            telefono:telefono,
+            referencia:referencia,
+            codgira:codgira,
+            tipo:tipo,
+            codmun:codmun,
+            coddepto:coddepto,
+            especialidad:especialidad,
+            colegiado:colegiado,
+            categoria:categoria,
+            encargado:encargado
+        })
+        .then((response) => {
+            console.log(response);
+            const data = response.data;
+            if (data.rowsAffected[0]==0){
+                reject();
+            }else{
+                resolve();
+            }            
+        }, (error) => {
+            reject();
+        });
+    })
+
+};
+
+function BACKUP_send_solicitud_cliente(codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,lat,long,telefono,referencia,codgira,tipo,codmun,coddepto){
     
     return new Promise((resolve,reject)=>{
         axios.post('/clientes/editar_cliente',{

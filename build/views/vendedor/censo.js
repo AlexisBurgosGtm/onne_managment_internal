@@ -82,7 +82,7 @@ function getView(){
                                 <br>
                                 <div class="form-group">
                                     <label>Razón Social:</label>
-                                    <input id="txtNomcliente" class="form-control" type="text" maxlenght="200" placeholder="nombre completo">
+                                    <input id="txtNomcliente" class="form-control" type="text" maxlenght="200" placeholder="Razón Social">
                                 </div>
 
                                 <div class="form-group">
@@ -98,10 +98,44 @@ function getView(){
                                 <br>
 
                                 <div class="form-group">
-                                    <label class="negrita">Gira</label>
+                                    <label class="">Gira</label>
                                     <select id="cmbGira" class="form-control"></select>
                                 </div>
                                 <br>
+
+                                
+
+                                <div class="form-group">
+                                    <label class="">Especialidad:</label>
+                                    <select id="cmbEspecialidad" class="form-control"></select>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Colegiado:</label>
+                                    <input id="txtColegiado" class="form-control" type="text" maxlenght="250" placeholder="">
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label class="">Categoria:</label>
+                                    <select id="cmbCategoria" class="form-control">
+                                        <option value="A+">A+</option>
+                                        <option value="A">A</option>
+                                        <option value="B+">B+</option>
+                                        <option value="C+">C+</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Encargado/a:</label>
+                                    <input id="txtEncargado" class="form-control" type="text" maxlenght="250" placeholder="">
+                                </div>
+                                <br>
+
+                               
 
                                 <div class="row">
                                     <div class="col-6">
@@ -279,13 +313,29 @@ async function addListeners(){
     .then((data)=>{
         let str = '';
         data.recordset.map((r)=>{
-            str += `<option value='${r.CODGIRA}'>${r.DESGIRA}</option>`
+            str += `<option value='${r.CODIGO}'>${r.DESCRIPCION}</option>`
         })
         document.getElementById('cmbGira').innerHTML= str;
     })
     .catch(()=>{
         document.getElementById('cmbGira').innerHTML= `<option value='0'>SN</option>` 
     })
+
+
+
+       //CARGA ESPECIALIDADES
+    get_especialidades()
+    .then((data)=>{
+        let str = '';
+        data.recordset.map((r)=>{
+            str += `<option value='${r.DESCRIPCION}'>${r.DESCRIPCION}</option>`
+        })
+        document.getElementById('cmbEspecialidad').innerHTML= str;
+    })
+    .catch(()=>{
+        document.getElementById('cmbEspecialidad').innerHTML= `<option value=''>SN</option>` 
+    })
+    //-----------------------------------
 
     //await apigen.comboVendedores(GlobalEmpnit,'cmbVendedor');
     
@@ -320,6 +370,15 @@ function fcnGuardarCliente(){
         let codruta = 1;
         let cmbGira = document.getElementById('cmbGira').value || '0';
 
+        //campos agregados en 04 2026
+
+        let cmbEspecialidad = document.getElementById('cmbEspecialidad').value || '';
+        let txtColegiado = document.getElementById('txtColegiado').value || '';
+        let cmbCategoria = document.getElementById('cmbCategoria').value || '';
+        let txtEncargado = document.getElementById('txtEncargado').value || '';
+
+        //campos agregados en 04 2026
+        
 
         if(nomclie==''){funciones.AvisoError('Escriba un nombre de cliente');return;}
        
@@ -342,7 +401,11 @@ function fcnGuardarCliente(){
             lat:txtLatitud.innerText,
             long:txtLongitud.innerText,
             codgira:cmbGira,
-            tipocliente:tipocliente
+            tipocliente:tipocliente,
+            especialidad:cmbEspecialidad,
+            colegiado:txtColegiado,
+            categoria:cmbCategoria,
+            encargado:funciones.limpiarTexto(txtEncargado)
         })
         .then((response) => {
             
@@ -381,6 +444,10 @@ function fcnCleanDataCliente(){
             document.getElementById('txtReferencia').value = "";
             document.getElementById('txtTelefono').value = "";
            // document.getElementById('txtObs').value = "SN";
+            document.getElementById('txtColegiado').value = '';
+            document.getElementById('cmbCategoria').value = 'A+';
+            document.getElementById('txtEncargado').value = '';
+
 
 };
 
@@ -504,8 +571,29 @@ function get_combos_mun_deptos(idContainerMun,idcontainerDep){
 function get_giras(){
     return new Promise((resolve,reject)=>{
 
-        axios.post('/clientes/listado_giras', {
-            sucursal: GlobalEmpnit
+        axios.post('/clientes/listado_descripciones', {
+            sucursal: GlobalEmpnit,
+            tipo:'GIRAS'
+        })  
+        .then(async(response) => {
+            const data = response.data;
+            if(Number(data.rowsAffected[0])==0){
+                reject();
+            }else{  
+                resolve(data);
+            }
+        }, (error) => {
+           reject();
+        });
+
+    })
+};
+function get_especialidades(){
+    return new Promise((resolve,reject)=>{
+
+        axios.post('/clientes/listado_descripciones', {
+            sucursal: GlobalEmpnit,
+            tipo:'ESPECIALIDADES'
         })  
         .then(async(response) => {
             const data = response.data;
